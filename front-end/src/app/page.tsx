@@ -2,9 +2,13 @@
 //Home page
 import styles from './page.module.css'
 import { useState } from 'react';
-// import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/navigation'
 
-// const supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key')
+const supabase_url: string = (process.env.NEXT_PUBLIC_SUPABASE_URL as string)
+const supabase_anon_key: string = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string)
+
+const supabase = createClient(supabase_url, supabase_anon_key)
 
 export default function Home() {
   return (
@@ -56,16 +60,19 @@ function Login() {
       <a target='_blank'>Forgot Password?</a>
 
       <button>Sign In</button>
-      {/* <button onClick={ () => signInWithGoogle }>Sign In with Google</button> */}
+      <button onClick={ signInWithGoogle }>Sign In with Google</button>
     </>
   )
 }
 
-// async function signInWithGoogle() {
-//   const { data, error } = await supabase.auth.signInWithOAuth({
-//     provider: 'google',
-//   })
-// }
+async function signInWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: '/feeds'
+    }
+  })
+}
 
 // async function signout() {
 //   const { error } = await supabase.auth.signOut()
