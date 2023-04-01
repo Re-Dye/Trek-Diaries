@@ -2,14 +2,9 @@
 //Home page
 import styles from './page.module.css'
 import { useState } from 'react';
-import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link';
-
-const supabase_url: string = (process.env.NEXT_PUBLIC_SUPABASE_URL as string)
-const supabase_anon_key: string = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string)
-
-const supabase = createClient(supabase_url, supabase_anon_key)
 
 export default function Home() {
   return (
@@ -24,22 +19,34 @@ export default function Home() {
 
 
 function Login() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+
+  const handleSignIn = async() => {
+    console.log(email, password)
+    const res = await signIn('credentials', { email: email, password: password, redirect: false })
+    console.log(res)
+  }
 
   return (
     <>
       <text className={styles.header_login}>Login</text>
 
       <input 
+        value={ email }
         placeholder='Email Address or Mobile Number' 
         className={ styles.input_login_email } 
         type='email'
+        onChange={ (e) => setEmail(e.target.value) }
       />
       
       <input 
+        value={ password }
         placeholder='Password' 
         className={ styles.input_login_password } 
         type={ showPassword? 'text': 'password' }
+        onChange={ (e) => setPassword(e.target.value) }
       />
 
       <input 
@@ -60,39 +67,11 @@ function Login() {
       <br />
       <Link href='/reset_password'>Forgot Password?</Link>
 
-      <button>Sign In</button>
-      <button onClick={ signInWithGoogle }>Sign In with Google</button>
+      <button onClick={ handleSignIn }>Sign In</button>
+      {/* <button onClick={ signInWithGoogle }>Sign In with Google</button> */}
       <br />
       <>Don't have an account?</>
       <Link href='/sign_up'>Sign Up</Link>
     </>
   )
 }
-
-async function signInWithGoogle() {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: '/feeds'
-    }
-  })
-}
-
-// async function signout() {
-//   const { error } = await supabase.auth.signOut()
-// }
-
-/** for Google OAuth 2.0 
- * Google OAuth2.0 doesn't return the provider_refresh_token by default. 
- * If you need the provider_refresh_token returned, you will need to add additional query parameters: */
-// async function signInWithGoogle() {
-//   const { data, error } = await supabase.auth.signInWithOAuth({
-//     provider: 'google',
-//     options: {
-//       queryParams: {
-//         access_type: 'offline',
-//         prompt: 'consent',
-//       },
-//     },
-//   })
-// }
