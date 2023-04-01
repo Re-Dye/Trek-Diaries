@@ -21,6 +21,8 @@ export default function loginform() {
         />
         </label>
         <a href="#" target='_blank'>Forgot Password?</a>
+        <p>don't have an account yet?<a href="/route">Sign Up</a></p>
+        <span>Or</span>
         <div className='alt-login'>
             <button className='alt-btn'>Continue with google <FcGoogle className='icon'/></button>
             <button className='alt-btn'>Continue with facebook <SiFacebook className='icon'/></button>
