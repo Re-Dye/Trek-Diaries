@@ -4,6 +4,7 @@ import styles from './page.module.css'
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link';
 
 const supabase_url: string = (process.env.NEXT_PUBLIC_SUPABASE_URL as string)
 const supabase_anon_key: string = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string)
@@ -57,10 +58,13 @@ function Login() {
       <label htmlFor='keep_me_signed_in'>Keep Me Signed In</label>
 
       <br />
-      <a target='_blank'>Forgot Password?</a>
+      <Link href='/reset_password'>Forgot Password?</Link>
 
       <button>Sign In</button>
       <button onClick={ signInWithGoogle }>Sign In with Google</button>
+      <br />
+      <>Don't have an account?</>
+      <Link href='/sign_up'>Sign Up</Link>
     </>
   )
 }
