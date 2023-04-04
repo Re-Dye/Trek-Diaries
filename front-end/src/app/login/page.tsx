@@ -24,8 +24,7 @@ function Login() {
   const [password, setPassword] = useState<string>("")
 
   const handleSignIn = async() => {
-    console.log(email, password)
-    const res = await signIn('credentials', { email: email, password: password, redirect: false })
+    const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
     console.log(res)
   }
 
@@ -65,7 +64,7 @@ function Login() {
       <label htmlFor='keep_me_signed_in'>Keep Me Signed In</label>
 
       <br />
-      <Link href='/reset_password'>Forgot Password?</Link>
+      {/* <Link href='/reset_password'>Forgot Password?</Link> */}
 
       <button onClick={ handleSignIn }>Sign In</button>
       {/* <button onClick={ signInWithGoogle }>Sign In with Google</button> */}
