@@ -1,5 +1,6 @@
 "use client";
 //Home page
+
 import loginStyles from "./page.module.css";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
@@ -8,6 +9,14 @@ import bgImg from "../../../public/ncpr.jpg";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+
+
+const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401
+
+export const metadata: Metadata = {
+  title: 'Login | TrekDiaries',
+  description: 'Login page of TrekDiaries',
+}
 
 export default function Home() {
   return (
@@ -18,9 +27,37 @@ export default function Home() {
 }
 
 function Login() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const router = useRouter()
+
+  const handleSignIn = async() => {
+    // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
+    const res = await signIn('credentials', { email, password, redirect: false })
+    
+    /* if error occured */
+    if (res?.error) {
+      /* if the status code matches with the incorrect login credentials status */
+      if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
+        return alert('The email or the password is incorrect.')
+      } 
+      return alert(`Some error occured.\nError code: ${ res.error }\n`)
+    }
+
+    /* navigate to feeds and reset states*/
+    router.push('/feeds')
+    resetStates()
+    return
+  }
+
+  const resetStates = () => {
+    setShowPassword(false)
+    setEmail("")
+    setPassword("")
+  }
+
 
   const handleSignIn = async () => {
     const res = await signIn("credentials", {
@@ -32,6 +69,7 @@ function Login() {
     console.log(res);
   };
   return (
+
     <div className={loginStyles.wrapper}>
       <div className={loginStyles.imgBox}>
         <img src={bgImg} alt="backgroundImage" />
@@ -51,6 +89,7 @@ function Login() {
             />
 
             <br />
+
 
             <input
               value={password}
