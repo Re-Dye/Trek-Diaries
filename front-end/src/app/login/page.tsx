@@ -9,7 +9,7 @@ import bgImg from "../../../public/ncpr.jpg";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-
+import { Metadata } from "next";
 
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401
 
@@ -58,16 +58,6 @@ function Login() {
     setPassword("")
   }
 
-
-  const handleSignIn = async () => {
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: true,
-      callbackUrl: "/feeds",
-    });
-    console.log(res);
-  };
   return (
 
     <div className={loginStyles.wrapper}>
