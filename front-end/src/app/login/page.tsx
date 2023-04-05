@@ -11,7 +11,6 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Metadata } from "next";
 
-
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401
 
 export const metadata: Metadata = {
