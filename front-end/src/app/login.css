@@ -1,0 +1,14 @@
+.App{
+  background-image: url("./images/ncpr.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+@media (max-width: 800px){
+}
