@@ -9,14 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next-auth/mongodb-adapter": "^1.1.1",
     "@types/node": "18.15.10",
     "@types/react": "18.0.29",
     "@types/react-dom": "18.0.11",
     "create-next-app": "^13.2.4",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
+    "mongodb": "^4.15.0",
+    "mongoose": "^7.0.3",
     "next": "13.2.4",
-    "next-auth": "^4.20.1",
+    "next-auth": "^4.21.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
