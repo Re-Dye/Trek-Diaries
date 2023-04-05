@@ -5,7 +5,7 @@ import loginStyles from "./page.module.css";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
-import bgImg from "../../../public/ncpr.jpg";
+import bgImg from '../../../public/ncpr.jpg'
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -13,10 +13,10 @@ import { Metadata } from "next";
 
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401
 
-export const metadata: Metadata = {
-  title: 'Login | TrekDiaries',
-  description: 'Login page of TrekDiaries',
-}
+// export const metadata: Metadata = {
+//   title: 'Login | TrekDiaries',
+//   description: 'Login page of TrekDiaries',
+// }
 
 export default function Home() {
   return (
@@ -36,13 +36,17 @@ function Login() {
   const handleSignIn = async() => {
     // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
     const res = await signIn('credentials', { email, password, redirect: false })
+
+    console.log(res)
     
     /* if error occured */
     if (res?.error) {
       /* if the status code matches with the incorrect login credentials status */
       if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
+        console.log('The email or the password is incorrect.')
         return alert('The email or the password is incorrect.')
       } 
+      console.log(`Some error occured.\nError code: ${ res.error }\n`)
       return alert(`Some error occured.\nError code: ${ res.error }\n`)
     }
 
