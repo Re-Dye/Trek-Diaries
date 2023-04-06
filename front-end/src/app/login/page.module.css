@@ -65,6 +65,9 @@
 .wrapper .loginBox .formBox .inputBx
 {
     margin-bottom: 1.7em;
+    font-weight: 600;
+    font-size: medium;
+    letter-spacing: 0.1em;
     
 }
 
@@ -131,7 +134,6 @@
 .wrapper .loginBox .formBox .Sbtn:hover
 {
   color: white;
-  width:;
   box-shadow: 0 0 20px #4079CE;
   background-color: #4079CE;
 }
