@@ -1,7 +1,19 @@
+'use client'
+import { signOut } from "next-auth/react"
+import { useRouter } from "next/navigation";
+
 export default function Feeds() {
+    const router = useRouter()
+
+    const handleSignOut = () => {
+        signOut()
+        router.push('/')
+    }
+
     return (
         <div>
             <h1>Log in successful.</h1>
+            <button onClick={ handleSignOut }>Log out</button>
         </div>
     )
 }
