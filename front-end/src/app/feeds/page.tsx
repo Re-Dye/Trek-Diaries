@@ -1,13 +1,13 @@
 'use client'
 import { signOut } from "next-auth/react"
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"
 
 export default function Feeds() {
     const router = useRouter()
 
-    const handleSignOut = () => {
-        signOut()
-        router.push('/')
+    const handleSignOut = async() => {
+        const data = await signOut({ redirect: false, callbackUrl: '/login'})
+        router.push(data.url)
     }
 
     return (

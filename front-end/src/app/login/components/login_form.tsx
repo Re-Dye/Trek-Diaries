@@ -20,25 +20,25 @@ export default function Login() {
     const handleSignIn = async() => {
       try{
         //const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
-        const res = await signIn('credentials', { email, password, redirect: false })
+        const res = await signIn('credentials', { email, password, redirect: false, callbackUrl: '/feeds' })
         
         console.log(res)
         
         /* if error occured */
-        // if (res?.error) {
-        //   /* if the status code matches with the incorrect login credentials status */
-        //   if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
-        //     console.log('The email or the password is incorrect.')
-        //     return alert('The email or the password is incorrect.')
-        //   } 
-        //   console.log(`Some error occured.\nError code: ${ res.error }\n`)
-        //   return alert(`Some error occured.\nError code: ${ res.error }\n`)
-        // }
+        if (res?.error) {
+          /* if the status code matches with the incorrect login credentials status */
+          if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
+            console.log('The email or the password is incorrect.')
+            return alert('The email or the password is incorrect.')
+          } 
+          console.log(`Some error occured.\nError code: ${ res.error }\n`)
+          return alert(`Some error occured.\nError code: ${ res.error }\n`)
+        }
     
-        // console.log("log in successfull")
-        // router.push('/feeds')
-        // resetStates()
-        // return
+        console.log("log in successfull")
+        router.push(res?.url as string)
+        resetStates()
+        return
       }catch {
         console.log("error")
       }
