@@ -17,12 +17,19 @@ export default function Login() {
   const [password, setPassword] = useState<string>("")
   const router = useRouter()
 
+  const handleSigninGoog = async() =>{
+    const googres = await signIn("google", { email, password, redirect: false, callbackUrl: '/' })
+    console.log(googres)
+  }
+  const handleSigninFB = async() =>{
+    const fbres = await signIn("facebook", { email, password, redirect: false, callbackUrl: '/' })
+    console.log(fbres)
+  }
   const handleSignIn = async(e: React.MouseEvent) => {
     e.preventDefault()
     try{
       // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
-      const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/' })
-      
+      const res = await signIn('credentials', { email, password, redirect: false, callbackUrl: '/' })
       console.log(res)
       
       /* if error occured */
@@ -124,11 +131,19 @@ export default function Login() {
             </div>
 
             <div className={loginStyles.AbtnCtn}>
-              <button className={loginStyles.Abtn}>
+              <button 
+              type="button"
+              className={loginStyles.Abtn}
+              onClick={handleSigninGoog}
+              >
                 Continue with google &nbsp;{" "}
                 <FcGoogle className={loginStyles.icon} />
               </button>
-              <button className={loginStyles.Abtn}>
+              <button 
+              type="button"
+              className={loginStyles.Abtn}
+              onClick={handleSigninFB}
+              >
                 Continue with facebook &nbsp;
                 <SiFacebook className={loginStyles.icon} />
               </button>
