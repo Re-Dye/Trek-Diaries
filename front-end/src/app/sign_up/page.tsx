@@ -10,14 +10,13 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
 
-const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401;
 
 // export const metadata: Metadata = {
 //   title: 'Login | TrekDiaries',
 //   description: 'Login page of TrekDiaries',
 // }
 
-export default function School() {
+export default function Page() {
   return (
     <div className={signupStyles.app}>
       <SignUp />
