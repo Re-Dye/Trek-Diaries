@@ -14,6 +14,7 @@ export default function Home() {
         router.push(data.url)
     }
 
+    //temporary use middleware later
     useEffect(() => {
         if (session.status === 'unauthenticated') router.push('/login')
     }, [])

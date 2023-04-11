@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
 import bgImg from '../../../../public/ncpr.jpg'
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import loginStyles from "../page.module.css";
 
@@ -16,6 +16,7 @@ export default function Login() {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const router = useRouter()
+  const session = useSession()
 
   const handleSignIn = async(e: React.MouseEvent) => {
     e.preventDefault()
@@ -51,6 +52,13 @@ export default function Login() {
     setEmail("")
     setPassword("")
   }
+
+  //temporary use middleware later
+  useEffect(() => {
+    if(session.status === 'authenticated') {
+      router.push('/')
+    }
+  })
 
   return (
 
