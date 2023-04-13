@@ -140,10 +140,10 @@ function SignUp() {
                 Continue with google &nbsp;{" "}
                 <FcGoogle className={signupStyles.icon} />
               </button>
-              <button className={signupStyles.Abtn}>
+              {/* <button className={signupStyles.Abtn}>
                 Continue with facebook &nbsp;
                 <SiFacebook className={signupStyles.icon} />
-              </button>
+              </button> */}
             </div>
           </form>
         </div>
