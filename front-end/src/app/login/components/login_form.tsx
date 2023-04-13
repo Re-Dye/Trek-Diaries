@@ -21,10 +21,10 @@ export default function Login() {
     const googres = await signIn("google", { email, password, redirect: false, callbackUrl: '/' })
     console.log(googres)
   }
-  const handleSigninFB = async() =>{
-    const fbres = await signIn("facebook", { email, password, redirect: false, callbackUrl: '/' })
-    console.log(fbres)
-  }
+  // const handleSigninFB = async() =>{
+  //   const fbres = await signIn("facebook", { email, password, redirect: false, callbackUrl: '/' })
+  //   console.log(fbres)
+  // }
   const handleSignIn = async(e: React.MouseEvent) => {
     e.preventDefault()
     try{
@@ -139,14 +139,14 @@ export default function Login() {
                 Continue with google &nbsp;{" "}
                 <FcGoogle className={loginStyles.icon} />
               </button>
-              <button 
+              {/* <button 
               type="button"
               className={loginStyles.Abtn}
               onClick={handleSigninFB}
               >
                 Continue with facebook &nbsp;
                 <SiFacebook className={loginStyles.icon} />
-              </button>
+              </button> */}
             </div>
           </form>
         </div>
