@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import loginStyles from "../page.module.css";
+import Image from "next/image";
 
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401
 
@@ -71,7 +72,7 @@ export default function Login() {
 
     <div className={loginStyles.wrapper}>
       <div className={loginStyles.imgBox}>
-        <img src={bgImg} alt="backgroundImage" />
+        <Image src={bgImg} alt="backgroundImage" />
       </div>
 
       <div className={loginStyles.loginBox}>

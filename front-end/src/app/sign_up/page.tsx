@@ -9,6 +9,7 @@ import bgImg from "../../../public/ncpr.jpg";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
+import Image from "next/image";
 
 
 // export const metadata: Metadata = {
@@ -46,7 +47,7 @@ function SignUp() {
   return (
     <div className={signupStyles.wrapper}>
       <div className={signupStyles.imgBox}>
-        <img src={bgImg} alt="backgroundImage" />
+        <Image src={bgImg} alt="backgroundImage" />
       </div>
 
       <div className={signupStyles.loginBox}>
