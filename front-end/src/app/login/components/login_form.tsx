@@ -60,13 +60,6 @@ export default function Login() {
     setPassword("")
   }
 
-  //temporary use middleware later
-  useEffect(() => {
-    if(session.status === 'authenticated') {
-      router.push('/')
-    }
-  })
-
   return (
 
     <div className={loginStyles.wrapper}>

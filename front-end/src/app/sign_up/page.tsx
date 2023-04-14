@@ -11,10 +11,10 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 
-// export const metadata: Metadata = {
-//   title: 'Login | TrekDiaries',
-//   description: 'Login page of TrekDiaries',
-// }
+export const metadata: Metadata = {
+  title: 'Sign Up | TrekDiaries',
+  description: 'Sign up page of TrekDiaries',
+}
 
 export default function Page() {
   return (
