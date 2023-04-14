@@ -13,12 +13,7 @@ export default function Home() {
         const data = await signOut({ redirect: false, callbackUrl: '/login'})
         router.push(data.url)
     }
-
-    //temporary use middleware later
-    useEffect(() => {
-        if (session.status === 'unauthenticated') router.push('/login')
-    }, [])
-
+    
     return (
         <div>
             {(session.status === "authenticated") ? 

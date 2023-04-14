@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../../lib/mongo-handler";
-import type { Session } from "next-auth";
 
 if (!process.env.NEXTAUTH_SECRET) {
     throw new Error('Please provide process.env.NEXTAUTH_SECRET env variable.')
