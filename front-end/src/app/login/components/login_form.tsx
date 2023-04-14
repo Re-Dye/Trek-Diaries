@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
 import bgImg from "../../../../public/ncpr.jpg";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import loginStyles from "../page.module.css";
 import Image from "next/image";
@@ -16,8 +16,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter();
-  const session = useSession();
 
   const handleSigninGoog = async () => {
     const googres = await signIn("google", {
@@ -42,17 +42,18 @@ export default function Login() {
         redirect: false,
         callbackUrl: "/",
       });
-      console.log(res);
 
       /* if error occured */
       if (res?.error) {
         /* if the status code matches with the incorrect login credentials status */
         if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
           console.log("The email or the password is incorrect.");
-          return alert("The email or the password is incorrect.");
+          setError("The email or the password is incorrect.");
+          return
         }
         console.log(`Some error occured.\nError code: ${res.error}\n`);
-        return alert(`Some error occured.\nError code: ${res.error}\n`);
+        setError(res.error)
+        return
       }
 
       console.log("log in successfull");
@@ -62,7 +63,6 @@ export default function Login() {
     } catch {
       console.log("error");
     }
-    console.log("signin clicked");
   };
 
   const resetStates = () => {
@@ -82,7 +82,9 @@ export default function Login() {
           <h2>Login</h2>
 
           <form>
-            <h3 className={loginStyles.incorrectAlert}>Incorrect Password. Please double-check your password.</h3>
+            {error &&
+              <h3 className={loginStyles.incorrectAlert}>{ error }</h3>
+            }
             <input
               value={email}
               placeholder="Email Address or Mobile Number"
