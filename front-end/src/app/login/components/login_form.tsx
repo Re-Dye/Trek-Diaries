@@ -89,6 +89,7 @@ export default function Login() {
           <h2>Login</h2>
 
           <form>
+            <h3 className={loginStyles.incorrectAlert}>Incorrect Password. Please double-check your password.</h3>
             <input
               value={email}
               placeholder="Email Address or Mobile Number"
