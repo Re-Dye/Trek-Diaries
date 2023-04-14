@@ -11,7 +11,6 @@ import Link from "next/link";
 import { Metadata } from "next";
 import Image from "next/image";
 
-
 // export const metadata: Metadata = {
 //   title: 'Login | TrekDiaries',
 //   description: 'Login page of TrekDiaries',
@@ -47,7 +46,7 @@ function SignUp() {
   return (
     <div className={signupStyles.wrapper}>
       <div className={signupStyles.imgBox}>
-        <Image src={bgImg} alt="backgroundImage" />
+        <Image src="/ncpr.jpg" alt="backgroundImage" fill />
       </div>
 
       <div className={signupStyles.loginBox}>

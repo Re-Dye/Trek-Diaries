@@ -1,78 +1,87 @@
-'use client'
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
-import bgImg from '../../../../public/ncpr.jpg'
+import bgImg from "../../../../public/ncpr.jpg";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import loginStyles from "../page.module.css";
 import Image from "next/image";
 
-const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401
+const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401;
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const router = useRouter()
-  const session = useSession()
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const router = useRouter();
+  const session = useSession();
 
-  const handleSigninGoog = async() =>{
-    const googres = await signIn("google", { email, password, redirect: false, callbackUrl: '/' })
-    console.log(googres)
-  }
+  const handleSigninGoog = async () => {
+    const googres = await signIn("google", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl: "/",
+    });
+    console.log(googres);
+  };
   // const handleSigninFB = async() =>{
   //   const fbres = await signIn("facebook", { email, password, redirect: false, callbackUrl: '/' })
   //   console.log(fbres)
   // }
-  const handleSignIn = async(e: React.MouseEvent) => {
-    e.preventDefault()
-    try{
+  const handleSignIn = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
       // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
-      const res = await signIn('credentials', { email, password, redirect: false, callbackUrl: '/' })
-      console.log(res)
-      
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+      console.log(res);
+
       /* if error occured */
       if (res?.error) {
         /* if the status code matches with the incorrect login credentials status */
         if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
-          console.log('The email or the password is incorrect.')
-          return alert('The email or the password is incorrect.')
-        } 
-        console.log(`Some error occured.\nError code: ${ res.error }\n`)
-        return alert(`Some error occured.\nError code: ${ res.error }\n`)
+          console.log("The email or the password is incorrect.");
+          return alert("The email or the password is incorrect.");
+        }
+        console.log(`Some error occured.\nError code: ${res.error}\n`);
+        return alert(`Some error occured.\nError code: ${res.error}\n`);
       }
-  
-      console.log("log in successfull")
-      router.push(res?.url as string)
-      resetStates()
-      return
-    }catch {
-      console.log("error")
+
+      console.log("log in successfull");
+      router.push(res?.url as string);
+      resetStates();
+      return;
+    } catch {
+      console.log("error");
     }
-    console.log('signin clicked')
-  }
+    console.log("signin clicked");
+  };
 
   const resetStates = () => {
-    setShowPassword(false)
-    setEmail("")
-    setPassword("")
-  }
+    setShowPassword(false);
+    setEmail("");
+    setPassword("");
+  };
 
   //temporary use middleware later
   useEffect(() => {
-    if(session.status === 'authenticated') {
-      router.push('/')
+    if (session.status === "authenticated") {
+      router.push("/");
     }
-  })
+  });
 
   return (
-
     <div className={loginStyles.wrapper}>
       <div className={loginStyles.imgBox}>
-        <Image src={bgImg} alt="backgroundImage" />
+        <Image src="/ncpr.jpg" alt="backgroundImage" fill  />
       </div>
 
       <div className={loginStyles.loginBox}>
@@ -89,7 +98,6 @@ export default function Login() {
             />
 
             <br />
-
 
             <input
               value={password}
@@ -128,7 +136,10 @@ export default function Login() {
 
             <br />
 
-            <button className={loginStyles.Sbtn} onClick={(e) => handleSignIn(e)}>
+            <button
+              className={loginStyles.Sbtn}
+              onClick={(e) => handleSignIn(e)}
+            >
               Sign In
             </button>
             {/* <button onClick={ signInWithGoogle }>Sign In with Google</button> */}
@@ -140,10 +151,10 @@ export default function Login() {
             </div>
 
             <div className={loginStyles.AbtnCtn}>
-              <button 
-              type="button"
-              className={loginStyles.Abtn}
-              onClick={handleSigninGoog}
+              <button
+                type="button"
+                className={loginStyles.Abtn}
+                onClick={handleSigninGoog}
               >
                 Continue with google &nbsp;{" "}
                 <FcGoogle className={loginStyles.icon} />
