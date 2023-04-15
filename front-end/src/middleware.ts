@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from "next/server"
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
   function middleware(req: NextRequest) {
-    return NextResponse.rewrite(new URL('/', req.url))
+    return NextResponse.redirect(new URL('/', req.url))
   },
   {
-    secret: 'abcd',
+    secret: 'mysecret',
     pages: {
       signIn: "/login"
     },
