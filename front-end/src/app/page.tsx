@@ -5,7 +5,12 @@ import { useSession } from "next-auth/react"
 
 export default function Home() {
     const router = useRouter()
-    const session = useSession()
+    const session = useSession({
+        required: true,
+        onUnauthenticated() {
+            router.push('/login')
+        }
+    })
     console.log(session)
 
     const handleSignOut = async() => {

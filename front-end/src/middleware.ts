@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from "next/server"
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
   function middleware(req: NextRequest) {
-    return NextResponse.redirect(new URL('/', req.url))
+    console.log('using middleware...')
+    return NextResponse.rewrite(new URL('/', req.url))
   },
   {
     secret: 'mysecret',
@@ -23,7 +24,10 @@ export default withAuth(
         }
       }
     }
+
   },
 )
 
+
 export const config = { matcher: [ "/((?!_next/static|favicon.ico|login|sign_up|).*)", "/" ] }
+

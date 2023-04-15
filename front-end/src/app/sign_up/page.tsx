@@ -2,14 +2,13 @@
 //Home page
 
 import signupStyles from "./page.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { SiFacebook } from "react-icons/si";
-import bgImg from "../../../public/ncpr.jpg";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: 'Sign Up | TrekDiaries',
@@ -31,7 +30,15 @@ function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const router = useRouter();
+  const session = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    console.log(session)
+    if (session.status === 'authenticated') {
+      router.push('/')
+    }
+  }, [session])
 
   const resetStates = () => {
     setShowPassword(false);
