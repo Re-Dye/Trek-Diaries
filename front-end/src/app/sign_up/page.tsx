@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 export const metadata: Metadata = {
   title: 'Sign Up | TrekDiaries',
   description: 'Sign up page of TrekDiaries',
@@ -23,6 +24,7 @@ export default function Page() {
 }
 
 const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match."
+const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8"
 
 function SignUp() {
   /* redirect to home page if already authenticated */
@@ -48,16 +50,25 @@ function SignUp() {
     setConfirmPassword("")
   };
 
-  const handleSignUp = (e: React.MouseEvent) => {
+  const handleSignUp = async(e: React.MouseEvent) => {
     e.preventDefault()
     console.log("signing up");
-    resetStates()
-  };
 
-  useEffect(() => {
-    console.log(dob)
-    console.log("rerendered")
-  })
+    try{
+      const { data } = await axios.post('/api/sign_up', {
+        firstName,
+        lastName,
+        email,
+        password,
+        dob
+      })
+
+      console.log(data)
+      // resetStates()
+    }catch(error) {
+      console.log(error)
+    }
+  };
 
   return (
     <div className={signupStyles.wrapper}>
@@ -233,10 +244,14 @@ function useConfirmPassword(initialValue: string, setError: Dispatch<SetStateAct
   const [confirmPassword, setConfirmPassword] = useState<string>(initialValue);
 
   useEffect(() => {
-    if(password !== confirmPassword) {
-      setError(ERR_MSG_PASSWORD_NOT_MATCH)
+    if(password.length < 8) {
+      setError(ERR_MSG_PASSWORD_LENGTH)
     }else{
-      setError(null)
+      if(password !== confirmPassword) {
+        setError(ERR_MSG_PASSWORD_NOT_MATCH)
+      }else{
+        setError(null)
+      }
     }
   }, [password, confirmPassword])
 
