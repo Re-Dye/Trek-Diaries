@@ -2,14 +2,13 @@
 //Home page
 
 import signupStyles from "./page.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-
 export const metadata: Metadata = {
   title: 'Sign Up | TrekDiaries',
   description: 'Sign up page of TrekDiaries',
@@ -23,32 +22,42 @@ export default function Page() {
   );
 }
 
+const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match."
+
 function SignUp() {
+  /* redirect to home page if already authenticated */
+  useRedirectOnAuthenticated()
+
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const session = useSession()
-  const router = useRouter()
-
-  useEffect(() => {
-    console.log(session)
-    if (session.status === 'authenticated') {
-      router.push('/')
-    }
-  }, [session])
+  const [error, setError] = useState<string|null>(null);
+  const [password, setPassword, confirmPassword, setConfirmPassword] = useConfirmPassword('', setError)
+  const [dob, setDob] = useState<string>("")
+  const disable = useDisableSignUp(firstName, lastName, email, dob, password, confirmPassword, error)
 
   const resetStates = () => {
+    setFirstName("")
+    setLastName("")
+    setDob("")
+    setError(null)
     setShowPassword(false);
     setEmail("");
     setPassword("");
+    setConfirmPassword("")
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = (e: React.MouseEvent) => {
+    e.preventDefault()
     console.log("signing up");
+    resetStates()
   };
+
+  useEffect(() => {
+    console.log(dob)
+    console.log("rerendered")
+  })
 
   return (
     <div className={signupStyles.wrapper}>
@@ -61,6 +70,9 @@ function SignUp() {
           <h2>Sign Up</h2>
 
           <form>
+            {error && 
+              <h3 className={signupStyles.incorrectAlert}>{ error }</h3>
+            }
             <div className={signupStyles.name}>
               <input
                 value={firstName}
@@ -89,6 +101,15 @@ function SignUp() {
               className={signupStyles.inputBx}
               type="email"
               onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <br />
+
+            <input
+              value={ dob }
+              className={signupStyles.inputBx}
+              type="date"
+              onChange={(e) => setDob(e.target.value)}
             />
 
             <br />
@@ -131,7 +152,11 @@ function SignUp() {
 
             <br />
 
-            <button className={signupStyles.Sbtn} onClick={handleSignUp}>
+            <button 
+            className={signupStyles.Sbtn}
+            onClick={ (e) => handleSignUp(e) }
+            disabled={ disable }
+            >
               Sign Up
             </button>
             {/* <button onClick={ signInWithGoogle }>Sign In with Google</button> */}
@@ -157,4 +182,63 @@ function SignUp() {
       </div>
     </div>
   );
+}
+
+function useDisableSignUp (
+  firstName: string, 
+  lastName: string, 
+  email: string, 
+  dob: string,
+  password: string, 
+  confirmPassword: string, 
+  error: string|null,
+  ) {
+  const [disable, setDisable] = useState<boolean>(true)
+
+  useEffect(() => {
+    if (error) {
+      setDisable(true)
+    }else{
+      if(firstName.length === 0 || lastName.length === 0 || email.length === 0 || password.length === 0 || confirmPassword.length === 0 || dob.length === 0) {
+        setDisable(true)
+      }else{
+        setDisable(false)
+      }
+    }
+  }, [firstName, lastName, email, password, confirmPassword, error])
+  
+  return disable
+}
+
+function useRedirectOnAuthenticated() {
+  const session = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    console.log(session)
+    if (session.status === 'authenticated') {
+      router.push('/')
+    }
+  }, [session])
+}
+
+
+function useConfirmPassword(initialValue: string, setError: Dispatch<SetStateAction<string|null>>): [
+  password: string, 
+  setPassword:  Dispatch<SetStateAction<string>>, 
+  confirmPassword: string,
+  setConfirmPassword: Dispatch<SetStateAction<string>>
+] {
+  const [password, setPassword] = useState<string>(initialValue);
+  const [confirmPassword, setConfirmPassword] = useState<string>(initialValue);
+
+  useEffect(() => {
+    if(password !== confirmPassword) {
+      setError(ERR_MSG_PASSWORD_NOT_MATCH)
+    }else{
+      setError(null)
+    }
+  }, [password, confirmPassword])
+
+  return [password, setPassword, confirmPassword, setConfirmPassword]
 }
