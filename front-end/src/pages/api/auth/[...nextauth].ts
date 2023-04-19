@@ -2,7 +2,7 @@ import NextAuth, {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from "../../../../lib/mongo-handler";
+import clientPromise from "../../../../lib/mongoDB";
 
 if (!process.env.NEXTAUTH_SECRET) {
     throw new Error('Please provide process.env.NEXTAUTH_SECRET env variable.')

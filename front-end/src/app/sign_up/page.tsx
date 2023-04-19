@@ -56,10 +56,10 @@ function SignUp() {
 
     try{
       const { data } = await axios.post('/api/sign_up', {
-        firstName,
-        lastName,
         email,
         password,
+        firstName,
+        lastName,
         dob
       })
 
