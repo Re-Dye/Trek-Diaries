@@ -11,12 +11,12 @@ export default async function handler(req: any, res: any) {
         }
         const countUser = await User.countDocuments({email:email});
         console.log(countUser);
-        if(countUser)
+        if(countUser) //if email already exists
         {
-            console.log("unsuccessfull try")
-            res.status(400).json({ success: false })
+            console.log("Duplicate Email!!!")
+            return res.status(400).json({ success: false })
         }
-            const user:any = new User()            
+            const user:any = new User()       //create mongo model of given data and store in database       
             user.email = email;
             user.password = password;
             user.first_name = firstName;
@@ -24,8 +24,8 @@ export default async function handler(req: any, res: any) {
             user.dob = dob;
             await user.save()
             console.log("User has been created...")
-            res.status(201).json({ success: true, data: user })
-        //create mongo model of given data and store in database
+            return res.status(201).json({ success: true, data: user })
+       
        
 
         // res.status(201).json({ user })

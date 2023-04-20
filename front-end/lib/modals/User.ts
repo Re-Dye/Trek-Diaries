@@ -39,7 +39,7 @@ const userSchema = new Schema<IUser>({
         data: Buffer,
         contentType: String,
     }
-})
+},{collection: 'User'})
 
 const User = mongoose.models.User||mongoose.model("User",userSchema);
 export default User;
