@@ -11,6 +11,7 @@ interface IComment {
 interface IPost {
     description: string;
     picture: any;
+    location: string;
     likes: number;
     comments: [IComment];
     owner:  {
@@ -39,6 +40,10 @@ const postSchema = new Schema<IPost>({
     picture: {
         data: Buffer,
         contentType: String
+    },
+    location: {
+        required: true,
+        type: String
     },
     likes: {
         type: Number,
