@@ -8,7 +8,7 @@ export default withAuth(
     return NextResponse.rewrite(new URL('/', req.url))
   },
   {
-    secret: 'mysecret',
+    secret: 'abcd',
     pages: {
       signIn: "/login"
     },

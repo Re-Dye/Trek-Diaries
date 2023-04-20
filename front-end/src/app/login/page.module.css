@@ -105,6 +105,10 @@ body{
     justify-content: center;
     white-space: nowrap;
 }
+.wrapper .loginBox .formBox .remCtn .forget
+{
+    margin-left: 1.5em;
+}
 
 .wrapper .loginBox .formBox .showCtn 
 {
@@ -162,9 +166,7 @@ body{
     border: 1px solid #ddd;
     border-radius: 0.3em;
     font-size: 1em;
-    padding: 0.3em;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    padding: 1em;
     font-weight: bold;
     text-align: center;
     text-decoration: none;
@@ -180,10 +182,10 @@ body{
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
 .icon{
-    width: 7%;
-    height: 7%;
-    font-size: 0.9em;
-    margin-top: 0.5em;
+    margin-bottom: -0.3em;
+    width: 9%;
+    height: 9%;
+    font-size: 1em;
 }
 
 form
@@ -223,8 +225,6 @@ form
     margin: 50px;
 
 }
-
-
 
 }
 
