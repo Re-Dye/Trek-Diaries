@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Post from "./Post";
 
 interface IUser {
     email: string,
@@ -40,6 +41,12 @@ const userSchema = new Schema<IUser>({
         contentType: String,
     }
 },{collection: 'users'})
+
+userSchema.pre('remove', async function (next) {
+    const user = this as any
+    await Post.deleteMany({ owner: user._id })
+    next()
+})
 
 const User = mongoose.models.User||mongoose.model("User",userSchema);
 export default User;
