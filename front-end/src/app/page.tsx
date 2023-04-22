@@ -3,6 +3,7 @@ import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useEffect } from "react"
+import SearchInput from "./components/SearchInput"
 
 export default function Home() {
     const router = useRouter()
@@ -26,6 +27,7 @@ export default function Home() {
         <div>
             {(session.status === "authenticated") ? 
                 <>
+                    <SearchInput />
                     <h1>Log in successful.</h1>
                     <button onClick={ handleSignOut }>Log out</button>
                 </> :

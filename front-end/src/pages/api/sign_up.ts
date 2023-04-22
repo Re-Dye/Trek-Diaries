@@ -1,11 +1,11 @@
 import dbConnect from "../../../lib/mongoose"
 import User from "../../../lib/modals/User"
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const {email, password, firstName, lastName,dob} = req.body as any
-        await dbConnect();
-        if (dbConnect())
+        if (await dbConnect())
         {
             console.log("Connection established....");
         }
