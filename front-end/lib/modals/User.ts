@@ -6,7 +6,8 @@ interface IUser {
     first_name: string,
     last_name: string,
     dob: Date,
-    profile_pic: any
+    profile_pic: any,
+    verified: boolean
 }
 
 const Schema = mongoose.Schema
@@ -38,6 +39,11 @@ const userSchema = new Schema<IUser>({
     profile_pic: {
         data: Buffer,
         contentType: String,
+    },
+    verified: {
+        type: Boolean,
+        default: false,
+        required: true
     }
 },{collection: 'users'})
 

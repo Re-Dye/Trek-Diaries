@@ -64,7 +64,7 @@ function SignUp() {
       })
 
       console.log(data)
-      // resetStates()
+      resetStates()
     }catch(error) {
       console.log(error)
     }

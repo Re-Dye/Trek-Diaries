@@ -1,5 +1,8 @@
 import dbConnect from "../../../lib/mongoose"
 import User from "../../../lib/modals/User"
+import sendEmail from "../../../lib/nodemailer"
+import Token from "../../../lib/modals/Token"
+import crypto from "crypto" 
 
 export default async function handler(req: any, res: any) {
     if (req.method === 'POST') {
@@ -23,7 +26,18 @@ export default async function handler(req: any, res: any) {
             user.last_name = lastName;
             user.dob = dob;
             await user.save()
-            console.log("User has been created...")
+
+            const token:any = new Token()
+            token.userId = user._id;
+            token.token = crypto.randomBytes(32).toString("hex")
+            await token.save()
+
+            const url: any = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`
+            console.log(`user has been created: ${user}`)
+            console.log(`token has been created: ${token}`)
+            console.log(`url: ${url}`);
+            await sendEmail(user.email,"Verification Mail",url)
+            
             return res.status(201).json({ success: true, data: user })
 
         // res.status(201).json({ user })
