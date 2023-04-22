@@ -6,7 +6,7 @@ import { Suspense } from 'react'
 import MongoDBDataApi from "../../../lib/mongodbDataApi"
 import Loading from "./loading"
 
-async function getLoactions(searchQuery: string) {
+async function fetchLoactions(searchQuery: string) {
     const locations = await MongoDBDataApi.aggregate({
         dataSource: 'Cluster1',
         database: 'Trek-Diaries',
