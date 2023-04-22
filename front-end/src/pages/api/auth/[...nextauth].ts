@@ -45,6 +45,12 @@ export const authOptions: NextAuthOptions = {
                     return null;
                    }
 
+                   if(result.verified !== true)
+                   {
+                    console.log('User has not been verified....')
+                    return null
+                   }
+
                     console.log(`returning user details: ${result}`) // result is MongoDB Object here.. might need to change into js object later...
                     return result;
                 } catch {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ export default function Login() {
     });
     console.log(googres);
   };
+
   // const handleSigninFB = async() =>{
   //   const fbres = await signIn("facebook", { email, password, redirect: false, callbackUrl: '/' })
   //   console.log(fbres)

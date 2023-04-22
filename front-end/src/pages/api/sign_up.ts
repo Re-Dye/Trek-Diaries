@@ -6,14 +6,14 @@ import crypto from "crypto"
 
 export default async function handler(req: any, res: any) {
     if (req.method === 'POST') {
-        const {email, password, firstName, lastName,dob} = req.body as any
+        const {email, password, firstName, lastName, dob} = req.body as any
         await dbConnect();
         if (dbConnect())
         {
-            console.log("Connection established....");
+            console.log("Connection established in sign_up");
         }
         const countUser = await User.countDocuments({email:email});
-        console.log(countUser);
+        console.log(email);
         if(countUser) //if email already exists
         {
             console.log("Duplicate Email!!!")
@@ -33,11 +33,11 @@ export default async function handler(req: any, res: any) {
             await token.save()
 
             const url: any = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`
-            console.log(`user has been created: ${user}`)
-            console.log(`token has been created: ${token}`)
+            // console.log(`user has been created: ${user}`)
+            // console.log(`token has been created: ${token}`)
             console.log(`url: ${url}`);
             await sendEmail(user.email,"Verification Mail",url)
-            
+
             return res.status(201).json({ success: true, data: user })
 
         // res.status(201).json({ user })
