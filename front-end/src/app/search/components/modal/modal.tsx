@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { text } from "stream/consumers";
-import modalStyles from "./page.module.css";
+import modalStyles from "../../page.module.css";
 
 export default function Modal() {
   const [modal, setModal] = useState(false);
