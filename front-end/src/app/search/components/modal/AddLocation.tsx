@@ -1,6 +1,8 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import modalStyles from "../../page.module.css";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function AddLocation() {
   const [show, setShow] = useState(false);
@@ -9,6 +11,7 @@ export default function AddLocation() {
   const [country, setCountry] = useState("")
   const [description, setDescription] = useState("")
   const disable = useDisable(address, state, country, description)
+  const router = useRouter()
 
   const toggleModal = () => {
     setShow((prev) => !prev);
@@ -17,7 +20,16 @@ export default function AddLocation() {
   const handleAddLocation = async(e: React.MouseEvent) => {
     e.preventDefault()
     try{
+      const { data } = await axios.post('/api/add_location', {
+        address: `${ address }, ${ state }, ${ country }`,
+        description
+      })
 
+      console.log(data)
+      
+      if(data) {
+        router.refresh()
+      }
     }catch(error){
       console.log(error)
       alert(error)
