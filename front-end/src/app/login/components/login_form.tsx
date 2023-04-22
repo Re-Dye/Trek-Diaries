@@ -124,10 +124,9 @@ export default function Login() {
                   // onChange={}
                 />
                 <label htmlFor="keep_me_signed_in">Remember me</label>
+                <Link className={loginStyles.forget} href='/reset-password'>Forgot Password?</Link>
               </div>
             </div>
-
-            {/* <Link href='/reset_password'>Forgot Password?</Link> */}
 
             <br />
 
@@ -137,7 +136,6 @@ export default function Login() {
             >
               Sign In
             </button>
-            {/* <button onClick={ signInWithGoogle }>Sign In with Google</button> */}
 
             <br />
             <div className={loginStyles.dText}>
@@ -154,14 +152,7 @@ export default function Login() {
                 Continue with google &nbsp;{" "}
                 <FcGoogle className={loginStyles.icon} />
               </button>
-              {/* <button 
-              type="button"
-              className={loginStyles.Abtn}
-              onClick={handleSigninFB}
-              >
-                Continue with facebook &nbsp;
-                <SiFacebook className={loginStyles.icon} />
-              </button> */}
+
             </div>
           </form>
         </div>
