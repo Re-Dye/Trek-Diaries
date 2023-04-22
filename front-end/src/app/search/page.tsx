@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation"
 
 import Modal from "./components/modal/modal";
 
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 
 import MongoDBDataApi from "../../../lib/mongodbDataApi"
 import Loading from "./loading"
@@ -27,15 +27,18 @@ export default function SearchPage() {
     const searchParams = useSearchParams()
     const searchQuery = searchParams? searchParams?.get('q') : null
 
-    console.log(searchQuery)
+    useEffect(() => {
+        console.log(searchQuery)
+    }, [])
+    
 
     return (
         <div>
             <Modal />
             This is the search page.
-            <Suspense fallback={<Loading />}>
+            {/* <Suspense fallback={<Loading />}>
 
-            </Suspense>
+            </Suspense> */}
         </div>
     )
 }

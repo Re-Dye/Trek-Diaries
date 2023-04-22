@@ -1,7 +1,9 @@
 import { createMongoDBDataAPI } from 'mongodb-data-api'
 
-const apiKey = process.env.MONGO_API_KEY as string
-const urlEndpoint = process.env.MONGO_URL_ENDPOINT as string 
+const apiKey = process.env.NEXT_PUBLIC_MONGO_API_KEY as string
+const urlEndpoint = process.env.NEXT_PUBLIC_MONGO_URL_ENDPOINT as string
+
+console.log(apiKey, urlEndpoint)
 
 if (!apiKey) {
     throw new Error("MONGO_API_KEY not found. Add MONGO_API_KEY to .env")
