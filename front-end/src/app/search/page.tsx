@@ -1,6 +1,9 @@
 'use client'
 
 import { useSearchParams } from "next/navigation"
+
+import Modal from "./components/modal/modal";
+
 import { Suspense } from 'react'
 
 import MongoDBDataApi from "../../../lib/mongodbDataApi"
@@ -19,6 +22,7 @@ async function fetchLoactions(searchQuery: string) {
     })
 }
 
+
 export default function SearchPage() {
     const searchParams = useSearchParams()
     const searchQuery = searchParams? searchParams?.get('q') : null
@@ -27,6 +31,7 @@ export default function SearchPage() {
 
     return (
         <div>
+            <Modal />
             This is the search page.
             <Suspense fallback={<Loading />}>
 
