@@ -1,6 +1,7 @@
 'use client'
 
 import { useSearchParams } from "next/navigation"
+import Modal from "./components/modal/modal";
 
 export default function SearchPage() {
     const searchParams = useSearchParams()
@@ -10,6 +11,7 @@ export default function SearchPage() {
 
     return (
         <div>
+            <Modal />
             This is the search page.
         </div>
     )
