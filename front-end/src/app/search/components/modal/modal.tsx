@@ -21,12 +21,29 @@ export default function Modal() {
             <div className="modal-content">
               <h2>Add Location</h2>
               <form>
-                <label htmlFor="address">Address:</label>
-                <input
-                  placeholder="Type full address"
-                  className={modalStyles.inputBx}
-                  type="text"
-                />
+                <div className="add">
+                  <label htmlFor="address">Address:</label>
+                  <input
+                    placeholder="Type full address"
+                    className={modalStyles.inputBx}
+                    type="text"
+                  />
+
+                  <label htmlFor="state">State:</label>
+                  <input
+                    placeholder="State Name"
+                    className={modalStyles.inputBx}
+                    type="text"
+                  />
+
+                  <label htmlFor="District">District:</label>
+                  <input
+                    placeholder="District Name"
+                    className={modalStyles.inputBx}
+                    type="text"
+                  />
+                </div>
+
                 <label htmlFor="description">Description:</label>
                 <input
                   placeholder="Type full description"
