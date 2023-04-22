@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation"
 
-import Modal from "./components/modal/modal";
+import AddLocation from "./components/modal/AddLocation";
 
 import { Suspense, useEffect } from 'react'
 
@@ -34,11 +34,11 @@ export default function SearchPage() {
 
     return (
         <div>
-            <Modal />
+            <AddLocation />
             This is the search page.
-            {/* <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading />}>
 
-            </Suspense> */}
+            </Suspense>
         </div>
     )
 }
