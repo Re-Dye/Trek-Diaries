@@ -50,24 +50,41 @@ body{
     display: inline-block;
 
 }
-.wrapper .verifiedBox p
+.wrapper .verifiedBox h2
 {
     color: #1ab91c;
-    font-size: 2em;
+    font-size: 1.2em;
+    display: inline-block;
+
+}
+.wrapper .verifiedBox p
+{
+    color: #222b22;
+    font-size: 1.1em;
+    text-align: center;
 }
 
-.wrapper .verifiedBox .linkverify
-{
-    margin-top: 1em;
-    color: #4079CE;
-}
-.wrapper .verifiedBox .linkverify:hover
-{
-    color: #7b070d;
-}
 
 .wrapper .verifiedBox .icon 
 {
     color: rgb(12, 175, 12);
     font-size: 3em;
+}
+
+.wrapper .verifiedBox .buttonVerify{
+    cursor: pointer;
+    border: 1px solid #4079CE;
+    border-radius: 1em;
+    font-weight: 600;
+    width: 60%;
+    padding: 1.2em 0;
+    box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+    transition: 0.4s;
+    margin-top: 1.8em;
+    text-align: center;
+}
+.wrapper .verifiedBox .buttonVerify:hover{
+    color: white;
+    box-shadow: 0 0 20px #4079CE;
+    background-color: #4079CE;
 }

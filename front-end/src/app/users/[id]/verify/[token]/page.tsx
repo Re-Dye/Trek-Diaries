@@ -39,9 +39,10 @@ function VerifyMail() {
             <Image className={verifystyles.img} src="/ncpr.jpg" alt="backgroundImage" fill  />
         <form className={verifystyles.verifiedBox}>
         <GoVerified className={verifystyles.icon}/>
-            <h1>Account Verified !!</h1>
-            <p>Your account has been verified!</p>
-            <button className={verifystyles.linkverify} onClick = {(e)=>{handleClick(e)}}> Verify and Continue </button>
+            <h1>Verify Your Email Address !!</h1>
+            <h2>Thank you for signing up with Trek Diaries!</h2>
+            <p>As an extra security precaution, please verify your email address to continue signing up</p>
+            <button className={verifystyles.buttonVerify} onClick = {(e)=>{handleClick(e)}}> Verify and Continue </button>
         </form>
         </div>
     )
