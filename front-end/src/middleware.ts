@@ -16,7 +16,7 @@ export default withAuth(
       authorized({ token }) {
         /* if user has a token, let them proceed */
         if (token) {
-          console.log(`User ${ token.name } has a token. Proceeding user...`)
+          console.log(`User ${ token.email } has a token. Proceeding user...`)
           return true
         }else{
           console.log(`User doesn't have a token. Rewriting the url to home page...`)

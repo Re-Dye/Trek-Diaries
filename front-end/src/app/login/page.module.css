@@ -105,6 +105,10 @@ body{
     justify-content: center;
     white-space: nowrap;
 }
+.wrapper .loginBox .formBox .remCtn .forget
+{
+    margin-left: 1.5em;
+}
 
 .wrapper .loginBox .formBox .showCtn 
 {
