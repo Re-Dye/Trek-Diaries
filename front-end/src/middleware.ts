@@ -29,5 +29,11 @@ export default withAuth(
 )
 
 
-export const config = { matcher: [ "/((?!_next/static|favicon.ico|login|sign_up|).*)", "/" ] }
+export const config = { matcher: [ 
+  "/((?!_next/static|favicon.ico|login|sign_up|).*)", 
+  "/", 
+  "/location", 
+  "/search", 
+  "/reset-passowrd"
+] }
 
