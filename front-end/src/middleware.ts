@@ -32,7 +32,7 @@ export default withAuth(
 export const config = { matcher: [ 
   "/((?!_next/static|favicon.ico|login|sign_up|).*)", 
   "/", 
-  "/location", 
+  "/location/:path*", 
   "/search", 
   "/reset-passowrd"
 ] }
