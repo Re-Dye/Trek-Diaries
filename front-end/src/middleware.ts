@@ -5,7 +5,9 @@ export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
   function middleware(req: NextRequest) {
     console.log('using middleware...')
-    return NextResponse.rewrite(new URL('/', req.url))
+    if(req.nextUrl.basePath.startsWith('/login') || req.nextUrl.basePath.startsWith('/sign_up')){
+      return NextResponse.rewrite(new URL('/', req.url))
+    }
   },
   {
     secret: 'mysecret',

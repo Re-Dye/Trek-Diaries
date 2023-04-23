@@ -6,8 +6,7 @@ export default async function handler(req: any, res: any){
         const {required_id} =  req.body as any
         console.log(required_id)
         const _id = `ObjectId('${required_id}')`
-        await dbConnect();
-        if (dbConnect())
+        if (await dbConnect())
         {
             console.log("Connection established in verify_email");
         }
