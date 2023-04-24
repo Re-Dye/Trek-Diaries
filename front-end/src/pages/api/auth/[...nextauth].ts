@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
                     console.log(`Entered email:${ email }\npassword: ${ password }`)
 
                     /* check on database here */
-                    const result:any = await User.findOne({email:email})   //checking if the user exists                                                    
+                    const result:any = await User.findOne({email:email})   //checking if the user exists                                                  
                    if(!result) //if the email is unregistered...
                    {
                     console.log("There is no user registered under this email....")
@@ -43,6 +43,12 @@ export const authOptions: NextAuthOptions = {
                    {
                     console.log(`Password Incorrect....`)
                     return null;
+                   }
+
+                   if(result.verified !== true)
+                   {
+                    console.log('User has not been verified....')
+                    return null
                    }
 
                     console.log(`returning user details: ${result}`) // result is MongoDB Object here.. might need to change into js object later...
