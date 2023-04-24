@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -19,7 +19,6 @@
     "eslint-config-next": "13.2.4",
     "icons": "^1.0.0",
     "mongodb": "^4.15.0",
-    "mongodb-data-api": "^0.4.0",
     "mongoose": "^7.0.3",
     "next": "13.2.4",
     "next-auth": "^4.21.1",
@@ -27,6 +26,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
+    "realm-web": "^2.0.0",
     "typescript": "5.0.2"
   },
   "devDependencies": {

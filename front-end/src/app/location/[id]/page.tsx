@@ -1,16 +1,30 @@
-import MongoDBDataApi from "../../../../lib/mongodbDataApi"
+"use client"
+import {useState, useEffect} from "react"
+import RealmConnect from "../../../../lib/realm"
 
-// async function fetchLocationData(id: string) {
-//     const data = await fetch()
-//     console.log(data)
-//     return data
-// }
+async function fetchLocationData(id: string) {
+    const user = await RealmConnect()
+    const data = user.functions.fetchLocationData(id)
+    console.log(data)
+    return data
+}
 
 export default function LocationPage({ params }: { params: { id: string } }) {
-    // fetchLocationData(params.id)
+    // const data = await fetchLocationData(params.id)
+    const [data, setData] = useState<any>()
+    useEffect(() => {
+        console.log("calling fetch location data")
+        setData(fetchLocationData(params.id))
+    }, [])
+
+    useEffect(() => {
+        console.log(data)
+    }, [data])
     return(
         <div>
-            { params.id }
+            {/* <Suspense fallback={<p>Loading...</p>}> */}
+                {/* <>{ data }</> */}
+            {/* </Suspense> */}
         </div>
     )
 }
