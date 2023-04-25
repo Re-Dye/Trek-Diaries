@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/server": "^11.10.0",
+    "@mui/material": "^5.12.1",
     "@next-auth/mongodb-adapter": "^1.1.1",
     "@nextui-org/react": "^1.0.0-beta.12",
     "@types/node": "18.15.10",
@@ -30,10 +33,14 @@
     "react-iconly": "^2.2.10",
     "react-icons": "^4.8.0",
     "react-modal": "^3.16.1",
+    "react-rating-stars-component": "^2.2.0",
+    "react-stars": "^2.2.5",
     "typescript": "5.0.2"
   },
   "devDependencies": {
+    "@types/nodemailer": "^6.4.7",
     "@types/react-modal": "^3.16.0",
-    "@types/nodemailer": "^6.4.7"
+    "@types/react-star-rating-component": "^1.4.1",
+    "@types/react-stars": "^2.2.1"
   }
 }
