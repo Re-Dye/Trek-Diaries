@@ -13,18 +13,30 @@ export default function LocationPage({ params }: { params: { id: string } }) {
     const [data, setData] = useState<any>()
     useEffect(() => {
         console.log("calling fetch location data")
-        // setData(fetchLocationData(params.id))
-        fetchLocationData(params.id).then(data=>{ // this executes the fetch only when promise is fulfilled
-            setData(data)
-            console.log(data)
-        })
+        async function FetchData()
+        {
+            setData ( await fetchLocationData(params.id))
+        }
+        FetchData()
     }, [])
+
+    useEffect(()=>{
+        console.log(data)
+    },
+    [data])
     return(
         <div>
-            {/* <Suspense fallback={<p>Loading...</p>}> */}
-                {/* <>{ data }</> */}
-            {/* </Suspense> */}
           this is home page
+          <div>
+            {data && <>{Object.keys(data).forEach((dummy)=>{
+                return(
+                    <div>
+                        {dummy.address}
+                    </div>
+                )}
+            )}
+            </>}
+          </div>
         </div>
     )
 }
