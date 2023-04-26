@@ -4,30 +4,30 @@ import { useSearchParams } from "next/navigation"
 
 import AddLocation from "./components/modal/AddLocation";
 
-import { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 
 import Loading from "./loading"
 
 async function fetchLoactions(searchQuery: string) {
-    // const locations = await MongoDBDataApi.aggregate({
-    //     dataSource: 'Cluster1',
-    //     database: 'Trek-Diaries',
-    //     collection: 'locations',
-    //     pipeline: [
-    //         { $search: { autocomplete: { query: searchQuery, path: 'address' } } },
-    //         { $limit: 20 },
-    //         { $project: { _id: 1, address: 1, description: 1 } }
-    //     ]
-    // })
+    const encodedQuery = encodeURI(searchQuery)
+    const res: any = await fetch(`https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/searchLocation?location=${ encodedQuery }`,
+    { cache: "no-store" })
+    return res.json()
 }
 
 
 export default function SearchPage() {
     const searchParams = useSearchParams()
     const searchQuery = searchParams? searchParams?.get('q') : null
+    const [locations, setLocations] = useState<any>()
 
     useEffect(() => {
-        console.log(searchQuery)
+        const fetchData = async() => {
+            const locations = await fetchLoactions(searchQuery as string)
+            console.log(locations)
+            setLocations(locations)
+        }
+        fetchData()
     }, [])
     
 
@@ -35,9 +35,6 @@ export default function SearchPage() {
         <div>
             <AddLocation />
             This is the search page.
-            <Suspense fallback={<Loading />}>
-
-            </Suspense>
         </div>
     )
 }

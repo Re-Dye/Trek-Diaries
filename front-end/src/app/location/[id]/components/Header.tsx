@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 async function fetchLocationData(id: string) {
   //console.log("inside fetchLocationData")
