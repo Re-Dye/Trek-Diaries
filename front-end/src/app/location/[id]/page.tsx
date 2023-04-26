@@ -5,7 +5,7 @@ import postStyle from "../../page.module.css";
 import axios from "axios";
 import ReactStars from "react-stars";
 import { Suspense } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Grid,
@@ -46,6 +46,20 @@ export default function LocationPage({ params }: { params: { id: string } }) {
     },
   });
 
+  const handleImage = (changeEvent) => {
+    let reader = new FileReader();
+    reader.onload = function(onLoadEvent){
+      setImageSrc(onLoadEvent.target.result);
+      setUploadData(undefined);
+    }
+    reader.readAsDataURL(changeEvent.target.files[0]);
+  }
+
+  const handleSubmit = (event) => {
+    e.preventDefault();
+    console.log(event);
+  }
+
   /* handleCreatePost triggers an event which passes data to the add_post api */
   const handleCreatePost = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -67,24 +81,11 @@ export default function LocationPage({ params }: { params: { id: string } }) {
       <div className={postStyle.postfield}>
         <Header id={params.id} />
       </div>
-      <div className="modal">
+        <h2>Add Post</h2>
         <div className="overlay">
-          <div className="modal-content">
-            <h2>Add Post</h2>
-            <form>
+            <form onSubmit = {handleSubmit}>
               <div className="add">
-                <p>
-                  <input type="file" name="file" />
-                </p>
-                <img src={imageSrc} />
-                {imageSrc && !uploadData && (
-                  <p>
-                    <button>Upload Image</button>
-                  </p>
-                )}
-                {/* {uploadData && (
-                <code><pre>{JSON.stringify(uploadData, null, 2)}</pre></code>
-                )} */}
+                <input type="file" onChange={handleImage} />
                 <label htmlFor="description">Description:</label>
                 <input
                   id="description"
@@ -94,58 +95,13 @@ export default function LocationPage({ params }: { params: { id: string } }) {
                   value={Description}
                   onChange={(e) => setDescription(e.target.value)} // setting value of Description
                 />
-                <br />
-                <label htmlFor="scenery">Scenery:</label>
-                <ReactStars
-                  id="scenery"
-                  count={5}
-                  size={24}
-                  color2={"#ffd700"}
-                  onChange={(sceneryRating) => {
-                    setSceneryRating(sceneryRating);
-                  }}
-                />
-                <br />
-                <label htmlFor="Road">Road:</label>
-                <ReactStars
-                  id="Road"
-                  count={5}
-                  size={24}
-                  color2={"#ffd700"}
-                  onChange={(roadRating) => {
-                    setRoadRating(roadRating);
-                  }}
-                />
-                <br />
-                <label htmlFor="Experience">Exp:</label>
-                <ReactStars
-                  id="Experience"
-                  count={5}
-                  size={24}
-                  color2={"#ffd700"}
-                  onChange={(expRating) => {
-                    setExpRating(expRating);
-                  }}
-                />
-                <br />
-                <label htmlFor="overall">Overall:</label>
-                <ReactStars
-                  count={5}
-                  size={34}
-                  color2={"#ffd700"}
-                  onChange={(overallScore) => {
-                    setOverallScore(overallScore);
-                  }}
-                />
-                <br />
                 <button onClick={(e) => handleCreatePost(e)}>
                   Create Post
                 </button>
+                <img src = {imageSrc}/>
               </div>
             </form>
-          </div>
         </div>
-      </div>
     </div>
   );
 }
