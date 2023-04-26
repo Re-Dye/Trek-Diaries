@@ -1,137 +1,151 @@
-"use client"
-import Header from "./components/Header"
-import { Suspense } from "react";
-import { useState } from "react";
+"use client";
+import Header from "./components/Header";
 import React from "react";
-import { useRouter } from "next/router";
-import postStyle from "../[id]/page.module.css";
-import {Grid, Modal, Spacer,Textarea,Button,Text, Input} from "@nextui-org/react";
-import {MdAddPhotoAlternate} from "react-icons/md";
+import postStyle from "../../page.module.css";
 import axios from "axios";
 import ReactStars from "react-stars";
-
-// const labels: { [index: string]: string } = {
-//     1: 'Useless',
-//     2: 'Poor',
-//     3: 'Ok',
-//     4: 'Good',
-//     5: 'Excellent',
-//   };
-
-//   function getLabelText(value: number) {
-//     return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
-//   }
+import { Suspense } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Grid,
+  Modal,
+  Spacer,
+  Textarea,
+  Button,
+  Text,
+  Input,
+} from "@nextui-org/react";
+import { MdAddPhotoAlternate } from "react-icons/md";
+import { useSession } from "next-auth/react";
 
 export default function LocationPage({ params }: { params: { id: string } }) {
-    const [visible, setVisible] = useState(false);
-    // const [file, setFile] = useState(null);
-    // const [filename, setFilename] = useState('');
-    const handler = () => setVisible(true);
-    const closeHandler = () => {
-        setVisible(false);
-      };
-      const [value, setValue] = useState(0);
-    //   const [hover, setHover] = useState(-1);
-      
-    return(
-        <div className={postStyle.wrapper}>
-            <div className={postStyle.postfield}>
-            { params.id }
-            <button 
-                className={postStyle.btn}
-                onClick={handler}>Add Post</button>
-            </div>
-            <Modal 
-                closeButton
-                blur
-                aria-labelledby="modal-title"
-                open={visible}
-                onClose={closeHandler}
-                width = "600px"
-                >
-                <Modal.Header>
-                    <Grid>
-                    <Text h1>Create post</Text>
-                    </Grid>
-                    <Spacer x={5} />
-                    <Grid>
-                    <Button
-                    // onSubmit={handleSubmit}
-                    auto ghost
-                    color= "primary"
-                    size= "sm"
-                    >
-                    <MdAddPhotoAlternate /></Button>
-                    </Grid>
-                    <Spacer x={4} />
-                    <Grid xs={1.5}>
-                    <Input 
-                    placeholder="Upload File" />
-                    </Grid>
-                      <Spacer y={1} />
-                </Modal.Header>
-                <Modal.Body>
-                <Textarea 
-                status="default"
-                placeholder="What's on your mind?"
-                minRows={1}
-                maxRows={10}
-                      // value={description}
-                    // onChange={event => setDescription(event.target.value) }
+  const [visible, setVisible] = useState(false);
+  const [Description, setDescription] = useState("");
+  const [sceneryRating, setSceneryRating] = useState(0);
+  const [expRating, setExpRating] = useState(0);
+  const [roadRating, setRoadRating] = useState(0);
+  const [overallScore, setOverallScore] = useState(0);
+  const [imageSrc, setImageSrc] = useState();
+  const [uploadData, setUploadData] = useState();
+  const locationId: string = params.id;
+
+  const router = useRouter();
+
+  /*Visible is used to hide or show the modal */
+  const handler = () => setVisible(true);
+  const closeHandler = () => {
+    setVisible(false);
+  };
+
+  /* Sessions is used to extract email from the users... */
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/login");
+    },
+  });
+
+  /* handleCreatePost triggers an event which passes data to the add_post api */
+  const handleCreatePost = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post("/api/add_post", {
+        Description,
+        locationId,
+      });
+      if (data) {
+        console.log("Data has been sent successfully...");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <div className={postStyle.wrapper}>
+      <div className={postStyle.postfield}>
+        <Header id={params.id} />
+      </div>
+      <div className="modal">
+        <div className="overlay">
+          <div className="modal-content">
+            <h2>Add Post</h2>
+            <form>
+              <div className="add">
+                <p>
+                  <input type="file" name="file" />
+                </p>
+                <img src={imageSrc} />
+                {imageSrc && !uploadData && (
+                  <p>
+                    <button>Upload Image</button>
+                  </p>
+                )}
+                {/* {uploadData && (
+                <code><pre>{JSON.stringify(uploadData, null, 2)}</pre></code>
+                )} */}
+                <label htmlFor="description">Description:</label>
+                <input
+                  id="description"
+                  placeholder="Description"
+                  className={postStyle.inputBx}
+                  type="text"
+                  value={Description}
+                  onChange={(e) => setDescription(e.target.value)} // setting value of Description
                 />
-                <Grid.Container gap={4}>
-                <Grid>
-                <Text h5>Scenery</Text>
-                <Spacer y={-1.2} x={6.5}/>
+                <br />
+                <label htmlFor="scenery">Scenery:</label>
                 <ReactStars
-                    // getLabelText={getLabelText}
-                    count={5}
-                    size={24}
-                    color2={'#ffd700'}
-                    value={value} />
-                </Grid>
-                <Grid>
-                <Text h5>Road Condition</Text>
-                <Spacer y={-1.2} x={6.5} />
+                  id="scenery"
+                  count={5}
+                  size={24}
+                  color2={"#ffd700"}
+                  onChange={(sceneryRating) => {
+                    setSceneryRating(sceneryRating);
+                  }}
+                />
+                <br />
+                <label htmlFor="Road">Road:</label>
                 <ReactStars
-                    count={5}
-                    size={24}
-                    color2={'#ffd700'} />
-                </Grid>
-                <Grid>
-                <Text h5>Experience</Text>
-                <Spacer y={-1.2} />
+                  id="Road"
+                  count={5}
+                  size={24}
+                  color2={"#ffd700"}
+                  onChange={(roadRating) => {
+                    setRoadRating(roadRating);
+                  }}
+                />
+                <br />
+                <label htmlFor="Experience">Exp:</label>
                 <ReactStars
-                    count={5}
-                    size={24}
-                    color2={'#ffd700'} />
-                </Grid>
-                </Grid.Container>
-                <Grid>
-                <Text h5>Overall Rating</Text>
-                <Spacer y={-1.4} />
+                  id="Experience"
+                  count={5}
+                  size={24}
+                  color2={"#ffd700"}
+                  onChange={(expRating) => {
+                    setExpRating(expRating);
+                  }}
+                />
+                <br />
+                <label htmlFor="overall">Overall:</label>
                 <ReactStars
-                    count={5}
-                    size={34}
-                    color2={'#ffd700'} />
-                </Grid>
-                 {/* <div>
-                    <Input  
-                    clearable
-                    labelPlaceholder="Upload image/Video"
-                    onChange={handleFileChange} />
-                    <Input
-                    label="filename"
-                    {filename} />
-                </div>                 */}
-                </Modal.Body>
-                <Modal.Footer>
-                 <Button 
-                 color="primary"
-                 auto ghost>
-                 Create Post</Button>
-                </Modal.Footer>
-            </Modal>
+                  count={5}
+                  size={34}
+                  color2={"#ffd700"}
+                  onChange={(overallScore) => {
+                    setOverallScore(overallScore);
+                  }}
+                />
+                <br />
+                <button onClick={(e) => handleCreatePost(e)}>
+                  Create Post
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
