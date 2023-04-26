@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 async function fetchLocationData(id: string) {
   //console.log("inside fetchLocationData")
   const res: any = await fetch(
-    `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/gTD?id=${id}`,
+    `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/fetchLocaitonData?id=${id}`,
     { cache: "no-store" }
   );
   return res.json();
