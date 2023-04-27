@@ -6,7 +6,7 @@ import Location from "../../../lib/modals/Location";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method === 'POST') {
         try {
-            const {Description, locationId} = req.body as any;
+            const {Description, locationId, image_URL} = req.body as any;
 
             if (await dbConnect()) // connect to database
             {
@@ -22,12 +22,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     message: "Location not found"
                 });
             }
-
-
             const newPost: any = new Post(); // creating new post
             newPost.description = Description;
             newPost.location.id = locationId;
             newPost.location.address = address;
+            newPost.pictureURL = image_URL;
             await newPost.save();
 
             return res.status(201).json({ success: true, data: newPost })

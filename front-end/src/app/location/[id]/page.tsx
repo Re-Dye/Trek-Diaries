@@ -45,6 +45,7 @@ export default function LocationPage({ params }: { params: { id: string } }) {
   
 
   const locationId: string = params.id;
+  var image_URL: string; 
 
   const router = useRouter();
 
@@ -66,18 +67,36 @@ export default function LocationPage({ params }: { params: { id: string } }) {
     reader.readAsDataURL(changeEvent.target.files[0]);
   }
 
-  const handleSubmit = (event) => {
+    async function handleSubmit(event) {
     event.preventDefault();
-    console.log(event);
+    const form = event.currentTarget;
+    const fileInput = Array.from(form.elements).find(({ name }) => name === 'file');
+    console.log(fileInput)
+
+    const formData = new FormData();
+    for(const file of fileInput.files){
+      formData.append('file',file)
+    }
+
+    formData.append('upload_preset','Trek-Diaries');
+
+    const data : any = await fetch('https://api.cloudinary.com/v1_1/dkid8h6ss/image/upload', {
+      method: 'POST',
+      body: formData,
+      cache: 'no-store'}).then(r=>r.json());
+    console.log(data.secure_url);
+    image_URL = data.secure_url;
   }
 
   /* handleCreatePost triggers an event which passes data to the add_post api */
   const handleCreatePost = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
+      console.log(`this is url: ${image_URL}`)
       const { data } = await axios.post("/api/add_post", {
         Description,
         locationId,
+        image_URL
       });
       if (data) {
         console.log("Data has been sent successfully...");
@@ -90,18 +109,24 @@ export default function LocationPage({ params }: { params: { id: string } }) {
   return (
     <div className={postStyle.wrapper}>
         <Image src="/ncpr2.jpg" alt="backgroundImage" fill  />
+        <h2>Add Post</h2>
+         <img src = {imageSrc} className={postStyle.imgFit}/>
+         <div className={postStyle.header}>
+         <Header id={params.id} />
+         </div>
+         <div>
             <form onSubmit = {handleSubmit} className={postStyle.postfield}>
-            <h2>Add Post</h2>               
-              <img src = {imageSrc} className={postStyle.imgFit}/>
-              <div className={postStyle.header}>
-              <Header id={params.id} />
-              </div>
               <input
                 id="image"
                 className={postStyle.inp}
                 type="file"
                 onChange={handleImage}
                 />
+                <button type = "submit"> Add Image </button>
+                </form>
+                </div>
+                <div>
+                <form>
                 <textarea 
                   name="content"
                   id="description"
@@ -209,6 +234,7 @@ export default function LocationPage({ params }: { params: { id: string } }) {
               onClick={(e) => handleCreatePost(e)}>
               Create Post</button>
             </form>
+            </div>
     </div>
   );
 }
