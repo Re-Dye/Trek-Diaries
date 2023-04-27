@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import SearchInput from "./components/SearchInput";
 import mainStyles from "./page.module.css";
+import NavBar from "./navBar/page";
 
 
 export default function Home() {
@@ -29,21 +30,10 @@ export default function Home() {
     <div>
       {session.status === "authenticated" ? (
         <>
-          <div className={mainStyles.wrapper}>
-            <div className={mainStyles.navBar}>
-              <div className={mainStyles.navBarLeft}>
-                <h1>Logo</h1>
-              </div>
-              <div className={mainStyles.navBarCenter}>
-               
-                <SearchInput />
-              </div>
-              <div className={mainStyles.navBarRight}>
-                <h1>PP</h1>
-              </div>
-            </div>
-          </div>
+        <div className="navbar">
 
+          <NavBar />
+        </div>
           <h1>Log in successful.</h1>
           <button onClick={handleSignOut}>Log out</button>
         </>

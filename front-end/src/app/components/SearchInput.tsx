@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import SearchBoxStyles from "./page.module.css";
 
 export default function SearchInput() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -17,14 +18,16 @@ export default function SearchInput() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSearch}>
-        <FaSearch />
+    <div className={SearchBoxStyles.container}>
+      <form onSubmit={handleSearch} className={SearchBoxStyles.box}>
         <input
           placeholder={`What are you looking for? (Enter in format "place, district/state, country")`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        <button type="submit">
+          <FaSearch className={SearchBoxStyles.icon} />
+        </button>
       </form>
     </div>
   );
