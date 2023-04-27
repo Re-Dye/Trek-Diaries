@@ -29,6 +29,7 @@ export default function LocationPage({ params }: { params: { id: string } }) {
   const [imageSrc, setImageSrc] = useState();
   const [uploadData, setUploadData] = useState();
   const locationId: string = params.id;
+  var image_URL: string; 
 
   const router = useRouter();
 
@@ -55,18 +56,36 @@ export default function LocationPage({ params }: { params: { id: string } }) {
     reader.readAsDataURL(changeEvent.target.files[0]);
   }
 
-  const handleSubmit = (event) => {
-    e.preventDefault();
-    console.log(event);
+    async function handleSubmit(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const fileInput = Array.from(form.elements).find(({ name }) => name === 'file');
+    console.log(fileInput)
+
+    const formData = new FormData();
+    for(const file of fileInput.files){
+      formData.append('file',file)
+    }
+
+    formData.append('upload_preset','Trek-Diaries');
+
+    const data : any = await fetch('https://api.cloudinary.com/v1_1/dkid8h6ss/image/upload', {
+      method: 'POST',
+      body: formData,
+      cache: 'no-store'}).then(r=>r.json());
+    console.log(data.secure_url);
+    image_URL = data.secure_url;
   }
 
   /* handleCreatePost triggers an event which passes data to the add_post api */
   const handleCreatePost = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
+      console.log(`this is url: ${image_URL}`)
       const { data } = await axios.post("/api/add_post", {
         Description,
         locationId,
+        image_URL
       });
       if (data) {
         console.log("Data has been sent successfully...");
@@ -82,10 +101,14 @@ export default function LocationPage({ params }: { params: { id: string } }) {
         <Header id={params.id} />
       </div>
         <h2>Add Post</h2>
-        <div className="overlay">
+        <div className="ImageSection">
             <form onSubmit = {handleSubmit}>
-              <div className="add">
-                <input type="file" onChange={handleImage} />
+                <input type="file" name ="file" onChange={handleImage} />
+                <button type = "submit"> Add Image </button>
+            </form>
+        </div>
+            <div> 
+                <form>       
                 <label htmlFor="description">Description:</label>
                 <input
                   id="description"
@@ -99,7 +122,6 @@ export default function LocationPage({ params }: { params: { id: string } }) {
                   Create Post
                 </button>
                 <img src = {imageSrc}/>
-              </div>
             </form>
         </div>
     </div>

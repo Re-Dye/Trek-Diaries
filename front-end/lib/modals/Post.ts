@@ -40,9 +40,8 @@ const postSchema = new Schema<IPost>({
     type: String,
     maxlength: 150,
   },
-  picture: {
-    data: Buffer,
-    contentType: String,
+  pictureURL: {
+    type: String, 
   },
   location: {
     id: {
