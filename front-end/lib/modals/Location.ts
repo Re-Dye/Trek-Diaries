@@ -19,7 +19,7 @@ const locationSchema = new mongoose.Schema<ILocation>({
     registeredTime: {
         required: true,
         type: mongoose.Schema.Types.Date,
-        default: Date.now()
+        default: new Date()
     }
 })
 
