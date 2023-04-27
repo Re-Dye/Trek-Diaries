@@ -8,6 +8,8 @@ interface IUser {
     last_name: string,
     dob: Date,
     profile_pic: any,
+    location:[{type:Schema.Types.ObjectId,
+                ref: string}],
     verified: boolean
 }
 
@@ -41,6 +43,10 @@ const userSchema = new Schema<IUser>({
         data: Buffer,
         contentType: String,
     },
+    location :[{
+        type: String,
+        ref : "locations",
+    }],
     verified: {
         type: Boolean,
         default: false,

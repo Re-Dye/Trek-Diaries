@@ -46,7 +46,7 @@ const postSchema = new Schema<IPost>({
   location: {
     id: {
       type: Schema.Types.ObjectId,
-      ref: "location",
+      ref: "locations",
     },
     address: {
       type: String,

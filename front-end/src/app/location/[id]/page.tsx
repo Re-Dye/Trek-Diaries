@@ -29,7 +29,7 @@ export default function LocationPage({ params }: { params: { id: string } }) {
   const [imageSrc, setImageSrc] = useState();
   const [uploadData, setUploadData] = useState();
   const locationId: string = params.id;
-  var image_URL: string; 
+  const [image_URL,setImageUrl] = useState(""); 
 
   const router = useRouter();
 
@@ -74,7 +74,7 @@ export default function LocationPage({ params }: { params: { id: string } }) {
       body: formData,
       cache: 'no-store'}).then(r=>r.json());
     console.log(data.secure_url);
-    image_URL = data.secure_url;
+    setImageUrl(data.secure_url);
   }
 
   /* handleCreatePost triggers an event which passes data to the add_post api */
