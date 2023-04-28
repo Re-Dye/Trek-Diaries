@@ -30,8 +30,7 @@ export default function NavBar() {
         {/* <div className={navStyles.dp} ref={dropRef}> */}
         <div 
         className={navStyles.dp} 
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
+        onClick={ () => setOpen(open => !open) }
         >
           <Image
             src="/ncpr.jpg"
@@ -40,7 +39,8 @@ export default function NavBar() {
             height={50}
             style={{ objectFit: "fill"}}
           />
-          {open && (
+        </div>
+        {open && (
             <div className={navStyles.drop}>
               <ul>
                 <li className={navStyles.dropdownItem}>
@@ -54,7 +54,6 @@ export default function NavBar() {
               </ul>
             </div>
           )}
-        </div>
       </div>
     </div>
   );
