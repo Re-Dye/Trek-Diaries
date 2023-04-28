@@ -1,10 +1,16 @@
 "use client"
 import axios from "axios";
+import React from "react";
 import { Suspense } from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { useSession } from "next-auth/react";
+import postStyle from "../../[id]/page.module.css"
+import Image from "next/image";
+import {AiFillStar} from "react-icons/ai"
+import { Dropdown } from "@nextui-org/react";
+
 export default function Addpost({ params }: { params: { id: string } }) {
     const [Description, setDescription] = useState("");
     const [sceneryRating, setSceneryRating] = useState(0);
@@ -16,6 +22,30 @@ export default function Addpost({ params }: { params: { id: string } }) {
     const locationId: string = params.id;
     const [image_URL,setImageUrl] = useState(""); 
     const router = useRouter();
+
+
+    // single selection of rating in pulldown button
+  const [selected, setSelected] = useState(new Set(["Rating"]));
+  const selectedValue = React.useMemo(
+    () => Array.from(selected).join(", ").replaceAll("_", " "),
+    [selected]
+  );
+  const [selected1, setSelected1] = useState(new Set(["Rating"]));
+  const selectedValue1 = React.useMemo(
+    () => Array.from(selected1).join(", ").replaceAll("_", " "),
+    [selected1]
+  );
+  const [selected2, setSelected2] = useState(new Set(["Rating"]));
+  const selectedValue2 = React.useMemo(
+    () => Array.from(selected2).join(", ").replaceAll("_", " "),
+    [selected2]
+  );
+  const [selected3, setSelected3] = useState(new Set(["Rating"]));
+  const selectedValue3 = React.useMemo(
+    () => Array.from(selected1).join(", ").replaceAll("_", " "),
+    [selected3]
+  );
+
 
     const handleImage = (changeEvent) => {
         let reader = new FileReader();
@@ -67,32 +97,108 @@ export default function Addpost({ params }: { params: { id: string } }) {
       };
 
     return (
-        <div className = "AddpostContainer">
-        <h2>Add Post</h2>
-        <div className="ImageSection">
-            <form onSubmit = {handleSubmit}>
-                <input type="file" name ="file" onChange={handleImage} />
-                <button type = "submit"> Add Image </button>
+        <div className = {postStyle.wrapper}>
+          <Image className={postStyle.img} src="/ncpr2.jpg" alt="backgroundImage" fill  />
+        <div className={postStyle.forms}>
+          <h2>Add Post</h2>
+            <form onSubmit = {handleSubmit} className={postStyle.postfield}>
+                <input 
+                className={postStyle.file}
+                type="file" 
+                name ="file" 
+                onChange={handleImage} />
+                <img src = {imageSrc} className={postStyle.imgFit}/>
+                <button 
+                type = "submit"
+                className={postStyle.addimg}> Add Image </button>
             </form>
-        </div>
-            <div> 
-                <form>       
-                <label htmlFor="description">Description:</label>
-                <input
+                <form className={postStyle.postfield1}>       
+                <textarea 
+                  name="text"
                   id="description"
-                  placeholder="Description"
-                  className="Description"
-                  type="text"
+                  placeholder="Description (required...)"
+                  className={postStyle.inputBx}
                   value={Description}
                   onChange={(e) => setDescription(e.target.value)} // setting value of Description
                 />
-                <button onClick={(e) => handleCreatePost(e)}>
-                  Create Post
-                </button>
-                <img src = {imageSrc}/>
+                <div className={postStyle.ratingStar}>
+                <div>
+                <h3>Scenery</h3>
+                <Dropdown>
+                  <Dropdown.Button flat color="secondary">
+                    {selectedValue}
+                  </Dropdown.Button>
+                  <Dropdown.Menu
+                      aria-label="Single selection actions"
+                      color="primary"
+                      disallowEmptySelection
+                      selectionMode="single"
+                      selectedKeys={selected}
+                      onSelectionChange={setSelected}
+                  >
+                    <Dropdown.Item key="1 star" color="warning"><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="2 star" color="warning"><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="3 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="4 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="5 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    
+                  </Dropdown.Menu>
+                  </Dropdown>
+                  </div>
+                  <div>
+                <h3>Road Condition</h3>
+                <Dropdown>
+                  <Dropdown.Button flat color="secondary">
+                    {selectedValue1}
+                  </Dropdown.Button>
+                  <Dropdown.Menu
+                      aria-label="Single selection actions"
+                      color="primary"
+                      disallowEmptySelection
+                      selectionMode="single"
+                      selectedKeys={selected1}
+                      onSelectionChange={setSelected1}
+                  >
+                    <Dropdown.Item key="1 star" color="warning"><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="2 star" color="warning"><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="3 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="4 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="5 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    
+                  </Dropdown.Menu>
+                  </Dropdown>
+                  </div>
+                  <div>
+                <h3>Experience</h3>
+                <Dropdown>
+                  <Dropdown.Button flat color="secondary">
+                    {selectedValue2}
+                  </Dropdown.Button>
+                  <Dropdown.Menu
+                      aria-label="Single selection actions"
+                      color="primary"
+                      disallowEmptySelection
+                      selectionMode="single"
+                      selectedKeys={selected2}
+                      onSelectionChange={setSelected2}
+                  >
+                    <Dropdown.Item key="1 star" color="warning"><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="2 star" color="warning"><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="3 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="4 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    <Dropdown.Item key="5 star" color="warning"><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /><AiFillStar /></Dropdown.Item>
+                    
+                  </Dropdown.Menu>
+                  </Dropdown>
+                  </div>
+                  </div>
+                <button 
+                className={postStyle.createbtn} 
+                onClick={(e) => handleCreatePost(e)}>
+                Create Post</button>
             </form>
         </div>
-        </div>
+      </div>
     )
     
 }

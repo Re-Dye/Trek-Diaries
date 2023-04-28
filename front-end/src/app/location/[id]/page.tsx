@@ -1,13 +1,14 @@
 "use client";
 import Header from "./components/Header";
 import React from "react";
-import postStyle from "../../page.module.css";
+import locateStyle from "../[id]/page.module.css";
 import axios from "axios";
 import { Suspense } from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function LocationPage({ params }: { params: { id: string } }) {
   const [Description, setDescription] = useState("");
@@ -35,11 +36,21 @@ export default function LocationPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className = "location">
-      <div className="header">
+    <div className = {locateStyle.location}>
+      <Image className={locateStyle.img} src="/ncpr2.jpg" alt="backgroundImage" fill  />
+      <div className={locateStyle.locatefield}>
+      <div className={locateStyle.header}>
         <Header id={params.id} />
       </div>
-      <button onClick = {handleADDPOST}> ADD POST</button>        
+      <button 
+      onClick = {handleADDPOST}
+      className={locateStyle.addpstbtn}
+      > ADD POST</button> 
+        <button
+        // onClick={handleFollow}
+        className={locateStyle.followbtn}
+        >FOLLOW</button>
+        </div>
     </div>
   );
 }
