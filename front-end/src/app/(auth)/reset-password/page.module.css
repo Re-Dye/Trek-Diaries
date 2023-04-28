@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+body{
+    margin: 0;
+}
+
+.wrapper
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    
+}
+
+.wrapper .img
+{
+    width: 100%;
+    height: 100%;
+    border-style:none;
+    object-fit: cover;
+}
+
+.wrapper .forgetBox
+{
+    border-radius: 1em;
+    border: none;
+    margin: 0 auto;
+    background-color: rgb(248, 247, 247);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    height: 50%;
+    margin-top: 10%;
+    padding: 2em;
+    align-items: center;
+}
+
+.wrapper .forgetBox h1
+{
+    color: #4079CE;
+    font-weight: bold;
+    font-size: 2.5em;
+    display: inline-block;
+
+}
+.wrapper .forgetBox p
+{
+    margin-top: -1.5em;
+    color: #282f39;
+    font-size: 0.8em;
+}
+
+.wrapper .forgetBox .inpforget
+{
+    margin-top: 3em;
+    font-weight: 600;
+    font-size: medium;
+    letter-spacing: 0.1em;
+}
+.wrapper .forgetBox input
+{
+    width: 80%;
+    padding: 1em;
+    border-radius: 0.6em;
+}
+.wrapper .forgetBox .resetbtn
+{
+    margin-top: 3em;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid #4079CE;
+    border-radius: 0.5em;
+    font-weight: 600;
+    width: 60%;
+    padding: 1.2em 0;
+    box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+    transition: 0.4s;
+    margin-bottom: 1.5em;
+    text-align: center;
+}
+.wrapper .forgetBox .resetbtn:hover
+{
+  color: white;
+  box-shadow: 0 0 20px #4079CE;
+  background-color: #4079CE;
+}
+
+.wrapper .forgetBox .linkforget
+{
+    margin-top: 1em;
+    color: #4079CE;
+}
+.wrapper .forgetBox .linkforget:hover
+{
+    color: #7b070d;
+}

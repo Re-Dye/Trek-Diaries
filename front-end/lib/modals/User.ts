@@ -1,17 +1,19 @@
 import mongoose from "mongoose";
+import Post from "./Post";
 
-interface User {
+interface IUser {
     email: string,
     password: string,
     first_name: string,
     last_name: string,
     dob: Date,
-    profile_pic: any
+    profile_pic: any,
+    verified: boolean
 }
 
 const Schema = mongoose.Schema
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<IUser>({
     email: {
         type: String,
         required: true,
@@ -38,7 +40,19 @@ const userSchema = new Schema<User>({
     profile_pic: {
         data: Buffer,
         contentType: String,
+    },
+    verified: {
+        type: Boolean,
+        default: false,
+        required: true
     }
+},{collection: 'users'})
+
+userSchema.pre('remove', async function (next) {
+    const user = this as any
+    await Post.deleteMany({ owner: user._id })
+    next()
 })
 
-export default userSchema;
+const User = mongoose.models.User||mongoose.model("User",userSchema);
+export default User;

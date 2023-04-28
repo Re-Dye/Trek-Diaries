@@ -1,21 +1,21 @@
 'use client'
 
-//overall layout of the web app
-// add global navbar here
+import { Session } from 'next-auth';
 import './globals.css'
 import { SessionProvider } from 'next-auth/react'
 import { ReactNode } from 'react';
+import { Metadata } from 'next';
 
 interface IProps {
   children: ReactNode;
-  session: any
+  session: Session
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'TrekDiaries',
   description: 'Social media app for hikers and trekkers',
 }
-
+// export default function RootLayout({ children }: { children: ReactNode}) {
 export default function RootLayout({ children, session }: IProps) {
   return (
     <html lang="en">
