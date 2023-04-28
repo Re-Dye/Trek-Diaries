@@ -6,9 +6,17 @@ import Image from "next/image";
 import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    const data = await signOut({ redirect: false, callbackUrl: "/login" });
+    router.push(data.url);
+  };
 
   return (
     <div className={navStyles.wrapper}>
@@ -20,7 +28,11 @@ export default function NavBar() {
           <SearchInput />
         </div>
         {/* <div className={navStyles.dp} ref={dropRef}> */}
-        <div className={navStyles.dp} onMouseDown={() => setOpen((open) => !open)}>
+        <div 
+        className={navStyles.dp} 
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        >
           <Image
             src="/ncpr.jpg"
             alt="profilePicture"
@@ -35,8 +47,8 @@ export default function NavBar() {
                   <CgProfile />
                   <a>My profile</a>
                 </li>
-                <li className={navStyles.dropdownItem}>
-                  <FiLogOut />
+                <li className={navStyles.dropdownItem} onClick={ handleSignOut }>
+                  <FiLogOut/>
                   <a>Logout</a>
                 </li>
               </ul>

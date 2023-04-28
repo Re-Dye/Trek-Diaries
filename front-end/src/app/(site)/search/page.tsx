@@ -64,11 +64,9 @@ export default function SearchPage() {
         }
     }
 
-    useEffect(() => {
-        console.log("page: ", page)
-        console.log("hasMore: ", hasMore)
-    }, [page, hasMore])
-    
+    // useEffect(() => {
+    //     fetchData()
+    // }, [])
 
     return (
         <div>
