@@ -7,6 +7,7 @@ import AddLocation from "./components/modal/AddLocation";
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Loading from "./loading"
+import Location from "./components/location/location";
 
 async function fetchLoactions(searchQuery: string) {
     const encodedQuery = encodeURI(searchQuery)
@@ -34,7 +35,7 @@ export default function SearchPage() {
     return (
         <div>
             <AddLocation />
-            This is the search page.
+            <Location />
         </div>
     )
 }
