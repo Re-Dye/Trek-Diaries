@@ -32,6 +32,7 @@
     "react-dom": "18.2.0",
     "react-iconly": "^2.2.10",
     "react-icons": "^4.8.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-modal": "^3.16.1",
     "react-rating-stars-component": "^2.2.0",
     "react-stars": "^2.2.5",

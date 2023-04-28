@@ -30,10 +30,6 @@ export default function Home() {
     <div>
       {session.status === "authenticated" ? (
         <>
-        <div className="navbar">
-
-          <NavBar />
-        </div>
           <h1>Log in successful.</h1>
           <button onClick={handleSignOut}>Log out</button>
         </>

@@ -5,15 +5,18 @@ import { useSearchParams } from "next/navigation"
 import AddLocation from "./components/modal/AddLocation";
 
 import React, { Suspense, useEffect, useState } from 'react'
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import Loading from "./loading"
-import Location from "./components/location/location";
+import ResultLocation from "./components/location/ResultLocation"
 
 interface Location {
     _id: string;
     address: string;
     description: string;
 }
+
+const LOCATIONS_PER_SCROLL = 7
 
 /**
  * 
@@ -22,7 +25,7 @@ interface Location {
  * @param searchTime time the search page loaded
  * @returns Response
  */
-async function fetchLoactions(searchQuery: string, page: number, searchTime: Date) {
+async function fetchLocations(searchQuery: string, page: number, searchTime: Date) {
     const encodedQuery = encodeURI(searchQuery)
     const encodedPage = encodeURI(page.toString())
     const encodedSearchTime = encodeURI(searchTime.toISOString())
@@ -36,30 +39,62 @@ async function fetchLoactions(searchQuery: string, page: number, searchTime: Dat
 
 export default function SearchPage() {
     const searchParams = useSearchParams()
-    const searchQuery = searchParams? searchParams?.get('q') : null
+    const searchQuery = searchParams? searchParams?.get('q') : ""
     const [page, setPage] = useState<number>(0)
     const [locations, setLocations] = useState<Array<Location>>([])
     const [searchTime, setSearchTime] = useState<Date>(new Date())
+    const [hasMore, setHasMore] = useState<boolean>(true)
 
-    useEffect(() => {
+    const fetchData = async() => {
+        console.log("Fetch called")
         try{
-            const fetchData = async() => {
-                const locations: Array<Location> = await fetchLoactions(searchQuery as string, page, searchTime)
-                console.log(locations)
-                setLocations(locations)
+            const fetchedLocations: Array<Location> = await fetchLocations(searchQuery as string, page, searchTime)
+            console.log(fetchedLocations.length)
+            setLocations((locations) => [...locations, ...fetchedLocations])
+            setPage((page) => page + 1)
+
+            if(fetchedLocations.length < 7) {
+                setHasMore(false)
+            }else{
+                setHasMore(true)
             }
-            fetchData()
         }catch(error){
             console.error(error)
             alert(error)
         }
-    }, [])
+    }
+
+    useEffect(() => {
+        console.log("page: ", page)
+        console.log("hasMore: ", hasMore)
+    }, [page, hasMore])
     
 
     return (
         <div>
             <AddLocation />
-            <Location />
+            <InfiniteScroll
+                dataLength={ locations.length } //This is important field to render the next data
+                next={ fetchData }
+                hasMore={ hasMore }
+                loader={<h4>Loading...</h4>}
+                endMessage={
+                    <p style={{ textAlign: 'center' }}>
+                    <b>Yay! You have seen it all</b>
+                    </p>
+                }
+            >
+                {
+                    locations.map((location) => (
+                        <ResultLocation
+                            key={ location._id }
+                            id={ location._id }
+                            address={ location.address }
+                            description={ location.description }
+                        />
+                    ))
+                }
+            </InfiniteScroll>
         </div>
     )
 }

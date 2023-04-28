@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-head-element */
 
+import NavBar from "./navBar/page";
+
 export default function Layout({
   children,
 }: {
@@ -8,6 +10,9 @@ export default function Layout({
   return (
     <>
       <main>
+        <div className="navbar">
+          <NavBar />
+        </div>
         { children }
       </main>
     </>
