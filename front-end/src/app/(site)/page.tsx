@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import SearchInput from "./components/SearchInput";
 import mainStyles from "./page.module.css";
-import NavBar from "./navBar/page";
+import NavBar from "./NavBar/NavBar";
 
 
 export default function Home() {

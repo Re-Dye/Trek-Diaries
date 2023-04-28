@@ -1,29 +1,14 @@
+"use client"
 import React from "react";
-import navStyles from "./page.module.css";
-import SearchInput from "../components/SearchInput";
+import navStyles from "./navbar.module.css";
+import SearchInput from "../SearchInput/SearchInput";
 import Image from "next/image";
 import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
-  const dropRef = useRef(null);
-
-  useEffect(() => {
-    let handler = (e) => {
-      if (dropRef.current) {
-        {
-          if (!dropRef.current.contains(e.target)) {
-            setOpen(false);
-            console.log(dropRef.current);
-          }
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handler);
-  });
 
   return (
     <div className={navStyles.wrapper}>
@@ -34,21 +19,15 @@ export default function NavBar() {
         <div className={navStyles.BarCenter}>
           <SearchInput />
         </div>
-        <div className={navStyles.dp} ref={dropRef}>
-          <div
-            className={navStyles.trigger}
-            onClick={() => {
-              setOpen(!open);
-            }}
-          >
-            <Image
-              src="/ncpr.jpg"
-              alt="profilePicture"
-              width={50}
-              height={50}
-              object-Fit="contain"
-            />
-          </div>
+        {/* <div className={navStyles.dp} ref={dropRef}> */}
+        <div className={navStyles.dp} onMouseDown={() => setOpen((open) => !open)}>
+          <Image
+            src="/ncpr.jpg"
+            alt="profilePicture"
+            width={50}
+            height={50}
+            style={{ objectFit: "fill"}}
+          />
           {open && (
             <div className={navStyles.drop}>
               <ul>
