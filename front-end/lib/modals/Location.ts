@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 interface ILocation {
     address: string,
     description: string
+    registeredTime: mongoose.Schema.Types.Date
 }
 
 const locationSchema = new mongoose.Schema<ILocation>({
@@ -14,6 +15,11 @@ const locationSchema = new mongoose.Schema<ILocation>({
     description: {
         required: true,
         type: String
+    },
+    registeredTime: {
+        required: true,
+        type: mongoose.Schema.Types.Date,
+        default: new Date()
     }
 })
 
