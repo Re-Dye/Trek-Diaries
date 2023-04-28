@@ -1,5 +1,11 @@
+body{
+    margin: 0px;
+    overflow: hidden;
+}
+
 .navbar {
     display: flex;
     position: sticky;
     top: 0;
+    margin: 0;
 }
