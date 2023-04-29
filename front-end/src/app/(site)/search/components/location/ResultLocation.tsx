@@ -17,11 +17,11 @@ export default function ResultLocation({ id, address, description }: {
   }
 
   return (
-    <div className={loc.wrapper} onClick={ handleClick }>
+    <div className={loc.wrapper}>
       <div className={loc.content}>
         <div className={loc.header}>
           <HiLocationMarker size={30} />
-          <h2>{ address }</h2>
+          <a onClick={ handleClick }>{ address }</a>
         </div>
 
         <div className={loc.description}>
