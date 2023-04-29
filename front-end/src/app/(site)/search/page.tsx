@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation"
 
 import AddLocation from "./components/modal/AddLocation";
 
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import Loading from "./loading"
@@ -40,59 +40,98 @@ async function fetchLocations(searchQuery: string, page: number, searchTime: Dat
 export default function SearchPage() {
     const searchParams = useSearchParams()
     const searchQuery = searchParams? searchParams?.get('q') : ""
-    const [page, setPage] = useState<number>(0)
+    const [locations, fetchData, hasMore, didMount] = useFetchLocations(searchQuery as string)
+
+    return (
+        <div>
+            <AddLocation />
+            {didMount && <>
+                    {(locations.length) &&
+                        <InfiniteScroll
+                            dataLength={ locations.length } //This is important field to render the next data
+                            next={ fetchData as any }
+                            hasMore={ hasMore }
+                            loader={<Loading />}
+                            endMessage={
+                                <p style={{ textAlign: 'center' }}>
+                                <b>Yay! You have seen it all</b>
+                                </p>
+                            }
+                        >
+                            {
+                                locations.map((location) => (
+                                    <ResultLocation
+                                        key={ location._id }
+                                        id={ location._id }
+                                        address={ location.address }
+                                        description={ location.description }
+                                    />
+                                ))
+                            }
+                        </InfiniteScroll>
+                    }
+                    {!(locations.length) && <h1>Not Found!</h1>}
+                </>
+            }
+            {!didMount && <Loading/>} 
+        </div>
+    )
+}
+
+
+function useFetchLocations(searchQuery: string): [
+    locations: Array<Location>,
+    fetchData: Function,
+    hasMore: boolean,
+    didMount: boolean
+] {
+    const page = useRef<number>(0)
     const [locations, setLocations] = useState<Array<Location>>([])
-    const [searchTime, setSearchTime] = useState<Date>(new Date())
+    const searchTime = useRef<Date>(new Date())
     const [hasMore, setHasMore] = useState<boolean>(true)
+    const [didMount, setDidMount] = useState<boolean>(false)
 
     const fetchData = async() => {
         console.log("Fetch called")
         try{
-            const fetchedLocations: Array<Location> = await fetchLocations(searchQuery as string, page, searchTime)
-            console.log(fetchedLocations.length)
+            /* fetch more locations */
+            const fetchedLocations: Array<Location> = await fetchLocations(searchQuery as string, page.current, searchTime.current)
+            
+            /* add the locations to the existing locations */
             setLocations((locations) => [...locations, ...fetchedLocations])
-            setPage((page) => page + 1)
 
-            if(fetchedLocations.length < 7) {
-                setHasMore(false)
-            }else{
-                setHasMore(true)
-            }
+            /* update page and has more */
+            page.current = page.current + 1
+            setHasMore(!(fetchedLocations.length < LOCATIONS_PER_SCROLL))
         }catch(error){
             console.error(error)
             alert(error)
         }
     }
 
-    // useEffect(() => {
-    //     fetchData()
-    // }, [])
+    /* fetch data once on render */
+    useEffect(() => {
+        if (!didMount) {
+            try{
+                const fetchData = async() => {
+                    /* fetch more locations */
+                    const fetchedLocations: Array<Location> = await fetchLocations(searchQuery as string, page.current, searchTime.current)
+                    
+                    /* add the locations to the existing locations */
+                    setLocations(fetchedLocations)
+        
+                    /* update page and has more */
+                    page.current = 1
+                    setHasMore(!(fetchedLocations.length < LOCATIONS_PER_SCROLL))
+                    setDidMount(true)
+                }
+                fetchData()
+            }catch(error){
+                alert(error)
+                console.error(error)
+            }
+        }
+    }, [])
 
-    return (
-        <div>
-            <AddLocation />
-            <InfiniteScroll
-                dataLength={ locations.length } //This is important field to render the next data
-                next={ fetchData }
-                hasMore={ hasMore }
-                loader={<h4>Loading...</h4>}
-                endMessage={
-                    <p style={{ textAlign: 'center' }}>
-                    <b>Yay! You have seen it all</b>
-                    </p>
-                }
-            >
-                {
-                    locations.map((location) => (
-                        <ResultLocation
-                            key={ location._id }
-                            id={ location._id }
-                            address={ location.address }
-                            description={ location.description }
-                        />
-                    ))
-                }
-            </InfiniteScroll>
-        </div>
-    )
+    return [locations, fetchData, hasMore, didMount]
 }
