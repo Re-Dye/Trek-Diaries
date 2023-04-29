@@ -10,6 +10,7 @@ import postStyle from "../../[id]/page.module.css"
 import Image from "next/image";
 import {AiFillStar} from "react-icons/ai"
 import { Dropdown } from "@nextui-org/react";
+import {BiImageAdd} from "react-icons/bi";
 
 export default function Addpost({ params }: { params: { id: string } }) {
     const [Description, setDescription] = useState("");
@@ -98,18 +99,18 @@ export default function Addpost({ params }: { params: { id: string } }) {
 
     return (
         <div className = {postStyle.wrapper}>
-          <Image className={postStyle.img} src="/ncpr2.jpg" alt="backgroundImage" fill  />
         <div className={postStyle.forms}>
           <h2>Add Post</h2>
-            <form onSubmit = {handleSubmit} className="imageInput">
+            <form onSubmit = {handleSubmit} className={postStyle.postfield}>
                 <input 
-                className="imageForm"
+                className={postStyle.file}
                 type="file" 
                 name ="file" 
                 onChange={handleImage} />
+                <img src = {imageSrc} className={postStyle.imgFit}/>
                 <button 
                 type = "submit"
-                className={postStyle.addimg}> Add Image </button>
+                className={postStyle.addimg}> Add Image <BiImageAdd className={postStyle.addimgicon}/></button>
             </form>
                 <form className={postStyle.postfield1}>       
                 <textarea 

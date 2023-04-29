@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-body
-{
-    margin: 0;
-}
 .wrapper
 {
     margin: 0;
@@ -11,38 +7,33 @@ body
     box-sizing: border-box;
     font-family: 'Raleway', sans-serif;
     position: relative;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     display: flex;
-    background-color: #878787;
-}
-.wrapper .img
-{
-    width: 100%;
-    height: 100%;
-    border-style:none;
-    object-fit: cover;
 }
 
 .wrapper .forms
 {
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
     border: none;
     padding: 2em;
     margin: 0 auto;
     border-radius: 1em;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(161, 155, 155);
     width: 40%;
     height: 45%;
-    margin-top: 2%;
+    z-index: 1;
+    margin-top: -17em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 .wrapper .forms h2
 {
     text-align: center;
     margin-top: -0.5em;
-    color: #4079CE;
+    color: #f1f2f5;
     font-weight: bold;
     font-size: 2em;
     display: inline-block;
@@ -52,36 +43,41 @@ body
 {
     border: none;
     margin: 0 auto;
-    background-color: rgba(141, 4, 4, 0.54);
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     width: 90%;
     height: 50%;
     padding: 2em;
-    margin-top: -1.4em;
+    position: relative;
 }
 
 .wrapper .forms .postfield .imgFit{
-    margin-top: -3em;
-    margin-left: 14em;
-    width: 60%;
-    height: 180px;
+    position: absolute;
+    top: 0;
+    right: 2.5em;
+    width: 40%;
+    height: 135px;
     object-fit: cover;
     border: none;
 }
 .wrapper .forms .postfield .file {
-   font-family: 'Raleway', sans-serif;
-   width: 100%;
-   height: 40%;
-   font-weight: 500;
-   font-size: 1em;
-   margin-top: -1em;
-   margin-left: -1em;
+    position: absolute;
+    font-family: 'Raleway', sans-serif;
+    width: 100%;
+    height: 40%;
+    font-weight: 500;
+    font-size: 1em;
+    top: 0;
+    left: 1.5em;
 }
 .wrapper .forms .postfield .addimg {
+    position: absolute;
+    bottom: 2.5em;
+    left: 2.5em;
     font-family: 'Raleway', sans-serif;
-    width: 35%;
-    height: 40%;
+    width: 30%;
+    height: 25%;
     padding: 0.4em;
     cursor: pointer;
     border: 1px solid #4079CE;
@@ -98,20 +94,30 @@ body
     box-shadow: 0 0 20px #5084d2;
     background-color: #285ea4;
 }
+.wrapper .forms .postfield .addimgicon
+{
+    position: absolute;
+    top: 0.3em;
+    right: 0.5em;
+    font-size: 1.5em;
+}
 .wrapper .forms .postfield1
 {
     border: none;
     margin: 0 auto;
-    background-color: rgba(141, 4, 4, 0.54);
+    padding: 2em;
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     width: 90%;
-    height: 25%;
-    padding: 2em;
+    height: 50%;
+    position: relative;
 }
 .wrapper .forms .postfield1 .inputBx
 {
-    margin-top: -2em;
+    position: absolute;
+    top: 1em;
+    left: 1.5em;
     font-weight: 500;
     font-size: 0.8em;
     padding: 1em;
@@ -119,10 +125,11 @@ body
     border: 2px solid #9a9393;
     background-color: #f8f8f8;
     color: #070707;
-    max-width: 95%;
+    max-width: 100%;
+    width: 90%;
+    height: 10%;
     letter-spacing: 0.05em;
     line-height: 1.5;
-    display: inline-block;
     border-radius: 0.3em;
 }
 .wrapper .forms .postfield1 .inputBx:focus {
@@ -130,12 +137,15 @@ body
 }
 .wrapper .forms .postfield1 .createbtn
 {
+    position: absolute;
+    bottom: 0;
+    right: 1em;
     cursor: pointer;
     border: 1px solid #4079CE;
     border-radius: 0.5em;
     font-weight: 600;
     font-size: 0.9em;
-    width: 30%;
+    width: 25%;
     padding: 1em;
     box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
     transition: 0.4s;
@@ -152,23 +162,21 @@ body
 
 .wrapper .forms .postfield1 .ratingStar
 {
-    margin-top: 0.5em;
-    column-gap: 2em;
-    width: 100%;
-    max-width: 20%;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 1.5em;
+    column-gap: 1em;
+    width: 80%;
+    max-width: 10%;
     display: flex;
     flex-direction: row;
-    margin-left: 8em;
 }
 .wrapper .forms .postfield1 .ratingStar h3
 {
     text-align: center;
-    color: #fbf9f9;
+    color: #141313;
     font-weight: bold;
     font-size: 0.8em;
-    display: inline-block;
 }
 
 
@@ -180,37 +188,40 @@ body
     box-sizing: border-box;
     font-family: 'Raleway', sans-serif;
     position: relative;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     display: flex;
-}
-.location .img
-{
-    width: 100%;
-    height: 100%;
-    border-style:none;
-    object-fit: cover;
 }
 .location .locatefield
 {
     border-radius: 1em;
     border: none;
     margin: 0 auto;
-    background-color: rgb(232, 215, 215);
+    background-color: rgb(80, 72, 72);
     z-index: 1;
+    margin-top: -17em;
     width: 40%;
     height: 30%;
-    margin-top: 1.5%;
     padding: 2em;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.location .locatefield .header
+{
+    font-family: 'Raleway', sans-serif;
+    color: #f8f8f8;
+    font-size: 0.7em;
 }
 
 .location .locatefield .addpstbtn {
-    margin-top: 12em;
+    position: absolute;
+    bottom: 1em;
     font-family: 'Raleway', sans-serif;
-    width: 25%;
-    height: 20%;
+    width: 20%;
+    height: 15%;
     padding: 0.4em;
     cursor: pointer;
     border: 1px solid #4079CE;
@@ -219,7 +230,6 @@ body
     font-size: 1em;
     box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
     transition: 0.4s;
-    text-align: center;
 
 }
 .location .locatefield .addpstbtn:hover {
@@ -228,16 +238,20 @@ body
     background-color: #285ea4;
 }
 .location .locatefield .followbtn {
-    margin-left: 25em;
+    position: absolute;
+    right: 1.5em;
+    top: 1em;
+    display: inline-block;
+    margin-left: 28em;
     font-family: 'Raleway', sans-serif;
-    width: 25%;
-    height: 20%;
+    width: 10%;
+    height: 15%;
     padding: 0.4em;
     cursor: pointer;
     border: 1px solid #1bd741;
     border-radius: 0.5em;
     font-weight: 500;
-    font-size: 1em;
+    font-size: 1.5em;
     box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
     transition: 0.4s;
     text-align: center;

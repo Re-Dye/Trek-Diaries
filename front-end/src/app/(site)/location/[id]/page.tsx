@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { useSession } from "next-auth/react";
+import {SlUserFollow} from "react-icons/sl";
 
 export default function LocationPage({ params }: { params: { id: string } }) {
   const locationId: string = params.id;
@@ -53,12 +54,6 @@ export default function LocationPage({ params }: { params: { id: string } }) {
 
   return (
     <div className={locateStyle.location}>
-      <Image
-        className={locateStyle.img}
-        src="/ncpr2.jpg"
-        alt="backgroundImage"
-        fill
-      />
       <div className={locateStyle.locatefield}>
         <div className={locateStyle.header}>
           <Header id={params.id} />
@@ -68,7 +63,7 @@ export default function LocationPage({ params }: { params: { id: string } }) {
           ADD POST
         </button>
         <button onClick={handleFollow} className={locateStyle.followbtn}>
-          FOLLOW
+          <SlUserFollow />
         </button>
       </div>
     </div>
