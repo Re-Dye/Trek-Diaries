@@ -21,7 +21,6 @@ export default function Header({ id }: { id: string }) {
   return (
     <div>
       <h1>{data.address}</h1>
-      <br />
       <h1>{data.description}</h1>
     </div>
   );
