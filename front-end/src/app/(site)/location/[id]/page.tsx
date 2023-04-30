@@ -30,7 +30,7 @@ export default function LocationPage({ params }: { params: { id: string } }) {
 
   /* handleFollow handles the follow event, i.e. it adds the location id to the users location */
   const handleFollow = async () => {
-    const email: any = session.data.user.email;
+    const email: any = session.data?.user?.email;
     const encodedEmail: any = encodeURI(email);
     const encodedLocation: any = encodeURI(params.id);
 
@@ -41,8 +41,9 @@ export default function LocationPage({ params }: { params: { id: string } }) {
           method: "POST",
           cache: "no-store",
         }
-      );
-      
+      )
+
+      console.log(res.json())
     } catch (error) {
       console.log(error);
     }
