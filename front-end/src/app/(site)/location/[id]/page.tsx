@@ -1,6 +1,3 @@
-// "use client";
-// import Header from "./components/Header";
-// import React from "react";
 import locateStyle from "./page.module.css";
 import ButtonFollow from "./components/ButtonFollow";
 import ButtonAddPost from "./components/ButtonAddPost";
