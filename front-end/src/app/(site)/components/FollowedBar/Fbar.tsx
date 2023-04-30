@@ -1,37 +1,10 @@
 "use client"
 import followStyle from "./fbar.module.css";
-import { SessionContextValue, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import Flocation from "../FollowedLocation/Flocation";
 import {ImLocation2} from "react-icons/im";
+import { Location } from "../../layout";
 
-interface Location {
-    _id: string;
-    address: string;
-}
-
-const getFollowedLocations = async(email: string) => {
-    const res = await fetch(
-        `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/getFollowedLocations?email=${ email }`,
-        { cache: 'no-store'}
-    )
-    return res.json()
-}
-
-export default function Fbar() {
-    const router = useRouter()
-
-    /* Sessions is used to extract email from the users... */
-    const session = useSession({
-        required: true,
-        onUnauthenticated() {
-            router.push("/login");
-        },
-    });
-    
-    const locations = useFetchLocations(session)
-
+export default function Fbar({ locations }: { locations: Array<Location> }) {
     return(
         <div className={followStyle.followbar}>
             <h1>Followed Locations <ImLocation2 className={followStyle.locicon} /></h1>
@@ -48,25 +21,4 @@ export default function Fbar() {
             </div>
         </div>
     );
-}
-
-
-function useFetchLocations(session: SessionContextValue) {
-    const [locations, setLocations] = useState<Array<Location>>([])
-
-    useEffect(() => {
-        if (session.status === "authenticated" && session.data.user) {
-            const getData = async() => {
-                const followedLocations = await getFollowedLocations(session.data.user?.email as string)
-                setLocations(followedLocations)
-            }
-            getData()
-        }
-    }, [session])
-
-    useEffect(() => {
-        console.log(locations)
-    }, [locations])
-
-    return locations
 }

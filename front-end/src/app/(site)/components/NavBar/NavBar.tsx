@@ -1,11 +1,10 @@
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import navStyles from "./navbar.module.css";
 import SearchInput from "../SearchInput/SearchInput";
 import Image from "next/image";
 import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
-import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
