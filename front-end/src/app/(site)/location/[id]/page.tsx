@@ -41,10 +41,6 @@ export default function LocationPage({ params }: { params: { id: string } }) {
           cache: "no-store",
         }
       );
-
-      if (res) {
-        console.log("location has been added");
-      }
       
     } catch (error) {
       console.log(error);
