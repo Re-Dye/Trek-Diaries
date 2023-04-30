@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-head-element */
 
 import NavBar from "./components/NavBar/NavBar";
+
+
 import Fbar from "./components/FollowedBar/Fbar";
 import Flocation from "./components/FollowedLocation/Flocation";
+
 
 export default function Layout({
   children,
