@@ -4,6 +4,7 @@ import { SessionContextValue, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Flocation from "../FollowedLocation/Flocation";
+import {ImLocation2} from "react-icons/im";
 
 interface Location {
     _id: string;
@@ -33,6 +34,7 @@ export default function Fbar() {
 
     return(
         <div className={followStyle.followbar}>
+            <h1>Followed Locations <ImLocation2 className={followStyle.locicon} /></h1>
             <div className={followStyle.followLocation}>
             {
                 locations.map((location) => (
