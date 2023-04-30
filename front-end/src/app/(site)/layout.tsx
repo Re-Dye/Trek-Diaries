@@ -1,9 +1,11 @@
 "use client"
 import NavBar from "./components/NavBar/NavBar";
 import Fbar from "./components/FollowedBar/Fbar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import { SessionContextValue, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+
+export const FLocationContext = createContext<Array<Location>>([])
 
 export interface Location {
   _id: string;
@@ -64,7 +66,9 @@ export default function Layout({
         <div className="fbar">
           <Fbar locations={ locations }/>
         </div>
-        { children }
+        <FLocationContext.Provider value={ locations }>
+          { children }
+        </FLocationContext.Provider>
       </main>
     </>
   );
