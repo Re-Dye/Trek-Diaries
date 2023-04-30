@@ -1,14 +1,12 @@
 'use client';
 
-import { useState } from "react";
 import locateStyle from "./flocation.module.css";
 
-export default function Flocation()
-{
+export default function Flocation({ id, address }: { id: string, address: string }) {
     return(
         <div className={locateStyle.followloc}>
             <div>
-                Followed Location
+                { address }
             </div>
         </div>
     );
