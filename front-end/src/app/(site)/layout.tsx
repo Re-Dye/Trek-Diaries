@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-head-element */
 
 import NavBar from "./components/NavBar/NavBar";
-
 export default function Layout({
   children,
 }: {
