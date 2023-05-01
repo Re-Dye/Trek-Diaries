@@ -41,10 +41,6 @@ function useFetchLocations(session: SessionContextValue): [
       }
   }, [session])
 
-  useEffect(() => {
-      console.log(locations)
-  }, [locations])
-
   return [locations, updateLocations]
 }
 
