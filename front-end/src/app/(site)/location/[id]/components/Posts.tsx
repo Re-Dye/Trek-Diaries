@@ -1,6 +1,7 @@
 'use client'
-
+import ViewPost from "../../../components/viewPost/viewPost"
 import { useRef, useState, useEffect } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 
 interface Post {
@@ -11,7 +12,7 @@ interface Post {
     likes: number;
   }
 
-const POST_PER_PAGE = 5;
+const POSTS_PER_SCROLL = 7;
 
 async function fetchLocationPosts(
     locationId: string,
@@ -31,14 +32,41 @@ async function fetchLocationPosts(
 export default function Posts({locationId}:{locationId: string}) {
 
     console.log(locationId)
-    const check: boolean = useFetchPosts(locationId);
+    const [posts, fetchPosts, hasMore, didMount] = useFetchPosts(locationId);
 
     return(
         <div className="PostBody">
-            <h1>Location</h1>
-            <h2>Description</h2>
-            <h3>Image</h3>
-            <h4>Likes</h4>
+            {didMount && <>
+                    {(posts.length) &&
+                        <InfiniteScroll
+                            dataLength={ posts.length } //This is important field to render the next data
+                            next={ fetchPosts as any }
+                            hasMore={ hasMore }
+                            endMessage={
+                                <p style={{ textAlign: 'center' }}>
+                                <b>Yay! You have seen it all</b>
+                                </p>
+                            }
+                        >
+                            {
+                                posts.map((post) => (
+                                    <ViewPost
+                                        key={ post._id }
+                                        id={ post._id }
+                                        location={ post.location }
+                                        description={ post.description }
+                                        likes = {post.likes}
+                                        imageURL = {post.pictureURL}
+                                        owner = {post.owner}
+                                    />
+                                ))
+                            }
+                        </InfiniteScroll>
+                    }
+                    {!(posts.length) && <h1>Not Found!</h1>}
+                </>
+            }
+            {!didMount} 
         </div>
     )
     
@@ -56,40 +84,43 @@ function useFetchPosts( locationId: string ):[
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [didMount, setDidMount] = useState<boolean>(false);
   
-    // const fetchPosts = async () => {
-    //   console.log("Fetch called");
-    //   try {
-    //     /* fetch more posts */
-    //     const fetchedPosts: Array<> = await fetchLocationPosts(
-    //       locationId as string,
-    //       page.current,
-    //       searchTime.current
-    //     );
-    //         console.log(fetchedPosts)
-    //     /* add the locations to the existing locations */
-    //     setPosts((posts) => [...posts, ...fetchedPosts]);
+    const fetchPosts = async () => {
+      console.log("Fetch called");
+      try {
+        /* fetch more posts */
+        const fetchedPosts: Array<> = await fetchLocationPosts(
+          locationId as string,
+          page.current,
+          searchTime.current
+        );
+
+        /* add the locations to the existing locations */
+        setPosts((posts) => [...posts, ...fetchedPosts]);
   
-    //     /* update page and has more */
-    //     // page.current = page.current + 1;
-    //     // setHasMore(!(fetchedLocations.length < LOCATIONS_PER_SCROLL));
-    //   } catch (error) {
-    //     console.error(error); 
-    //     alert(error);
-    //   }
+        /* update page and has more */
+        page.current = page.current + 1;
+        setHasMore(!(fetchedPosts.length < POSTS_PER_SCROLL))
+      } catch (error) {
+        console.error(error); 
+        alert(error);
+      }
+    }
+
+      /* fetch data on the render */
       useEffect(() => {
         if (!didMount) {
-            console.log("inside fetch didMount")
             try{
                 const fetchPost = async() => {
-                    /* fetch more locations */
+                    /* fetch more posts */
                     const fetchedPosts: Array<Posts> = await fetchLocationPosts(locationId as string, page.current, searchTime.current)
+
                     console.log(fetchedPosts);
                     /* add the locations to the existing locations */
                     setPosts(fetchedPosts);
         
                     /* update page and has more */
-                    // page.current = 1
-                    // setHasMore(!(fetchedLocations.length < LOCATIONS_PER_SCROLL))
+                    page.current = 1
+                    setHasMore(!(fetchedPosts.length < POSTS_PER_SCROLL))
                     setDidMount(true)
                 }
                 fetchPost()
@@ -97,9 +128,9 @@ function useFetchPosts( locationId: string ):[
                 alert(error)
                 console.error(error)
             }
-        }
-    }, [])
-
-    return true;
-};
+          }
+        }, [])
+    return  [posts, fetchPosts, hasMore, didMount];
+    };
+  
   

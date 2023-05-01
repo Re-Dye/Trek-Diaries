@@ -23,6 +23,7 @@ interface IPost {
   likes: number;
   comments: [IComment];
   owner: IOwner;
+  registeredTime: mongoose.Schema.Types.Date;
 }
 
 
@@ -69,6 +70,12 @@ const postSchema = new Schema<IPost>({
       type: String,
     }
   },
+  registeredTime: {
+    required: true,
+    type: mongoose.Schema.Types.Date,
+    default: new Date()
+  }
+
 });
 
 const Post = mongoose.models.Post || mongoose.model("Post", postSchema);
