@@ -10,6 +10,9 @@ interface Post {
     description: string;
     imageURL: string;
     likes: number;
+    location: any;
+    pictureURL: string;
+    owner: any;
   }
 
 const POSTS_PER_SCROLL = 7;
@@ -20,7 +23,7 @@ async function fetchLocationPosts(
     searchTime: Date
   ) {
     const encodedLocation: any = encodeURI(locationId);
-    const encodedPage: any = encodeURI(page);
+    const encodedPage: string = encodeURI(page.toString());
     const encodedSearchTime: any = encodeURI(searchTime.toISOString());
     const res: any = await fetch(
       `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/getLocationPosts?locationId=${encodedLocation}&page=${encodedPage}&searchTime=${encodedSearchTime}`,
@@ -87,7 +90,7 @@ function useFetchPosts( locationId: string ):[
       console.log("Fetch called");
       try {
         /* fetch more posts */
-        const fetchedPosts: Array<> = await fetchLocationPosts(
+        const fetchedPosts: Array<any> = await fetchLocationPosts(
           locationId as string,
           page.current,
           searchTime.current
@@ -111,7 +114,7 @@ function useFetchPosts( locationId: string ):[
             try{
                 const fetchPost = async() => {
                     /* fetch more posts */
-                    const fetchedPosts: Array<Posts> = await fetchLocationPosts(locationId as string, page.current, searchTime.current)
+                    const fetchedPosts: Array<any> = await fetchLocationPosts(locationId as string, page.current, searchTime.current)
 
                     console.log(fetchedPosts);
                     /* add the locations to the existing locations */
