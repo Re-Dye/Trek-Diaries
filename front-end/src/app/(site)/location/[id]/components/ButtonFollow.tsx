@@ -3,9 +3,13 @@ import { SlUserFollow } from "react-icons/sl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import locateStyle from "../page.module.css"
+import { useContext, useEffect, useState } from "react"
+import { FLocationContext } from "@/app/(site)/layout";
 
 export default function ButtonFollow({ locationID }: { locationID: string}) {
     const router = useRouter();
+    const locations = useContext(FLocationContext)
+    const [followed, setFollowed] = useState<boolean>(false)
 
     /* Sessions is used to extract email from the users... */
     const session = useSession({
@@ -36,9 +40,32 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
         }
     };
 
+    const handleUnfollow = async () => {
+        console.log("unfollow")
+    }
+
+    useEffect(() => {
+        locations.map((location) => {
+            if(location._id === locationID) {
+                setFollowed(true)
+            }else{
+                setFollowed(false)
+            }
+        })
+    }, [locations])
+
     return(
-        <button onClick={handleFollow} className={locateStyle.followbtn}>
-          <SlUserFollow />
-        </button>
+        <>
+            {(!followed) && 
+                <button onClick={handleFollow} className={locateStyle.followbtn}>
+                    <SlUserFollow />
+                </button>
+            }
+            {followed &&
+                <button onClick={ handleUnfollow } className={locateStyle.followbtn}>
+                    Unfollow
+                </button>
+            }
+        </>
     )
 }

@@ -14,10 +14,6 @@ export default function Home() {
     },
   });
 
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
-
   return (
       <div className={mainStyles.wrapper}>
         <div className={mainStyles.left}></div>

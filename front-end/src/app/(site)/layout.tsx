@@ -1,17 +1,62 @@
-/* eslint-disable @next/next/no-head-element */
-
+"use client"
 import NavBar from "./components/NavBar/NavBar";
-
-
 import Fbar from "./components/FollowedBar/Fbar";
-import Flocation from "./components/FollowedLocation/Flocation";
+import React, { useEffect, useState, createContext } from "react";
+import { SessionContextValue, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
+export const FLocationContext = createContext<Array<Location>>([])
+
+export interface Location {
+  _id: string;
+  address: string;
+}
+
+const getFollowedLocations = async(email: string) => {
+  const res = await fetch(
+      `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/getFollowedLocations?email=${ email }`,
+      { cache: 'no-store'}
+  )
+  return res.json()
+}
+
+function useFetchLocations(session: SessionContextValue) {
+  const [locations, setLocations] = useState<Array<Location>>([])
+
+  useEffect(() => {
+      if (session.status === "authenticated" && session.data.user) {
+          const getData = async() => {
+              const followedLocations = await getFollowedLocations(session.data.user?.email as string)
+              setLocations(followedLocations)
+          }
+          getData()
+      }
+  }, [session])
+
+  useEffect(() => {
+      console.log(locations)
+  }, [locations])
+
+  return locations
+}
 
 export default function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter()
+
+  /* Sessions is used to extract email from the users... */
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
+        router.push("/login");
+    },
+  });
+
+  const locations = useFetchLocations(session)
+
   return (
     <>
       <main>
@@ -19,12 +64,11 @@ export default function Layout({
           <NavBar />
         </div>
         <div className="fbar">
-          <Fbar />
+          <Fbar locations={ locations }/>
         </div>
-        <div className="flocation">
-          <Flocation />
-        </div>
-        { children }
+        <FLocationContext.Provider value={ locations }>
+          { children }
+        </FLocationContext.Provider>
       </main>
     </>
   );
