@@ -14,7 +14,6 @@ export default function SearchInput() {
     /* encode the search query to uri */
     const encodedQuery = encodeURI(searchQuery);
 
-    router.refresh()
     router.push(`/search?q=${encodedQuery}`);
   };
 

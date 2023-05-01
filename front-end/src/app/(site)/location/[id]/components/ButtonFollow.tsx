@@ -45,6 +45,7 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
     }
 
     useEffect(() => {
+        console.log(locations)
         locations.map((location) => {
             if(location._id === locationID) {
                 setFollowed(true)

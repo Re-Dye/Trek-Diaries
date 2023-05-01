@@ -111,27 +111,25 @@ function useFetchLocations(searchQuery: string): [
 
     /* fetch data once on render */
     useEffect(() => {
-        if (!didMount) {
-            try{
-                const fetchData = async() => {
-                    /* fetch more locations */
-                    const fetchedLocations: Array<Location> = await fetchLocations(searchQuery as string, page.current, searchTime.current)
-                    
-                    /* add the locations to the existing locations */
-                    setLocations(fetchedLocations)
-        
-                    /* update page and has more */
-                    page.current = 1
-                    setHasMore(!(fetchedLocations.length < LOCATIONS_PER_SCROLL))
-                    setDidMount(true)
-                }
-                fetchData()
-            }catch(error){
-                alert(error)
-                console.error(error)
+        try{
+            const fetchData = async() => {
+                /* fetch more locations */
+                const fetchedLocations: Array<Location> = await fetchLocations(searchQuery as string, page.current, searchTime.current)
+                
+                /* add the locations to the existing locations */
+                setLocations(fetchedLocations)
+    
+                /* update page and has more */
+                page.current = 1
+                setHasMore(!(fetchedLocations.length < LOCATIONS_PER_SCROLL))
+                setDidMount(true)
             }
+            fetchData()
+        }catch(error){
+            alert(error)
+            console.error(error)
         }
-    }, [])
+    }, [searchQuery])
 
     return [locations, fetchData, hasMore, didMount]
 }
