@@ -11,17 +11,21 @@ interface Ilocation {
   id: Schema.Types.ObjectId;
   address: string;
 }
+interface IOwner {
+  email: string,
+  name: string
+}
+
 interface IPost {
   description: string;
   picture: any;
   location: Ilocation;
   likes: number;
   comments: [IComment];
-  owner: {
-    type: Schema.Types.ObjectId;
-    ref: string;
-  };
+  owner: IOwner;
 }
+
+
 
 const commentSchema = new Schema<IComment>({
   content: {
@@ -58,8 +62,12 @@ const postSchema = new Schema<IPost>({
   },
   comments: [commentSchema],
   owner: {
-    type: Schema.Types.ObjectId,
-    ref: "users",
+    email: {
+      type: String,
+    },
+    name: {
+      type: String,
+    }
   },
 });
 

@@ -192,6 +192,19 @@
     height: 100vh;
     display: flex;
 }
+.location .body
+{
+    font-family: 'Raleway', sans-serif;
+    color: #f8f8f8;
+    margin: 0;
+    font-size: 0.7em;
+    z-index: 0;
+    margin-top: -15em;
+    width: 40%;
+    height: 30%;
+    padding: 2em;
+    display: flex;
+}
 .location .locatefield
 {
     border-radius: 1em;
@@ -199,7 +212,7 @@
     margin: 0 auto;
     background-color: rgb(80, 72, 72);
     z-index: 1;
-    margin-top: -17em;
+    margin-top: -14em;
     width: 40%;
     height: 30%;
     padding: 2em;
@@ -215,7 +228,6 @@
     color: #f8f8f8;
     font-size: 0.7em;
 }
-
 .location .locatefield .addpstbtn {
     position: absolute;
     bottom: 1em;

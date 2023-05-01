@@ -24,28 +24,36 @@ export default function Addpost({ params }: { params: { id: string } }) {
     const [image_URL,setImageUrl] = useState(""); 
     const router = useRouter();
 
+    const session = useSession({
+      required: true,
+      onUnauthenticated() {
+        router.push("/login");
+      },
+    });
 
-    // single selection of rating in pulldown button
-  const [selected, setSelected] = useState(new Set(["Rating"]));
-  const selectedValue = React.useMemo(
-    () => Array.from(selected).join(", ").replaceAll("_", " "),
-    [selected]
-  );
-  const [selected1, setSelected1] = useState(new Set(["Rating"]));
-  const selectedValue1 = React.useMemo(
-    () => Array.from(selected1).join(", ").replaceAll("_", " "),
-    [selected1]
-  );
-  const [selected2, setSelected2] = useState(new Set(["Rating"]));
-  const selectedValue2 = React.useMemo(
-    () => Array.from(selected2).join(", ").replaceAll("_", " "),
-    [selected2]
-  );
-  const [selected3, setSelected3] = useState(new Set(["Rating"]));
-  const selectedValue3 = React.useMemo(
-    () => Array.from(selected1).join(", ").replaceAll("_", " "),
-    [selected3]
-  );
+    const userId = session.data.user.email
+
+      // single selection of rating in pulldown button
+    const [selected, setSelected] = useState(new Set(["Rating"]));
+    const selectedValue = React.useMemo(
+      () => Array.from(selected).join(", ").replaceAll("_", " "),
+      [selected]
+    );
+    const [selected1, setSelected1] = useState(new Set(["Rating"]));
+    const selectedValue1 = React.useMemo(
+      () => Array.from(selected1).join(", ").replaceAll("_", " "),
+      [selected1]
+    );
+    const [selected2, setSelected2] = useState(new Set(["Rating"]));
+    const selectedValue2 = React.useMemo(
+      () => Array.from(selected2).join(", ").replaceAll("_", " "),
+      [selected2]
+    );
+    const [selected3, setSelected3] = useState(new Set(["Rating"]));
+    const selectedValue3 = React.useMemo(
+      () => Array.from(selected1).join(", ").replaceAll("_", " "),
+      [selected3]
+    );
 
 
     const handleImage = (changeEvent) => {
@@ -83,10 +91,12 @@ export default function Addpost({ params }: { params: { id: string } }) {
         e.preventDefault();
         try {
           console.log(`this is url: ${image_URL}`)
+          console.log(`this is userid: ${userId}`)
           const { data } = await axios.post("/api/add_post", {
             Description,
             locationId,
-            image_URL
+            image_URL,
+            userId
           });
           if (data) {
             console.log("Data has been sent successfully...");
