@@ -6,6 +6,7 @@ import { SessionContextValue, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export const FLocationContext = createContext<Array<Location>>([])
+export const ReloadFLocationContext = createContext<Function>(() => {})
 
 export interface Location {
   _id: string;
@@ -20,14 +21,21 @@ const getFollowedLocations = async(email: string) => {
   return res.json()
 }
 
-function useFetchLocations(session: SessionContextValue) {
+function useFetchLocations(session: SessionContextValue): [
+  locations: Location[],
+  updateLocations: Function
+] {
   const [locations, setLocations] = useState<Array<Location>>([])
+
+  const updateLocations = async() => {
+    const followedLocations = await getFollowedLocations(session?.data?.user?.email as string)
+    setLocations(followedLocations)
+  }
 
   useEffect(() => {
       if (session.status === "authenticated" && session.data.user) {
           const getData = async() => {
-              const followedLocations = await getFollowedLocations(session.data.user?.email as string)
-              setLocations(followedLocations)
+            await updateLocations()
           }
           getData()
       }
@@ -37,7 +45,7 @@ function useFetchLocations(session: SessionContextValue) {
       console.log(locations)
   }, [locations])
 
-  return locations
+  return [locations, updateLocations]
 }
 
 export default function Layout({
@@ -55,7 +63,7 @@ export default function Layout({
     },
   });
 
-  const locations = useFetchLocations(session)
+  const [locations, updateLocations] = useFetchLocations(session)
 
   return (
     <>
@@ -67,7 +75,9 @@ export default function Layout({
           <Fbar locations={ locations }/>
         </div>
         <FLocationContext.Provider value={ locations }>
-          { children }
+          <ReloadFLocationContext.Provider value={ updateLocations }>
+            { children }
+          </ReloadFLocationContext.Provider>
         </FLocationContext.Provider>
       </main>
     </>

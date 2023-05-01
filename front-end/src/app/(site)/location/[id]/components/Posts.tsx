@@ -29,9 +29,7 @@ async function fetchLocationPosts(
     return res.json();
   }
 
-export default function Posts({locationId}:{locationId: string}) {
-
-    console.log(locationId)
+export default function Posts({ locationId }:{ locationId: string }) {
     const [posts, fetchPosts, hasMore, didMount] = useFetchPosts(locationId);
 
     return(
@@ -42,10 +40,11 @@ export default function Posts({locationId}:{locationId: string}) {
                             dataLength={ posts.length } //This is important field to render the next data
                             next={ fetchPosts as any }
                             hasMore={ hasMore }
+                            loader={<p>Loading...</p>}
                             endMessage={
-                                <p style={{ textAlign: 'center' }}>
-                                <b>Yay! You have seen it all</b>
-                                </p>
+                              <p style={{ textAlign: 'center' }}>
+                              <b>Yay! You have seen it all</b>
+                              </p>
                             }
                         >
                             {

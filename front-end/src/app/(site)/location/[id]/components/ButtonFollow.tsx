@@ -4,11 +4,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import locateStyle from "../page.module.css"
 import { useContext, useEffect, useState } from "react"
-import { FLocationContext } from "@/app/(site)/layout";
+import { FLocationContext, ReloadFLocationContext } from "@/app/(site)/layout";
 
 export default function ButtonFollow({ locationID }: { locationID: string}) {
     const router = useRouter();
     const locations = useContext(FLocationContext)
+    const reloadLocations = useContext(ReloadFLocationContext)
     const [followed, setFollowed] = useState<boolean>(false)
 
     /* Sessions is used to extract email from the users... */
@@ -26,15 +27,15 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
         const encodedLocation: any = encodeURI(locationID);
 
         try {
-        const res: Response = await fetch(
-            `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/followLocation?locationId=${encodedLocation}&email=${encodedEmail}`,
-            {
-            method: "POST",
-            cache: "no-store",
-            }
-        )
+            const res: Response = await fetch(
+                `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/followLocation?locationId=${encodedLocation}&email=${encodedEmail}`,
+                {
+                method: "POST",
+                cache: "no-store",
+                }
+            )
 
-        console.log(res.json())
+            reloadLocations()
         } catch (error) {
         console.log(error);
         }
@@ -45,7 +46,7 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
     }
 
     useEffect(() => {
-        console.log(locations)
+        
         locations.map((location) => {
             if(location._id === locationID) {
                 setFollowed(true)
