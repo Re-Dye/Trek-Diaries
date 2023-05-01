@@ -1,6 +1,8 @@
 import locateStyle from "./page.module.css";
 import ButtonFollow from "./components/ButtonFollow";
 import ButtonAddPost from "./components/ButtonAddPost";
+import Posts from "./components/Posts";
+
 
 async function fetchLocationData(id: string) {
   const res: any = await fetch(
@@ -10,9 +12,9 @@ async function fetchLocationData(id: string) {
   return res.json();
 }
 
-export default async function LocationPage({ params }: { params: { id: string } }) {
+export default async function LocationPage({ params }: {  params: { id: string };}) {
   const locationID: string = params.id;
-  const data = await fetchLocationData(locationID)
+  const data = await fetchLocationData(locationID);
 
   return (
     <div className={locateStyle.location}>
@@ -22,11 +24,12 @@ export default async function LocationPage({ params }: { params: { id: string } 
             <h1>{data.address}</h1>
             <h1>{data.description}</h1>
           </div>
-          {/* <Header id={params.id} /> */}
         </div>
-        <ButtonAddPost locationID={ locationID } />
-        <ButtonFollow locationID={ locationID }/>
+        <ButtonAddPost locationID={locationID} />
+        <ButtonFollow locationID={locationID} />
       </div>
+      <Posts locationId = {params.id}/>
     </div>
   );
-}
+} 
+

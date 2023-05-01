@@ -9,6 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'POST') {
         try{
             const {email, password, firstName, lastName,dob} = req.body as any
+
+            const fullName: String = `${firstName} ${lastName}`;
             if (await dbConnect())
             {
                 console.log("Connection established....");
@@ -27,6 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             user.password = password;
             user.first_name = firstName;
             user.last_name = lastName;
+            user.full_name = fullName;
             user.dob = dob;
             await user.save()
 
