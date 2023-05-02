@@ -11,16 +11,18 @@ interface Owner {
 //{id, location, description, likes, imageURL, owner}
 export default function ViewPost({ id, location, description, likes, imageURL, owner }: {
   id: string,
-  location: string,
+  location: any,
   description: string,
   likes: number,
   imageURL: string,
   owner: Owner
 }) {
+
   const router = useRouter();
   const handleComment = ()=>{
     router.push(`/post/${id}`);
   }
+
   return (
     <div className={postStyles.wrapper}>
       <div className={postStyles.left}>
@@ -51,7 +53,7 @@ export default function ViewPost({ id, location, description, likes, imageURL, o
           /> */}
           <button
             className={`${postStyles.icons} ${postStyles.like}`}
-            size={35}
+            // size={35}
           > LIKE </button>
           {/* <FaCommentAlt
             className={`${postStyles.icons} ${postStyles.comment}`}
@@ -59,7 +61,7 @@ export default function ViewPost({ id, location, description, likes, imageURL, o
           /> */}
           <button
             className={`${postStyles.icons} ${postStyles.comment}`}
-            size={28}
+            // size={28}
             onClick = {handleComment}
           > COMMENT </button>
         </div>

@@ -18,7 +18,7 @@ export default function Home() {
       <div className={mainStyles.wrapper}>
         <div className={mainStyles.left}></div>
         <div className={mainStyles.center}>
-          <ViewPost />
+          {/* <ViewPost /> */}
         </div>
         <div className={mainStyles.right}></div>
       </div>
