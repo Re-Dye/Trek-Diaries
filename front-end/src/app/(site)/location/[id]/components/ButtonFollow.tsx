@@ -8,9 +8,8 @@ import { FLocationContext, ReloadFLocationContext } from "@/app/(site)/layout";
 
 export default function ButtonFollow({ locationID }: { locationID: string}) {
     const router = useRouter();
-    const locations = useContext(FLocationContext)
     const reloadLocations = useContext(ReloadFLocationContext)
-    const [followed, setFollowed] = useState<boolean>(false)
+    const followed = useGetFollow(locationID)
 
     /* Sessions is used to extract email from the users... */
     const session = useSession({
@@ -21,7 +20,7 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
     });
 
     /* handleFollow handles the follow event, i.e. it adds the location id to the users location */
-    const handleFollow = async () => {
+    const handleToggleFollow = async () => {
         const email: any = session.data?.user?.email;
         const encodedEmail: any = encodeURI(email);
         const encodedLocation: any = encodeURI(locationID);
@@ -41,33 +40,35 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
         }
     };
 
-    const handleUnfollow = async () => {
-        console.log("unfollow")
-    }
-
-    useEffect(() => {
-        
-        locations.map((location) => {
-            if(location._id === locationID) {
-                setFollowed(true)
-            }else{
-                setFollowed(false)
-            }
-        })
-    }, [locations])
-
     return(
         <>
-            {(!followed) && 
-                <button onClick={handleFollow} className={locateStyle.followbtn}>
+            {(!followed)?
+                <button onClick={handleToggleFollow} className={locateStyle.followbtn}>
                     <SlUserFollow />
                 </button>
-            }
-            {followed &&
-                <button onClick={ handleUnfollow } className={locateStyle.followbtn}>
+            :
+                <button onClick={ handleToggleFollow } className={locateStyle.followbtn}>
                     Unfollow
                 </button>
             }
         </>
     )
+}
+
+function useGetFollow(locationID: string): boolean {
+    const locations = useContext(FLocationContext)
+    const [followed, setFollowed] = useState<boolean>(false)
+
+    useEffect(() => {
+        for (let i = 0; i < locations.length; i++) {
+            if(locations[i]._id === locationID) {
+                setFollowed(true)
+                break
+            }else{
+                setFollowed(false)
+            }
+        }
+    }, [locations])
+
+    return followed
 }
