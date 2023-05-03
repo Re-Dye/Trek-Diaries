@@ -2,11 +2,12 @@
 
 .wrapper{
     width: 100%;
-    background-color: rgba(217, 217, 217, 0.3);
+    background-color: white;
     padding: 30px;
-    margin-bottom: 300px;
+    margin-bottom: 15px;
     box-sizing: border-box;
     font-family: raleway;
+    border-radius: 10px;
 }
 
 .header{
