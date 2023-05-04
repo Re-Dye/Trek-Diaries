@@ -2,10 +2,8 @@ import mongoose, { Schema } from "mongoose";
 
 interface IComment {
   content: string;
-  owner: {
-    type: Schema.Types.ObjectId;
-    ref: string;
-  };
+  owner: string;
+  registeredTime: mongoose.Schema.Types.Date;
 }
 interface Ilocation {
   id: Schema.Types.ObjectId;
@@ -35,9 +33,13 @@ const commentSchema = new Schema<IComment>({
     maxlength: 150,
   },
   owner: {
-    type: Schema.Types.ObjectId,
-    ref: "users",
+    type: String
   },
+  registeredTime: {
+    required: true,
+    type: mongoose.Schema.Types.Date,
+    default: new Date()
+  }
 });
 
 const postSchema = new Schema<IPost>({

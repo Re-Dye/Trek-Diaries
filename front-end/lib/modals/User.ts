@@ -6,7 +6,7 @@ interface IUser {
     password: string,
     first_name: string,
     last_name: string,
-    full_name: string,
+    name: string,
     dob: Date,
     profile_pic: any,
     location:[{type:Schema.Types.ObjectId,
@@ -36,7 +36,7 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: true,
     },
-    full_name: {
+    name: {
         type: String,
         required: true,
     },

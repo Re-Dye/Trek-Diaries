@@ -17,7 +17,6 @@ async function fetchPostData(id:string) {
 export default async function PostPage({ params }: {  params: { id: string };}) {
   const postID: string = params.id;
   const data = await fetchPostData(postID);
-  console.log(data.owner.name)
 
   return (
     <div className={postStyles.wrapper}>
@@ -29,7 +28,7 @@ export default async function PostPage({ params }: {  params: { id: string };}) 
             pictureURL = {data.pictureURL}
             />
       <div className={postStyles.rComment}>
-        <CommentLayout />
+        <CommentLayout postId = {params.id}/>
       </div>
     </div>
   );

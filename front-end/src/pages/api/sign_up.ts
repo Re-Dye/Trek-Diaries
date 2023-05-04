@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             user.password = password;
             user.first_name = firstName;
             user.last_name = lastName;
-            user.full_name = fullName;
+            user.name = fullName;
             user.dob = dob;
             await user.save()
 
