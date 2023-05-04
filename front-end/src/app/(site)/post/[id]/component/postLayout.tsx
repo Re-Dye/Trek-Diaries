@@ -1,5 +1,4 @@
 "use client"
-import React from "react";
 import { AiTwotoneLike } from "react-icons/ai";
 import { FaCommentAlt } from "react-icons/fa";
 import postStyles from "../page.module.css";
@@ -20,13 +19,17 @@ export default function Post({address,name,likes,registeredTime,description,pict
         const seconds = Math.floor(diff / 1000);
         const minutes = Math.floor(seconds / 60);
         const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
         let formattedDiff;
-        if (hours >= 1) {
-        formattedDiff = hours + 'h ago';
+        if(days>=1){
+          formattedDiff = days + 'd ago';
+        }
+         else if (hours >= 1) {
+          formattedDiff = hours + 'h ago';
         } else if (minutes >= 1) {
-        formattedDiff = minutes + 'm ago';
+          formattedDiff = minutes + 'm ago';
         } else {
-        formattedDiff = seconds + 's ago';
+          formattedDiff = seconds + 's ago';
         }
 
     

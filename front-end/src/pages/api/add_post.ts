@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 console.log("Connection established in addPost");
             }
             const user: any = await User.findOne({email: userId});
-            const fullName = user.full_name;
+            const fullName = user.name;
 
             const location: any = await Location.findById(locationId); // importing address from location
             const address = location.address;
