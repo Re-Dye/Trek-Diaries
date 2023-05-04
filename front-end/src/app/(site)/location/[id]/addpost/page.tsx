@@ -4,10 +4,8 @@ import React from "react";
 import { Suspense } from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { MdAddPhotoAlternate } from "react-icons/md";
 import { useSession } from "next-auth/react";
-import postStyle from "../../[id]/page.module.css"
-import Image from "next/image";
+import locationStyle from "../addpost/page.module.css"
 import {AiFillStar} from "react-icons/ai"
 import { Dropdown } from "@nextui-org/react";
 import {BiImageAdd} from "react-icons/bi";
@@ -31,7 +29,7 @@ export default function Addpost({ params }: { params: { id: string } }) {
       },
     });
 
-    const userId = session.data.user.email
+    const userId = session?.data?.user?.email
 
       // single selection of rating in pulldown button
     const [selected, setSelected] = useState(new Set(["Rating"]));
@@ -108,30 +106,30 @@ export default function Addpost({ params }: { params: { id: string } }) {
       };
 
     return (
-        <div className = {postStyle.wrapper}>
-        <div className={postStyle.forms}>
+        <div className = {locationStyle.wrapper}>
+        <div className={locationStyle.forms}>
           <h2>Add Post</h2>
-            <form onSubmit = {handleSubmit} className={postStyle.postfield}>
+            <form onSubmit = {handleSubmit} className={locationStyle.postfield}>
                 <input 
-                className={postStyle.file}
+                className={locationStyle.file}
                 type="file" 
                 name ="file" 
                 onChange={handleImage} />
-                <img src = {imageSrc} className={postStyle.imgFit}/>
+                <img src = {imageSrc} className={locationStyle.imgFit}/>
                 <button 
                 type = "submit"
-                className={postStyle.addimg}> Add Image <BiImageAdd className={postStyle.addimgicon}/></button>
+                className={locationStyle.addimg}> Add Image <BiImageAdd className={locationStyle.addimgicon}/></button>
             </form>
-                <form className={postStyle.postfield1}>       
+                <form className={locationStyle.postfield1}>       
                 <textarea 
                   name="text"
                   id="description"
                   placeholder="Description (required...)"
-                  className={postStyle.inputBx}
+                  className={locationStyle.inputBx}
                   value={Description}
                   onChange={(e) => setDescription(e.target.value)} // setting value of Description
                 />
-                <div className={postStyle.ratingStar}>
+                <div className={locationStyle.ratingStar}>
                 <div>
                 <h3>Scenery</h3>
                 <Dropdown>
@@ -203,7 +201,7 @@ export default function Addpost({ params }: { params: { id: string } }) {
                   </div>
                   </div>
                 <button 
-                className={postStyle.createbtn} 
+                className={locationStyle.createbtn} 
                 onClick={(e) => handleCreatePost(e)}>
                 Create Post</button>
             </form>
