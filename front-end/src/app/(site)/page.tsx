@@ -16,14 +16,16 @@ export default function Home() {
   });
 
   return (
-      <div className={mainStyles.wrapper}>
-        <div className={mainStyles.left}></div>
-        <div className={mainStyles.center}>
-          {(session.status === "authenticated") &&
-            <PostFeed email={ session.data?.user?.email as string }/>
-          }
+    <div className={mainStyles.wrapper}>
+      <div className={mainStyles.left}></div>
+      <div className={mainStyles.center}>
+        <div className={mainStyles.post}>
+          {session.status === "authenticated" && (
+            <PostFeed email={session.data?.user?.email as string} />
+          )}
         </div>
-        <div className={mainStyles.right}></div>
       </div>
+      <div className={mainStyles.right}></div>
+    </div>
   );
 }

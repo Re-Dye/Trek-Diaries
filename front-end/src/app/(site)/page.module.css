@@ -28,3 +28,8 @@ margin-top: -17em;
     margin: 0;
 }
 
+.center .post{
+    width: 100%;
+    box-sizing: border-box;
+}
+
