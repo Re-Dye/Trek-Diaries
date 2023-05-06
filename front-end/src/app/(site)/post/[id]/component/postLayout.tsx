@@ -1,7 +1,7 @@
 "use client"
 import { AiTwotoneLike } from "react-icons/ai";
 import { FaCommentAlt } from "react-icons/fa";
-import postStyles from "../page.module.css";
+import "./postLayout.css"
 import Image from "next/image";
 
 export default function Post({address,name,likes,registeredTime,description,pictureURL }:{
@@ -34,21 +34,21 @@ export default function Post({address,name,likes,registeredTime,description,pict
 
     
     return(
-       <div className= {postStyles.wrapper}>
-        <div className={postStyles.leftCtn}>
+       <div className= "wrapper">
+        <div className="leftCtn">
             <Image
             alt="Error: Image could not be loaded."
             width = '1000'
             height = '500'
             src = {pictureURL}/>
         </div>
-        <div className={postStyles.rightCtn}>
-          <div className={postStyles.rTop}>
-            <h3 className={postStyles.uName}>{name}</h3>
-            <h5 className={postStyles.time}>{formattedDiff}</h5>
+        <div className="rightCtn">
+          <div className="rTop">
+            <h3 className="uName">{name}</h3>
+            <h5 className="time">{formattedDiff}</h5>
           </div>
-          <div className={postStyles.rdesc}>
-            <p className={postStyles.description}>
+          <div className="rDesc">
+            <p className="description">
              {description}
             </p>
           </div>
@@ -57,13 +57,13 @@ export default function Post({address,name,likes,registeredTime,description,pict
             <h3>*****</h3>
             <h3>**</h3>
           </div> */}
-          <div className={postStyles.rReact}>
+          <div className="rReact">
             <AiTwotoneLike
-              className={`${postStyles.icons} ${postStyles.like}`}
+              className="icons like"
               size={35}
             />
             <FaCommentAlt
-              className={`${postStyles.icons} ${postStyles.comment}`}
+              className="icons comment"
               size={28}
             />
           </div>
