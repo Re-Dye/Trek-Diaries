@@ -16,11 +16,12 @@ export default function CommentLayout ({postId}:{postId:string}) {
       },
     });
 
-  const handleComment = async(e)=>{
+  const handleComment = async(e:any)=>{
     e.preventDefault();
-    console.log(comment,session.data.user.email,postId);
+    console.log(comment,session?.data?.user?.email,postId);
+    var email: any = session?.data?.user?.email;
     const encodedComment = encodeURI(comment);
-    const encodedEmail = encodeURI(session.data.user.email);
+    const encodedEmail = encodeURI(email);
     const encodedPostId = encodeURI(postId);
     const data: any = await fetch(`https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/postComment?email=${encodedEmail}&content=${encodedComment}&postId=${encodedPostId}`,
     {
