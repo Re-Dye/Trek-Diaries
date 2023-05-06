@@ -43,7 +43,7 @@ body{
     flex-direction: column;
     margin: 5px;
     color: black;
-    background-color: lightcoral;
+    /* background-color: lightcoral; */
     /* background-color:green; */
 }
 
@@ -51,14 +51,14 @@ body{
     width:90%;
     height: 30%;
     margin: 5px;
-    background-color: lightgoldenrodyellow;
+    /* background-color: lightgoldenrodyellow; */
 }
 
 .rRating{
     width: 90%;
     height:15%;
     margin: 5px;
-    background-color: lightgreen;
+    /* background-color: lightgreen; */
 }
 
 .rReact{
@@ -67,14 +67,13 @@ body{
     margin: 5px;
     display: flex;
     align-items: center;
-    background-color: lightsteelblue;
+    /* background-color: lightsteelblue; */
 
 }
 
 .rComment{
     width: 90%;
     height: 35%;
-    background-color: skyblue;
     margin: 5px;
     display: flex;
     flex-direction: column;
