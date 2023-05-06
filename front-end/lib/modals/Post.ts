@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 interface IComment {
+  id: Schema.Types.ObjectId;
   content: string;
   owner: string;
   registeredTime: mongoose.Schema.Types.Date;
@@ -16,7 +17,7 @@ interface IOwner {
 
 interface IPost {
   description: string;
-  picture: any;
+  pictureURL: string;
   location: Ilocation;
   likes: number;
   comments: [IComment];
@@ -27,6 +28,10 @@ interface IPost {
 
 
 const commentSchema = new Schema<IComment>({
+  id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   content: {
     type: String,
     required: true,
