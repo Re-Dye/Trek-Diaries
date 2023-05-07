@@ -66,9 +66,9 @@ export default function Post({
           <FaCommentAlt className="icons comment" size={28} />
         </div>
 
-        <div className="rComment">
+        {/* <div className="rComment">
           <ViewComment />
-        </div>
+        </div> */}
       </div>
     </div>
   );

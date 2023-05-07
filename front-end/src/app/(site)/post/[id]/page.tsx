@@ -1,8 +1,6 @@
 import React from "react";
 import postStyles from "./page.module.css";
-import { AiTwotoneLike } from "react-icons/ai";
-import { FaCommentAlt } from "react-icons/fa";
-import CommentLayout from "./component/commentLayour";
+import Comment from "./component/Comment";
 import Post from "./component/postLayout";
 
 async function fetchPostData(id: string) {
@@ -31,7 +29,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           pictureURL={data.pictureURL}
         />
         <div className={postStyles.rComment}>
-          <CommentLayout postId={params.id} />
+          <Comment postId={params.id} />
         </div>
       </div>
     </div>

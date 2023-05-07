@@ -63,7 +63,7 @@ export default function Addpost({ params }: { params: { id: string } }) {
         reader.readAsDataURL(changeEvent.target.files[0]);
       }
     
-        async function handleSubmit(event) {
+        async function handleSubmit(event: any) {
         event.preventDefault();
         const form = event.currentTarget;
         const fileInput = Array.from(form.elements).find(({ name }) => name === 'file');
