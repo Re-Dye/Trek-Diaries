@@ -1,15 +1,22 @@
 .wrapper{
-    width: 95%;
+    width: 100%;
     min-height: 100px;
-    background-color: grey;
+    background-color: white;
     border-radius: 10px;
     padding:10px;
     box-sizing: border-box;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
 }
 
 .wrapper h3 , p{
-    margin:1px;
+    margin:3px;
+    font-size: medium;
+}
+
+h5{
+    margin: 0;
+    font-weight: 100;
 }

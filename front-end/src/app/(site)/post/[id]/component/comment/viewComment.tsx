@@ -26,7 +26,7 @@ const ViewComment = ({content, owner, registeredTime}: {
   return (
     <div className={comStyles.wrapper}>
       <div>
-        <h3>{formattedDiff}</h3>
+        <h5>{formattedDiff}</h5>
       </div>
       <div className={comStyles.userName}>
         <h3>{owner}</h3>

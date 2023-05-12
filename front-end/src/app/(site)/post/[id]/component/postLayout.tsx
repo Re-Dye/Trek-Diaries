@@ -4,6 +4,7 @@ import { FaCommentAlt } from "react-icons/fa";
 import "./postLayout.css";
 import Image from "next/image";
 import ViewComment from "./comment/viewComment";
+import Comment from "./comment_sec/Comment";
 
 export default function Post({
   address,
@@ -12,6 +13,7 @@ export default function Post({
   registeredTime,
   description,
   pictureURL,
+  postID,
 }: {
   address: string;
   name: string;
@@ -19,6 +21,7 @@ export default function Post({
   registeredTime: Date;
   description: string;
   pictureURL: string;
+  postID: string;
 }) {
   const storedDate = new Date(registeredTime);
   const now = new Date();
@@ -56,19 +59,13 @@ export default function Post({
         <div className="rDesc">
           <p className="description">{description}</p>
         </div>
-
-        {/* <div className={postStyles.rRating}>
-            <h3>*****</h3>
-            <h3>**</h3>
-          </div> */}
         <div className="rReact">
           <AiTwotoneLike className="icons like" size={35} />
-          <FaCommentAlt className="icons comment" size={28} />
         </div>
 
-        {/* <div className="rComment">
-          <ViewComment />
-        </div> */}
+        <div className="rComment">
+          <Comment postId={postID} />
+        </div>
       </div>
     </div>
   );

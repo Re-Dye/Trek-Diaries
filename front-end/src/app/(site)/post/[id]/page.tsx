@@ -1,6 +1,6 @@
 import React from "react";
 import postStyles from "./page.module.css";
-import Comment from "./component/Comment";
+import Comment from "./component/comment_sec/Comment";
 import Post from "./component/postLayout";
 
 async function fetchPostData(id: string) {
@@ -27,9 +27,10 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           registeredTime={data.registeredTime}
           description={data.description}
           pictureURL={data.pictureURL}
+          postID={params.id}
         />
         <div className={postStyles.rComment}>
-          <Comment postId={params.id} />
+          {/* <Comment postId={params.id} /> */}
         </div>
       </div>
     </div>
