@@ -20,6 +20,7 @@ interface IPost {
   pictureURL: string;
   location: Ilocation;
   likes: number;
+  likedBy: [string];
   comments: [IComment];
   owner: IOwner;
   registeredTime: mongoose.Schema.Types.Date;
@@ -68,6 +69,9 @@ const postSchema = new Schema<IPost>({
     type: Number,
     default: 0,
   },
+  likedBy: [{
+    type: String,
+  }],
   comments: [commentSchema],
   owner: {
     email: {
