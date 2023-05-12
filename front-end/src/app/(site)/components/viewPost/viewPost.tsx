@@ -3,6 +3,8 @@ import { AiTwotoneLike } from "react-icons/ai";
 import { FaCommentAlt } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 interface Owner {
   name: string;
@@ -24,11 +26,38 @@ export default function ViewPost({
   imageURL: string;
   owner: Owner;
 }) {
+  const [Likes, setLike] = useState(likes)
+  const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
+        router.push("/login");
+    },
+  });
+
+  const email: any = session.data?.user?.email;
+
   const handleComment = () => {
     router.push(`/post/${id}`);
   };
 
+  const handleLike = async() =>{
+    const encodedEmail = encodeURI(email);
+    const eoncodedPostId = encodeURI(id);
+    try {
+        const res: Response = await fetch(
+        `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/likePost?postId=${eoncodedPostId}&email=${encodedEmail}`,
+        {
+          method: "POST",
+          cache: "no-store",
+        })
+        setLike(isLiked ? likes : likes + 1); // Toggle between increment and decrement based on isLiked state
+        setIsLiked(!isLiked); // Toggle the isLiked state
+        } catch (error) {
+        console.log(error);
+        }
+      }
   return (
     <div className={postStyles.wrapper}>
       <div className={postStyles.left}>
@@ -64,8 +93,9 @@ export default function ViewPost({
           /> */}
           <button
             className={`${postStyles.icons} ${postStyles.like}`}
+            onClick={handleLike}
             // size={35}
-          >
+          >{Likes}
             {" "}
             LIKE{" "}
           </button>
