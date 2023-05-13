@@ -39,18 +39,18 @@ export default function ViewPost({
   });
 
   const email: any = session.data?.user?.email;
-  const handleColor = () => {
-    if (isLiked) {
-      setColor("blue");
-    } else {
-      setColor("grey");
-    }
-  };
+  // const handleColor = () => {
+  //   if (isLiked) {
+  //     setColor("blue");
+  //     console.log("Liked")
+  //   } else {
+  //     setColor("grey");
+  //   }
+  // };
 
   const handleComment = () => {
     router.push(`/post/${id}`);
   };
-
   const handleLike = async () => {
     const encodedEmail = encodeURI(email);
     const eoncodedPostId = encodeURI(id);
@@ -62,13 +62,24 @@ export default function ViewPost({
           cache: "no-store",
         }
       );
-      setLike(isLiked ? likes : likes + 1); // Toggle between increment and decrement based on isLiked state
+      if(isLiked)
+      {
+        setLike(likes)
+        setColor("grey"); 
+      }
+      else{
+        setLike(likes+1);
+        setColor("blue");
+      }
+      // setLike(isLiked ? likes : likes + 1); // Toggle between increment and decrement based on isLiked state
       setIsLiked(!isLiked); // Toggle the isLiked state
     } catch (error) {
       console.log(error);
     }
   };
-
+  useEffect(()=>{
+        console.log(Color);
+      },[Likes]);
   return (
     <div className={postStyles.wrapper}>
       <div className={postStyles.left}>
@@ -100,10 +111,9 @@ export default function ViewPost({
         <div className={postStyles.rBottom}>
           <button
             className={`${postStyles.icons} ${postStyles.like}`}
-            color={`${Color}`}
+            style={{ color: `${Color}` }}
             onClick={() => {
               handleLike();
-              handleColor();
             }}
             // size={35}
           >
