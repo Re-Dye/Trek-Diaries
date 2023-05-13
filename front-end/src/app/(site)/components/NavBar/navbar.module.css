@@ -20,6 +20,15 @@
     align-items: center;
     
 }
+.Bar .BarLeft h1
+{
+  font-size: 2.5em;
+  color: rgb(3, 98, 98);
+}
+.Bar .BarLeft .icon
+{
+  color: rgb(6, 156, 73);
+}
 
 .dp{
     width: 50px;

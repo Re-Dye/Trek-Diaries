@@ -7,6 +7,7 @@ import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import {FaHiking} from "react-icons/fa"
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
@@ -21,7 +22,7 @@ export default function NavBar() {
     <div className={navStyles.wrapper}>
       <div className={navStyles.Bar}>
         <div className={navStyles.BarLeft}>
-          <h1 onClick={()=>{router.push("/")}} className={navStyles.logo}>TrekDiaries</h1>
+          <h1 onClick={()=>{router.push("/")}} className={navStyles.logo}><FaHiking className={navStyles.icon}/>D</h1>
         </div>
         <div className={navStyles.BarCenter}>
           <SearchInput />
