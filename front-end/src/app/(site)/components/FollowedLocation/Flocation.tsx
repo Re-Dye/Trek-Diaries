@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import locateStyle from "./flocation.module.css";
+import {GrMapLocation} from "react-icons/gr"
 
 export default function Flocation({ id, address }: { id: string, address: string }) {
     const router = useRouter()
@@ -12,7 +13,8 @@ export default function Flocation({ id, address }: { id: string, address: string
 
     return(
         <div className={locateStyle.followloc} onClick={ handleClick }>
-            { address }
+
+           <GrMapLocation /> { address }
         </div>
     );
 }

@@ -96,18 +96,36 @@
 }
 
 .like{
-    color: grey;
+    display: flex;
+    font-size: 25px;
+    cursor: pointer;
 }
+
 
 .like:hover{
     color: blue;
 }
 
+.likeCount{
+    margin-right: 10px;
+    position: relative;
+    top: 8.5px;
+}
+
 .comment{
     color: grey;
+    cursor: pointer;
 }
 
 .comment:hover{
     color: blue;
 }
+
+button{
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+
 

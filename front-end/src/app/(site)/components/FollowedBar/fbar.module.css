@@ -7,7 +7,7 @@
     width: 20%;
     height: 70%;
     margin-top: -16em;
-    background-color: rgba(217, 217, 217, 0.3);
+    /* background-color: rgba(217, 217, 217, 0.3); */
     margin-bottom: 300px;
     box-sizing: border-box;
     font-family: raleway;
@@ -15,17 +15,19 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    box-shadow:  0 3px 10px rgb(0 0 0 / 0.2);
+
+    /* box-shadow:  0 3px 10px rgb(0 0 0 / 0.2); */
 }
 
-.followbar h1
+.followbar h2
 {
     font-weight: 600;
     position: absolute;
     top: 0;
     font-size: 1.5em;
-    color: rgb(23, 11, 155);
+    color: black;
     left: 0.8em;
+    text-decoration: underline;
 }
 .followbar .locicon
 {
@@ -45,4 +47,5 @@
     padding: 1em;
     font-weight: 500;
     row-gap: 1em;
+    cursor: pointer;
 }

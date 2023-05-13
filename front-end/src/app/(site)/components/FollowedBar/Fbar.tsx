@@ -7,7 +7,7 @@ import { Location } from "../../layout";
 export default function Fbar({ locations }: { locations: Array<Location> }) {
     return(
         <div className={followStyle.followbar}>
-            <h1>Followed Locations <ImLocation2 className={followStyle.locicon} /></h1>
+            <h2>Followed Locations </h2>
             <div className={followStyle.followLocation}>
             {
                 locations.map((location) => (

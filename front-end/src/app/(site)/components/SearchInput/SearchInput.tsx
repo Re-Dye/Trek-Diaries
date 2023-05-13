@@ -21,7 +21,7 @@ export default function SearchInput() {
     <div className={SearchBoxStyles.container}>
       <form onSubmit={handleSearch} className={SearchBoxStyles.box}>
         <input
-          placeholder={`What are you looking for? (Enter in format "place, district/state, country")`}
+          placeholder={`Search TrekDiaries`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />

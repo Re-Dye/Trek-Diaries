@@ -21,7 +21,7 @@ export default function NavBar() {
     <div className={navStyles.wrapper}>
       <div className={navStyles.Bar}>
         <div className={navStyles.BarLeft}>
-          <h1 onClick={()=>{router.push("/")}}>Logo</h1>
+          <h1 onClick={()=>{router.push("/")}} className={navStyles.logo}>TrekDiaries</h1>
         </div>
         <div className={navStyles.BarCenter}>
           <SearchInput />

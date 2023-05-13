@@ -74,3 +74,8 @@ a {
   max-width: 100px;
   margin-left: 10px;
 }
+
+.logo{
+  cursor: pointer;
+  
+}
