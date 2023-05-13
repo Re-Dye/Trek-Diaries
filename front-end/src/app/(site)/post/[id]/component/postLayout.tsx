@@ -5,6 +5,9 @@ import "./postLayout.css";
 import Image from "next/image";
 import ViewComment from "./comment/viewComment";
 import Comment from "./comment_sec/Comment";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function Post({
   address,
@@ -41,6 +44,37 @@ export default function Post({
     formattedDiff = seconds + "s ago";
   }
 
+  const [Likes, setLike] = useState(likes);
+  const [isLiked, setIsLiked] = useState(false);
+  const router = useRouter();
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/login");
+    },
+  });
+
+  
+  const email: any = session.data?.user?.email;
+
+  const handleLike = async () => {
+    const encodedEmail = encodeURI(email);
+    const eoncodedPostId = encodeURI(postID);
+    try {
+      const res: Response = await fetch(
+        `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/likePost?postId=${eoncodedPostId}&email=${encodedEmail}`,
+        {
+          method: "POST",
+          cache: "no-store",
+        }
+      );
+      setLike(isLiked ? likes : likes + 1); // Toggle between increment and decrement based on isLiked state
+      setIsLiked(!isLiked); // Toggle the isLiked state
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="wrapper">
       <div className="leftCtn">
@@ -60,7 +94,8 @@ export default function Post({
           <p className="description">{description}</p>
         </div>
         <div className="rReact">
-          <AiTwotoneLike className="icons like" size={35} />
+          <AiTwotoneLike className="icons like" size={35}  onClick={handleLike}/>
+          {Likes}
         </div>
 
         <div className="rComment">
