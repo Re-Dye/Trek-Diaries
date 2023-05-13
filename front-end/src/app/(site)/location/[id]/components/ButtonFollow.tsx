@@ -44,11 +44,11 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
         <>
             {(!followed)?
                 <button onClick={handleToggleFollow} className={locateStyle.followbtn}>
-                    <SlUserFollow />
+                    + Follow
                 </button>
             :
                 <button onClick={ handleToggleFollow } className={locateStyle.followbtn}>
-                    Unfollow
+                    x Unfollow
                 </button>
             }
         </>

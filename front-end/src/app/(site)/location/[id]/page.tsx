@@ -2,6 +2,7 @@ import locateStyle from "./page.module.css";
 import ButtonFollow from "./components/ButtonFollow";
 import ButtonAddPost from "./components/ButtonAddPost";
 import Posts from "./components/Posts";
+import {TbLocationFilled }from "react-icons/tb"
 
 async function fetchLocationData(id: string) {
   const res: any = await fetch(
@@ -24,16 +25,19 @@ export default async function LocationPage({
       <div className={locateStyle.left}></div>
       <div className={locateStyle.center}>
         <div className={locateStyle.cTop}>
-          <div className={locateStyle.locatefield}>
             <div className={locateStyle.header}>
-              <div>
+              <div className={locateStyle.hText}>
+                <div className={locateStyle.locName}>
+                <TbLocationFilled size={28}/>
                 <h1>{data.address}</h1>
-                <h1>{data.description}</h1>
+                </div>
+                <p>{data.description}</p>
+              </div>
+              <div className={locateStyle.hButton}>
+                <ButtonAddPost locationID={locationID} />
+                <ButtonFollow locationID={locationID} />
               </div>
             </div>
-            <ButtonAddPost locationID={locationID} />
-            <ButtonFollow locationID={locationID} />
-          </div>
         </div>
 
         <div className={locateStyle.cBottom}>

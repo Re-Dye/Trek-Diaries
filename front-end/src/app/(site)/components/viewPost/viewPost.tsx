@@ -11,7 +11,6 @@ interface Owner {
   name: string;
 }
 
-
 //{id, location, description, likes, imageURL, owner}
 export default function ViewPost({
   id,
@@ -28,6 +27,7 @@ export default function ViewPost({
   imageURL: string;
   owner: Owner;
 }) {
+  const [Color, setColor] = useState("grey");
   const [Likes, setLike] = useState(likes);
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
@@ -38,8 +38,14 @@ export default function ViewPost({
     },
   });
 
-  
   const email: any = session.data?.user?.email;
+  const handleColor = () => {
+    if (isLiked) {
+      setColor("blue");
+    } else {
+      setColor("grey");
+    }
+  };
 
   const handleComment = () => {
     router.push(`/post/${id}`);
@@ -63,9 +69,6 @@ export default function ViewPost({
     }
   };
 
-    
-
-  
   return (
     <div className={postStyles.wrapper}>
       <div className={postStyles.left}>
@@ -97,17 +100,18 @@ export default function ViewPost({
         <div className={postStyles.rBottom}>
           <button
             className={`${postStyles.icons} ${postStyles.like}`}
-            onClick={handleLike}
+            color={`${Color}`}
+            onClick={() => {
+              handleLike();
+              handleColor();
+            }}
             // size={35}
           >
-            <div className={postStyles.likeCount}>
-            {Likes}
-            </div>
+            <div className={postStyles.likeCount}>{Likes}</div>
             <AiTwotoneLike
               className={`${postStyles.icons} ${postStyles.like}`}
               size={35}
             />
-            
           </button>
 
           <button

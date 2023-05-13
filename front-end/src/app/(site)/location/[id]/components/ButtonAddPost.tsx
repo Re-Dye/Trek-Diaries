@@ -12,7 +12,7 @@ export default function ButtonAddPost({ locationID }: { locationID: string }) {
 
     return(
         <button onClick={handleADDPOST} className={locateStyle.addpstbtn}>
-          ADD POST
+          + ADD POST
         </button>
     )
 }
