@@ -62,13 +62,11 @@ export default function ViewPost({
           cache: "no-store",
         }
       );
-      if(isLiked)
-      {
-        setLike(likes)
-        setColor("grey"); 
-      }
-      else{
-        setLike(likes+1);
+      if (isLiked) {
+        setLike(likes);
+        setColor("grey");
+      } else {
+        setLike(likes + 1);
         setColor("blue");
       }
       // setLike(isLiked ? likes : likes + 1); // Toggle between increment and decrement based on isLiked state
@@ -77,9 +75,9 @@ export default function ViewPost({
       console.log(error);
     }
   };
-  useEffect(()=>{
-        console.log(Color);
-      },[Likes]);
+  useEffect(() => {
+    console.log(Color);
+  }, [Likes]);
   return (
     <div className={postStyles.wrapper}>
       <div className={postStyles.left}>
@@ -90,8 +88,8 @@ export default function ViewPost({
           <div className={postStyles.imgCtn}>
             <Image
               alt="Error: Image could not be loaded."
-              width="1000"
-              height="500"
+              fill={true}
+              style={{ objectFit: "cover" }}
               src={imageURL}
             />
           </div>

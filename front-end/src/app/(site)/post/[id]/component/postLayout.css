@@ -21,6 +21,12 @@ body{
     overflow-y: auto;
 }
 
+.imgCtn{
+    position: relative;
+    overflow: hidden;
+    height: 1000px;
+}
+
 .rightCtn{
     width:50%;
     height: 100vh;

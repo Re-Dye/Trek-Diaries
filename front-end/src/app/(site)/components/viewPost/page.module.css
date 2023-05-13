@@ -127,5 +127,11 @@ button{
     background: none;
 }
 
+.imgCtn{
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 500px;
+}
 
 

@@ -54,7 +54,6 @@ export default function Post({
     },
   });
 
-  
   const email: any = session.data?.user?.email;
 
   const handleLike = async () => {
@@ -78,12 +77,14 @@ export default function Post({
   return (
     <div className="wrapper">
       <div className="leftCtn">
-        <Image
-          alt="Error: Image could not be loaded."
-          width="1000"
-          height="500"
-          src={pictureURL}
-        />
+        <div className="imgCtn">
+          <Image
+            alt="Error: Image could not be loaded."
+            fill={true}
+            style={{ objectFit: "cover" }}
+            src={pictureURL}
+          />
+        </div>
       </div>
       <div className="rightCtn">
         <div className="rTop">
@@ -94,7 +95,11 @@ export default function Post({
           <p className="description">{description}</p>
         </div>
         <div className="rReact">
-          <AiTwotoneLike className="icons like" size={35}  onClick={handleLike}/>
+          <AiTwotoneLike
+            className="icons like"
+            size={35}
+            onClick={handleLike}
+          />
           {Likes}
         </div>
 
