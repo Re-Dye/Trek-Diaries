@@ -8,12 +8,14 @@
     box-sizing: border-box;
     font-family: raleway;
     border-radius: 10px;
+    
 }
 
 .header{
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .icon{

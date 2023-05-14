@@ -36,7 +36,7 @@ const commentSchema = new Schema<IComment>({
   content: {
     type: String,
     required: true,
-    maxlength: 150,
+    maxlength: 1500,
   },
   owner: {
     type: String
@@ -51,7 +51,7 @@ const commentSchema = new Schema<IComment>({
 const postSchema = new Schema<IPost>({
   description: {
     type: String,
-    maxlength: 150,
+    maxlength: 1500,
   },
   pictureURL: {
     type: String, 

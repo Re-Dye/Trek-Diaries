@@ -87,7 +87,7 @@ export default function Login() {
             }
             <input
               value={email}
-              placeholder="Email Address or Mobile Number"
+              placeholder="Email Address"
               className={loginStyles.inputBx}
               type="text"
               onChange={(e) => setEmail(e.target.value)}
@@ -117,7 +117,7 @@ export default function Login() {
                 <label htmlFor="show_password">Show Password</label>
               </div>
 
-              <div className={loginStyles.remCtn}>
+              {/* <div className={loginStyles.remCtn}>
                 <input
                   type="checkbox"
                   id="keep_me_signed_in"
@@ -126,7 +126,7 @@ export default function Login() {
                 />
                 <label htmlFor="keep_me_signed_in">Remember me</label>
                 <Link className={loginStyles.forget} href='/reset-password'>Forgot Password?</Link>
-              </div>
+              </div> */}
             </div>
 
             <br />

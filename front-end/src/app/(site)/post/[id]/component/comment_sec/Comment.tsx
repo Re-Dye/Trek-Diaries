@@ -71,7 +71,7 @@ export default function Comment({ postId }: { postId: string }) {
             className={commentStyle.commentBox}
             onChange={(e) => setComment(e.target.value)}
           />
-          <button type="submit">Submit Comment</button>
+          <button type="submit" className={commentStyle.btn}>Submit Comment</button>
         </form>
       </div>
       <div className={commentStyle.PostBody}>

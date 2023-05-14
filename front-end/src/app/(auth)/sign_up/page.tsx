@@ -11,9 +11,9 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 export const metadata: Metadata = {
-  title: 'Sign Up | TrekDiaries',
-  description: 'Sign up page of TrekDiaries',
-}
+  title: "Sign Up | TrekDiaries",
+  description: "Sign up page of TrekDiaries",
+};
 
 export default function Page() {
   return (
@@ -23,50 +23,59 @@ export default function Page() {
   );
 }
 
-const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match."
-const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8"
+const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match.";
+const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8";
 
 function SignUp() {
   /* redirect to home page if already authenticated */
-  useRedirectOnAuthenticated()
+  useRedirectOnAuthenticated();
 
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
-  const [error, setError] = useState<string|null>(null);
-  const [password, setPassword, confirmPassword, setConfirmPassword] = useConfirmPassword('', setError)
-  const [dob, setDob] = useState<string>("")
-  const disable = useDisableSignUp(firstName, lastName, email, dob, password, confirmPassword, error)
+  const [error, setError] = useState<string | null>(null);
+  const [password, setPassword, confirmPassword, setConfirmPassword] =
+    useConfirmPassword("", setError);
+  const [dob, setDob] = useState<string>("");
+  const disable = useDisableSignUp(
+    firstName,
+    lastName,
+    email,
+    dob,
+    password,
+    confirmPassword,
+    error
+  );
 
   const resetStates = () => {
-    setFirstName("")
-    setLastName("")
-    setDob("")
-    setError(null)
+    setFirstName("");
+    setLastName("");
+    setDob("");
+    setError(null);
     setShowPassword(false);
     setEmail("");
     setPassword("");
-    setConfirmPassword("")
+    setConfirmPassword("");
   };
 
-  const handleSignUp = async(e: React.MouseEvent) => {
-    e.preventDefault()
+  const handleSignUp = async (e: React.MouseEvent) => {
+    e.preventDefault();
     console.log("signing up");
 
-    try{
-      const { data } = await axios.post('/api/sign_up', {
+    try {
+      const { data } = await axios.post("/api/sign_up", {
         email,
         password,
         firstName,
         lastName,
-        dob
-      })
+        dob,
+      });
 
-      console.log(data)
-      resetStates()
-    }catch(error) {
-      console.log(error)
+      console.log(data);
+      resetStates();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -81,9 +90,7 @@ function SignUp() {
           <h2>Sign Up</h2>
 
           <form>
-            {error && 
-              <h3 className={signupStyles.incorrectAlert}>{ error }</h3>
-            }
+            {error && <h3 className={signupStyles.incorrectAlert}>{error}</h3>}
             <div className={signupStyles.name}>
               <input
                 value={firstName}
@@ -108,7 +115,7 @@ function SignUp() {
 
             <input
               value={email}
-              placeholder="Email Address or Mobile Number"
+              placeholder="Email Address"
               className={signupStyles.inputBx}
               type="email"
               onChange={(e) => setEmail(e.target.value)}
@@ -117,7 +124,7 @@ function SignUp() {
             <br />
 
             <input
-              value={ dob }
+              value={dob}
               className={signupStyles.inputBx}
               type="date"
               onChange={(e) => setDob(e.target.value)}
@@ -163,10 +170,10 @@ function SignUp() {
 
             <br />
 
-            <button 
-            className={signupStyles.Sbtn}
-            onClick={ (e) => handleSignUp(e) }
-            disabled={ disable }
+            <button
+              className={signupStyles.Sbtn}
+              onClick={(e) => handleSignUp(e)}
+              disabled={disable}
             >
               Sign Up
             </button>
@@ -195,48 +202,57 @@ function SignUp() {
   );
 }
 
-function useDisableSignUp (
-  firstName: string, 
-  lastName: string, 
-  email: string, 
+function useDisableSignUp(
+  firstName: string,
+  lastName: string,
+  email: string,
   dob: string,
-  password: string, 
-  confirmPassword: string, 
-  error: string|null,
-  ) {
-  const [disable, setDisable] = useState<boolean>(true)
+  password: string,
+  confirmPassword: string,
+  error: string | null
+) {
+  const [disable, setDisable] = useState<boolean>(true);
 
   useEffect(() => {
     if (error) {
-      setDisable(true)
-    }else{
-      if(firstName.length === 0 || lastName.length === 0 || email.length === 0 || password.length === 0 || confirmPassword.length === 0 || dob.length === 0) {
-        setDisable(true)
-      }else{
-        setDisable(false)
+      setDisable(true);
+    } else {
+      if (
+        firstName.length === 0 ||
+        lastName.length === 0 ||
+        email.length === 0 ||
+        password.length === 0 ||
+        confirmPassword.length === 0 ||
+        dob.length === 0
+      ) {
+        setDisable(true);
+      } else {
+        setDisable(false);
       }
     }
-  }, [firstName, lastName, email, password, confirmPassword, error])
-  
-  return disable
+  }, [firstName, lastName, email, password, confirmPassword, error]);
+
+  return disable;
 }
 
 function useRedirectOnAuthenticated() {
-  const session = useSession()
-  const router = useRouter()
+  const session = useSession();
+  const router = useRouter();
 
   useEffect(() => {
-    console.log(session)
-    if (session.status === 'authenticated') {
-      router.push('/')
+    console.log(session);
+    if (session.status === "authenticated") {
+      router.push("/");
     }
-  }, [session])
+  }, [session]);
 }
 
-
-function useConfirmPassword(initialValue: string, setError: Dispatch<SetStateAction<string|null>>): [
-  password: string, 
-  setPassword:  Dispatch<SetStateAction<string>>, 
+function useConfirmPassword(
+  initialValue: string,
+  setError: Dispatch<SetStateAction<string | null>>
+): [
+  password: string,
+  setPassword: Dispatch<SetStateAction<string>>,
   confirmPassword: string,
   setConfirmPassword: Dispatch<SetStateAction<string>>
 ] {
@@ -244,16 +260,16 @@ function useConfirmPassword(initialValue: string, setError: Dispatch<SetStateAct
   const [confirmPassword, setConfirmPassword] = useState<string>(initialValue);
 
   useEffect(() => {
-    if(password.length < 8) {
-      setError(ERR_MSG_PASSWORD_LENGTH)
-    }else{
-      if(password !== confirmPassword) {
-        setError(ERR_MSG_PASSWORD_NOT_MATCH)
-      }else{
-        setError(null)
+    if (password.length < 8) {
+      setError(ERR_MSG_PASSWORD_LENGTH);
+    } else {
+      if (password !== confirmPassword) {
+        setError(ERR_MSG_PASSWORD_NOT_MATCH);
+      } else {
+        setError(null);
       }
     }
-  }, [password, confirmPassword])
+  }, [password, confirmPassword]);
 
-  return [password, setPassword, confirmPassword, setConfirmPassword]
+  return [password, setPassword, confirmPassword, setConfirmPassword];
 }

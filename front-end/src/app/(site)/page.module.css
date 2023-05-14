@@ -11,6 +11,7 @@ margin-top: -17em;
 
 .left{
     width: 23%;
+    min-height: 100vh;
     background-color:#EFF4FC;
 }
 .right{

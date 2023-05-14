@@ -65,8 +65,13 @@
     width:100%;
     height: 230px;
     margin: 5px;
+    box-sizing: border-box;
+    overflow: scroll;
+    padding-right:10px;
 }
-
+.rCenter::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
 .rBottom{
     width: 100%;
     height: 50px;

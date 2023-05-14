@@ -43,6 +43,7 @@
     width: 42.6%;
     height: 100%;
     
+    
 }
 
 .wrapper .loginBox .formBox
@@ -67,6 +68,7 @@
     font-weight: 600;
     font-size: medium;
     letter-spacing: 0.1em;
+    box-sizing: border-box;
     
 }
 
