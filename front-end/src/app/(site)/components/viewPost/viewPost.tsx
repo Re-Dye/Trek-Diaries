@@ -73,9 +73,7 @@ export default function ViewPost({
       console.log(error);
     }
   };
-  useEffect(() => {
-    console.log(Color);
-  }, [Likes]);
+  
   return (
     <div className={postStyles.wrapper}>
       <div className={postStyles.left}>
