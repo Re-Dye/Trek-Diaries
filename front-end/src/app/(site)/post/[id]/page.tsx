@@ -2,19 +2,24 @@ import React from "react";
 import postStyles from "./page.module.css";
 import Comment from "./component/comment_sec/Comment";
 import Post from "./component/postLayout";
+import { notFound } from "next/navigation";
 
 async function fetchPostData(id: string) {
-  const res: any = await fetch(
+  const res: Response = await fetch(
     `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/getaPost?postId=${id}`,
     { cache: "no-store" }
   );
-  console.log("inside fetchpostdata");
+  if (!res.ok) return undefined
   return res.json();
 }
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const postID: string = params.id;
   const data = await fetchPostData(postID);
+
+  if (!data) {
+    notFound()
+  }
 
   return (
     <div className={postStyles.wrapper}>
