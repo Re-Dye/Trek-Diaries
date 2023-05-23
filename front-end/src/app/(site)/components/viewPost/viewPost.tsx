@@ -64,10 +64,8 @@ export default function ViewPost({
       );
       if (isLiked) {
         setLike(likes);
-        setColor("grey");
       } else {
         setLike(likes + 1);
-        setColor("blue");
       }
       // setLike(isLiked ? likes : likes + 1); // Toggle between increment and decrement based on isLiked state
       setIsLiked(!isLiked); // Toggle the isLiked state

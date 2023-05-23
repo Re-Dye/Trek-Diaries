@@ -1,9 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
 import mainStyles from "./page.module.css";
-import ViewPost from "./components/viewPost/viewPost";
 import PostFeed from "./components/PostFeed/PostFeed";
 
 export default function Home() {

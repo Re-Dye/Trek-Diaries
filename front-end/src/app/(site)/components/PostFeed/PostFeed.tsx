@@ -25,10 +25,13 @@ async function fetchLocationPosts(
     const encodedEmail: any = encodeURI(email);
     const encodedPage: string = encodeURI(page.toString());
     const encodedSearchTime: any = encodeURI(searchTime.toISOString());
-    const res: any = await fetch(
+    const res: Response = await fetch(
       `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/getPostFeed?email=${ encodedEmail }&page=${ encodedPage }&searchTime=${ encodedSearchTime }`,
       { cache: "no-store" }
     );
+
+    if (!res.ok) return undefined
+
     return res.json();
   }
 
@@ -65,7 +68,7 @@ export default function PostFeed({ email }:{ email: string }) {
                             }
                         </InfiniteScroll>
                     }
-                    {!(posts.length) && <h1>Not Found!</h1>}
+                    {!(posts.length) && <h1>No posts found. Follow locations to view here.</h1>}
                 </>
             }
             {!didMount} 
@@ -113,17 +116,16 @@ function useFetchPosts( email: string ):[
         if (!didMount) {
             try{
                 const fetchPost = async() => {
-                    /* fetch more posts */
-                    const fetchedPosts: Array<any> = await fetchLocationPosts(email as string, page.current, searchTime.current)
+                  /* fetch more posts */
+                  const fetchedPosts: Array<any> = await fetchLocationPosts(email as string, page.current, searchTime.current)
 
-                    console.log(fetchedPosts);
-                    /* add the locations to the existing locations */
-                    setPosts(fetchedPosts);
-        
-                    /* update page and has more */
-                    page.current = 1
-                    setHasMore(!(fetchedPosts.length < POSTS_PER_SCROLL))
-                    setDidMount(true)
+                  /* add the locations to the existing locations */
+                  setPosts(fetchedPosts);
+      
+                  /* update page and has more */
+                  page.current = 1
+                  setHasMore(!(fetchedPosts.length < POSTS_PER_SCROLL))
+                  setDidMount(true)
                 }
                 fetchPost()
             }catch(error){

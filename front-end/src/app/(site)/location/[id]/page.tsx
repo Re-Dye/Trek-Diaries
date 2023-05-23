@@ -3,12 +3,16 @@ import ButtonFollow from "./components/ButtonFollow";
 import ButtonAddPost from "./components/ButtonAddPost";
 import Posts from "./components/Posts";
 import {TbLocationFilled }from "react-icons/tb"
+import { notFound } from "next/navigation";
 
 async function fetchLocationData(id: string) {
-  const res: any = await fetch(
+  const res: Response = await fetch(
     `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/fetchLocaitonData?id=${id}`,
     { cache: "no-store" }
   );
+  
+  if(!res.ok) return undefined
+
   return res.json();
 }
 
@@ -19,6 +23,10 @@ export default async function LocationPage({
 }) {
   const locationID: string = params.id;
   const data = await fetchLocationData(locationID);
+
+  if (!data) {
+    notFound()
+  }
 
   return (
     <div className={locateStyle.wrapper}>
