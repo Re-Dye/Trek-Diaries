@@ -11,7 +11,12 @@
     margin-bottom: 10px;
 }
 
-.wrapper h3 , p{
+.wrapper h3{
+    margin:3px;
+    font-size: medium;
+}
+
+.wrapper p{
     margin:3px;
     font-size: medium;
 }

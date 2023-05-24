@@ -37,12 +37,12 @@
     border-radius: 50%;
 }
 
-ul{
+.drop ul{
   list-style: none;
   padding: 0;
 }
 
-a {
+.dropdownItem a {
   text-decoration: none;
 }
 
