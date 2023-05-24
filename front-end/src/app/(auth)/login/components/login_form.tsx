@@ -140,7 +140,7 @@ export default function Login() {
 
             <br />
             <div className={loginStyles.dText}>
-              <>Don't have an account?&nbsp; </>
+              <>Don&apos;t have an account?&nbsp;  </>
               <Link href="/sign_up"> Sign Up</Link>
             </div>
 

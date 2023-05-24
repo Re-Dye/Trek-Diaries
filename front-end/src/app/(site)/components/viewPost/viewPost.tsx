@@ -98,8 +98,7 @@ export default function ViewPost({
         </div>
         <div className={postStyles.rCenter}>
           <p className={postStyles.description}>
-            Here is the description of the place: <br />
-            {description}
+           {description}
           </p>
         </div>
         <div className={postStyles.rBottom}>
