@@ -126,7 +126,7 @@
     color: blue;
 }
 
-button{
+.wrapper button{
     padding: 0;
     border: none;
     background: none;
