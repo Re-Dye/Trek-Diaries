@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.skeleton{
+    animation: skeleton-loading 1s linear infinite alternate;
+
+}
+
+@keyframes animation {
+    0% {
+        background-color: hsl(200, 20%, 70%);
+
+    }
+
+    100% {
+        background-color: hsl(200, 20%, 95%);
+        
+    }
+}
+
+.skeleton-text{
+    width: 100%;
+}
+
+.wrapper{
+    width: 94%;
+    height: 380px;
+    background-color: white;
+    border: 1px solid;
+    border-color: transparent;
+    border-radius: 10px;
+    margin: 3%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: raleway;
+}
+
+.left{
+    width:45%;
+    height: 360px;
+    margin: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.Tleft{
+    width:100%;
+    height: 16px;
+    margin: 7px;
+    overflow: hidden;
+}
+
+
+.Bleft{
+    width:100%;
+    height: 330px;
+    background-color: rgba(170, 226, 250, 1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.right{
+    width:50%;
+    height: 360px;
+    margin: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.rTop{
+    width:100%;
+    height: 45px;
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    color: black;
+    /* background-color:green; */
+}
+
+.rCenter{
+    width:100%;
+    height: 230px;
+    margin: 5px;
+    box-sizing: border-box;
+    overflow: scroll;
+    padding-right:10px;
+}
+
+.rBottom{
+    width: 100%;
+    height: 50px;
+    margin-right: 5px;
+    margin-left: 5px;
+    position: relative;
+    top: 12px;
+    display: flex;
+    align-items: center;
+
+}
+
+.uName, .time{
+    margin: 1px;
+}
+.uName{
+    color: black;
+
+}
+
+.time{
+    color: grey;
+}
+
+
+.imgCtn{
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 500px;
+}
+
+
