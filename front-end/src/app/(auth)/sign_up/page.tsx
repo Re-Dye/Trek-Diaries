@@ -6,7 +6,7 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import axios from "axios";

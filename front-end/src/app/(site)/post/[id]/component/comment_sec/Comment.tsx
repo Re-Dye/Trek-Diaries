@@ -33,33 +33,8 @@ async function fetchPostComments(
 
 export default function Comment({ postId }: { postId: string }) {
   const [comment, setComment] = useState("");
-  const router = useRouter();
 
-  /* Sessions is used to extract email from the users... */
-  const session = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/login");
-    },
-  });
-
-  const handleComment = async (e: any) => {
-    e.preventDefault();
-    console.log(comment, session?.data?.user?.email, postId);
-    var email: any = session?.data?.user?.email;
-    const encodedComment = encodeURI(comment);
-    const encodedEmail = encodeURI(email);
-    const encodedPostId = encodeURI(postId);
-    const data: any = await fetch(
-      `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/postComment?email=${encodedEmail}&content=${encodedComment}&postId=${encodedPostId}`,
-      {
-        method: "POST",
-        cache: "no-store",
-      }
-    );
-  };
-
-  const [comments, fetchComments, hasMore, didMount] = useFetchComments(postId);
+  const [comments, fetchComments, hasMore, didMount, handleComment] = useFetchComments(postId, comment);
   return (
     <div className={commentStyle.wrapper}>
       <div className={commentStyle.commentText}>
@@ -109,18 +84,29 @@ export default function Comment({ postId }: { postId: string }) {
 }
 
 function useFetchComments(
-  PostId: string
+  PostId: string,
+  comment: string
 ): [
   Comments: Array<Comment>,
   fetchComments: Function,
   hasMore: boolean,
-  didMount: boolean
+  didMount: boolean,
+  handleComment: React.FormEventHandler
 ] {
   const page = useRef<number>(0);
   const searchTime = useRef<Date>(new Date());
   const [comments, setComments] = useState<Array<Comment>>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [didMount, setDidMount] = useState<boolean>(false);
+  const router = useRouter();
+
+  /* Sessions is used to extract email from the users... */
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/login");
+    },
+  });
 
   const fetchComments = async () => {
     console.log("Fetch called");
@@ -142,6 +128,33 @@ function useFetchComments(
       console.error(error);
       alert(error);
     }
+  };
+
+  const handleComment = async (e: any) => {
+    e.preventDefault();
+    var email: any = session?.data?.user?.email;
+    const encodedComment = encodeURI(comment);
+    const encodedEmail = encodeURI(email);
+    const encodedPostId = encodeURI(PostId);
+    const data: Response = await fetch(
+      `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/postComment?email=${encodedEmail}&content=${encodedComment}&postId=${encodedPostId}`,
+      {
+        method: "POST",
+        cache: "no-store",
+      }
+    );
+
+    if (data.ok && data.status === 200) {
+      setTimeout(() => {
+        page.current = 0
+        searchTime.current = new Date()
+        setComments([])
+        setHasMore(true)
+        fetchComments()
+      }, 3000)
+    }
+
+    console.log(data)
   };
 
   useEffect(() => {
@@ -172,5 +185,5 @@ function useFetchComments(
     }
   }, []);
 
-  return [comments, fetchComments, hasMore, didMount];
+  return [comments, fetchComments, hasMore, didMount, handleComment];
 }
