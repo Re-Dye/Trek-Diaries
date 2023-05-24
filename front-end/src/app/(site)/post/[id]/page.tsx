@@ -16,6 +16,7 @@ async function fetchPostData(id: string) {
 export default async function PostPage({ params }: { params: { id: string } }) {
   const postID: string = params.id;
   const data = await fetchPostData(postID);
+  console.log("hello", data);
 
   if (!data) {
     notFound()
@@ -32,11 +33,9 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           registeredTime={data.registeredTime}
           description={data.description}
           pictureURL={data.pictureURL}
+          rating = {data.rating}
           postID={params.id}
         />
-        <div className={postStyles.rComment}>
-          {/* <Comment postId={params.id} /> */}
-        </div>
       </div>
     </div>
   );

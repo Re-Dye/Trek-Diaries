@@ -1,5 +1,4 @@
-import mongoose from "mongoose"
-
+import mongoose, { Schema } from "mongoose";
 interface IToken {
     userId: {
         type: Schema.Types.ObjectId,
@@ -8,8 +7,6 @@ interface IToken {
     token: string;
     createdAt: Date;
 }
-
-const Schema = mongoose.Schema
 
 const tokenSchema = new Schema<IToken>({
     userId: {

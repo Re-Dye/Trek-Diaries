@@ -7,7 +7,7 @@ import User from "../../../lib/modals/User"
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if(req.method === 'POST') {
         try {
-            const {Description, locationId, image_URL, userId} = req.body as any;
+            const {Description, locationId, image_URL, userId, TrailCondition, Weather, Accessibility, overallScore} = req.body as any;
             if (await dbConnect()) // connect to database
             {
                 console.log("Connection established in addPost");
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     message: "Location not found"
                 });
             }
-
+            console.log(TrailCondition,Weather,Accessibility,overallScore);
             const newPost: any = new Post(); // creating new post
             newPost.description = Description;
             newPost.location.id = locationId;
@@ -32,6 +32,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             newPost.pictureURL = image_URL;
             newPost.owner.email = userId;
             newPost.owner.name = fullName;
+            newPost.rating.TrailCondition = TrailCondition;
+            newPost.rating.Weather = Weather;
+            newPost.rating.Accessibility = Accessibility;
+            newPost.rating.overallScore = overallScore;
             await newPost.save();
 
             return res.status(201).json({ success: true, data: newPost })
