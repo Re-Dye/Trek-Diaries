@@ -27,7 +27,7 @@ export default function Post({
   pictureURL: string;
   postID: string;
   rating: {
-    TrialCondition: number,
+    TrailCondition: number,
     Weather: number,
     Accessibility: number,
     overallScore: number
@@ -98,8 +98,17 @@ export default function Post({
           <h3 className="uName">{name}</h3>
           <h5 className="time">{formattedDiff}</h5>
         </div>
-        <div className="rating">
-          {rating.overallScore}
+        <div className="TrialCondition">
+          <h4>TrialCondition: {rating.TrailCondition}</h4>
+        </div>
+        <div className="Weather">
+          <h4>Weather: {rating.Weather}</h4>
+        </div>
+        <div className="Accessibility">
+          <h4>Accessibility: {rating.Accessibility}</h4>
+        </div>
+        <div className="overallScore">
+          <h4>Final: {rating.overallScore}</h4>
         </div>
         <div className="rDesc">
           <p className="description">{description}</p>
