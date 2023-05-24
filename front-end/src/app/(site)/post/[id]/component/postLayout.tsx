@@ -17,6 +17,7 @@ export default function Post({
   description,
   pictureURL,
   postID,
+  rating,
 }: {
   address: string;
   name: string;
@@ -25,6 +26,12 @@ export default function Post({
   description: string;
   pictureURL: string;
   postID: string;
+  rating: {
+    TrialCondition: number,
+    Weather: number,
+    Accessibility: number,
+    overallScore: number
+  }
 }) {
   const storedDate = new Date(registeredTime);
   const now = new Date();
@@ -90,6 +97,9 @@ export default function Post({
         <div className="rTop">
           <h3 className="uName">{name}</h3>
           <h5 className="time">{formattedDiff}</h5>
+        </div>
+        <div className="rating">
+          {rating.overallScore}
         </div>
         <div className="rDesc">
           <p className="description">{description}</p>

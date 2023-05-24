@@ -11,8 +11,15 @@ interface Ilocation {
   address: string;
 }
 interface IOwner {
-  email: string,
-  name: string
+  email: string;
+  name: string;
+}
+
+interface IRating{
+  TrailCondition: number;
+  Weather: number;
+  Accessibility: number;
+  overallScore: number;
 }
 
 interface IPost {
@@ -23,6 +30,7 @@ interface IPost {
   likedBy: [string];
   comments: [IComment];
   owner: IOwner;
+  rating: IRating;
   registeredTime: mongoose.Schema.Types.Date;
 }
 
@@ -53,9 +61,11 @@ const postSchema = new Schema<IPost>({
     type: String,
     maxlength: 1500,
   },
+  
   pictureURL: {
     type: String, 
   },
+
   location: {
     id: {
       type: Schema.Types.ObjectId,
@@ -65,6 +75,7 @@ const postSchema = new Schema<IPost>({
       type: String,
     },
   },
+
   likes: {
     type: Number,
     default: 0,
@@ -72,6 +83,7 @@ const postSchema = new Schema<IPost>({
   likedBy: [{
     type: String,
   }],
+
   comments: [commentSchema],
   owner: {
     email: {
@@ -80,6 +92,22 @@ const postSchema = new Schema<IPost>({
     name: {
       type: String,
     }
+  },
+
+  rating: {
+    TrailCondition: {
+      type: Number,
+    },
+    Weather: {
+      type: Number,
+    },
+    Accessibility: {
+      type: Number,
+    },
+    overallScore: {
+      type: Number,
+    }
+
   },
   registeredTime: {
     required: true,

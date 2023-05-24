@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, {Schema} from "mongoose";
 import Post from "./Post";
 
 interface IUser {
@@ -9,12 +9,10 @@ interface IUser {
     name: string,
     dob: Date,
     profile_pic: any,
-    location:[{type:Schema.Types.ObjectId,
+    location:[{type: Schema.Types.ObjectId,
         ref: string}],
     verified: boolean
 }
-
-const Schema = mongoose.Schema
 
 const userSchema = new Schema<IUser>({
     email: {

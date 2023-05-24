@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer"
+import nodemailer, { TransportOptions } from "nodemailer"
 
 const sendEmail = async (email: any,subject: any,link: any) => {
     try {
@@ -10,7 +10,7 @@ const sendEmail = async (email: any,subject: any,link: any) => {
                 user: process.env.USER,
                 pass: process.env.PASS,
             },
-        });
+        } as TransportOptions);
 
         let success = await transporter.sendMail({
             from: process.env.USER,
