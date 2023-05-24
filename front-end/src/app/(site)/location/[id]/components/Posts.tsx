@@ -13,6 +13,9 @@ interface Post {
     location: any;
     pictureURL: string;
     owner: any;
+    rating: {
+      overallScore: number;
+    }
   }
 
 const POSTS_PER_SCROLL = 7;
@@ -60,6 +63,7 @@ export default function Posts({ locationId }:{ locationId: string }) {
                                         likes = {post.likes}
                                         imageURL = {post.pictureURL}
                                         owner = {post.owner}
+                                        rating = { post.rating?.overallScore || 0 }
                                     />
                                 ))
                             }

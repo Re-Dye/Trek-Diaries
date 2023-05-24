@@ -19,6 +19,7 @@ export default function ViewPost({
   likes,
   imageURL,
   owner,
+  rating
 }: {
   id: string;
   location: any;
@@ -26,6 +27,7 @@ export default function ViewPost({
   likes: number;
   imageURL: string;
   owner: Owner;
+  rating: number;
 }) {
   const [Color, setColor] = useState("grey");
   const [Likes, setLike] = useState(likes);
@@ -98,6 +100,8 @@ export default function ViewPost({
         </div>
         <div className={postStyles.rCenter}>
           <p className={postStyles.description}>
+            <h3>Rating: { rating }</h3>
+            <br />
            {description}
           </p>
         </div>
