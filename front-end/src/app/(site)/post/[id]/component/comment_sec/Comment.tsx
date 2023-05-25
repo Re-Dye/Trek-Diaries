@@ -45,6 +45,7 @@ export default function Comment({ postId }: { postId: string }) {
             placeholder="Comment"
             className={commentStyle.commentBox}
             onChange={(e) => setComment(e.target.value)}
+            rows={5}
           />
           <button type="submit" className={commentStyle.btn}>Submit Comment</button>
         </form>

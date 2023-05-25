@@ -49,6 +49,12 @@ body{
     /* background-color:green; */
 }
 
+.rating{
+    display: flex;
+    width: 90%;
+    box-sizing: border-box;
+}
+
 .rdesc{
     width:90%;
     height: 30%;
