@@ -8,6 +8,8 @@ import Comment from "./comment_sec/Comment";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Star from "./star";
+import FinalRating from "./finalRating";
 
 export default function Post({
   address,
@@ -27,11 +29,11 @@ export default function Post({
   pictureURL: string;
   postID: string;
   rating: {
-    TrailCondition: number,
-    Weather: number,
-    Accessibility: number,
-    overallScore: number
-  }
+    TrailCondition: number;
+    Weather: number;
+    Accessibility: number;
+    overallScore: number;
+  };
 }) {
   const storedDate = new Date(registeredTime);
   const now = new Date();
@@ -99,19 +101,31 @@ export default function Post({
           <h5 className="time">{formattedDiff}</h5>
         </div>
         <div className="rating">
+          <div className="lRating">
+            <div className="TrialCondition">
+              <h4>
+                TrialCondition: <Star stars={rating.TrailCondition} />
+              </h4>
 
-        {/* <div className="TrialCondition">
-          <h4>TrialCondition: {rating.TrailCondition}</h4>
-        </div>
-        <div className="Weather">
-          <h4>Weather: {rating.Weather}</h4>
-        </div>
-        <div className="Accessibility">
-          <h4>Accessibility: {rating.Accessibility}</h4>
-        </div>
-        <div className="overallScore">
-          <h4>Final: {rating.overallScore}</h4>
-        </div> */}
+              {/* <h4>TrialCondition: {rating.TrailCondition}</h4> */}
+            </div>
+            <div className="Weather">
+              <h4>
+                Weather: <Star stars={rating.Weather} />
+              </h4>
+              {/* <h4>Weather: {rating.Weather}</h4> */}
+            </div>
+            <div className="Accessibility">
+              <h4>
+                Accessibility: <Star stars={rating.Accessibility} />
+              </h4>
+              {/* <h4>Accessibility: {rating.Accessibility}</h4> */}
+            </div>
+          </div>
+          <div className="rRating">
+            <FinalRating stars={rating.overallScore} />
+            {/* <h4>Final: {rating.overallScore}</h4> */}
+          </div>
         </div>
         <div className="rDesc">
           <p className="description">{description}</p>

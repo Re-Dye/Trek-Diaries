@@ -51,8 +51,51 @@ body{
 
 .rating{
     display: flex;
-    width: 90%;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 10px;;
     box-sizing: border-box;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.rRating{
+    margin: 0;
+    width: 10%;
+    height: 100%;
+margin: 0;
+box-sizing: border-box;
+display: flex;
+align-items: center;
+
+}
+
+/* .overallScore{
+    width: 40%;
+    margin: 0;
+    box-sizing: border-box;
+} */
+.lRating{
+    width: 80%;
+    height: 100%;
+}
+.CircularProgressbar{
+    position: relative;
+    top: 0;
+width: 40%;
+margin: 0;
+}
+.CircularProgressbar-text {
+    transform: translate(-15px, 5px);
+}
+.rating h4{
+    width: 100%;
+    font-size: x-small;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0.1px;
+    font-weight: 600;
 }
 
 .rdesc{
