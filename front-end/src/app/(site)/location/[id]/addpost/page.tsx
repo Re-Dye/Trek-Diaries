@@ -115,6 +115,7 @@ export default function Addpost({ params }: { params: { id: string } }) {
 
   return (
     <div className={locationStyle.wrapper}>
+       <div className={locationStyle.left}></div>
       <div className={locationStyle.forms}>
         <h2>Add Post</h2>
         <form onSubmit={handleSubmit} className={locationStyle.postfield}>
@@ -139,18 +140,20 @@ export default function Addpost({ params }: { params: { id: string } }) {
             value={Description}
             onChange={(e) => setDescription(e.target.value)} // setting value of Description
           />
-          <div>
+          <div className={locationStyle.ratingStar}>
+            <div>
             <h3>Trial Condition</h3>
             <RatingDropdown onRatingSelect={handleTrailConditon} />
-          </div>
-          <div>
+            </div>
+            <div>
             <h3>Weather</h3>
             <RatingDropdown onRatingSelect={handleWeather} />
-          </div>
-          <div>
+            </div>
+            <div>
             <h3>Accessibility</h3>
             <RatingDropdown onRatingSelect={handleAccessiblity} />
-          </div>
+            </div>
+            </div>
           <button
             className={locationStyle.createbtn}
             onClick={(e) => handleCreatePost(e)}

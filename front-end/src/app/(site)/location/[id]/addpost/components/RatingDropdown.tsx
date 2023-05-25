@@ -1,5 +1,6 @@
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
+import styling from "../page.module.css";
 
 interface RatingOption {
   value: number;
@@ -15,11 +16,11 @@ const RatingDropdown: React.FC<RatingDropdownProps> = ({onRatingSelect}) => {
 
   // Rating Options
   const ratingOptions: RatingOption[] = [
-    { value: 1, label: '1 Star (Poor)' },
-    { value: 2, label: '2 Star (Average)' },
-    { value: 3, label: '3 Star (Good)' },
-    { value: 4, label: '4 Star (Outstading)' },
-    { value: 5, label: '5 Star (Excellent)' },
+    { value: 1, label: '★ (Poor)' },
+    { value: 2, label: '★★ (Average)' },
+    { value: 3, label: '★★★ (Good)' },
+    { value: 4, label: '★★★★ (Outstanding)' },
+    { value: 5, label: '★★★★★ (Excellent)' },
   ];
 
   const handleRatingChange = (selectedOption: RatingOption | null) => {
@@ -30,10 +31,11 @@ const RatingDropdown: React.FC<RatingDropdownProps> = ({onRatingSelect}) => {
 
   return (
     <Select<RatingOption, false>
+      className={styling.rating}
       options={ratingOptions}
       value={selectedRating}
       onChange={handleRatingChange}
-      placeholder="Select a rating"
+      placeholder="Select rating"
     />
   );
 };
