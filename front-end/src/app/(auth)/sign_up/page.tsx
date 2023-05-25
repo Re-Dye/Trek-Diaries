@@ -188,17 +188,6 @@ function SignUp() {
               <>Already have an account?&nbsp; </>
               <Link href="/login">Login</Link>
             </div>
-
-            <div className={signupStyles.AbtnCtn}>
-              <button className={signupStyles.Abtn}>
-                Continue with google &nbsp;{" "}
-                <FcGoogle className={signupStyles.icon} />
-              </button>
-              {/* <button className={signupStyles.Abtn}>
-                Continue with facebook &nbsp;
-                <SiFacebook className={signupStyles.icon} />
-              </button> */}
-            </div>
           </form>
         </div>
       </div>
