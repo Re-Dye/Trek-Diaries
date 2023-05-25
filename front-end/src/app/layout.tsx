@@ -11,10 +11,10 @@ interface IProps {
   session: Session
 }
 
-export const metadata: Metadata = {
-  title: 'TrekDiaries',
-  description: 'Social media app for hikers and trekkers',
-}
+// export const metadata: Metadata = {
+//   title: 'TrekDiaries',
+//   description: 'Social media app for hikers and trekkers',
+// }
 // export default function RootLayout({ children }: { children: ReactNode}) {
 export default function RootLayout({ children, session }: IProps) {
   return (

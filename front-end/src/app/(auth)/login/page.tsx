@@ -9,10 +9,10 @@ import { useRouter } from "next/navigation"
 import React, { useEffect } from "react";
 import type { Session } from "next-auth";
 
-export const metadata: Metadata = {
-  title: 'Login | TrekDiaries',
-  description: 'Login page of TrekDiaries',
-}
+// export const metadata: Metadata = {
+//   title: 'Login | TrekDiaries',
+//   description: 'Login page of TrekDiaries',
+// }
 
 export default function Page() {
   const session = useSession()
