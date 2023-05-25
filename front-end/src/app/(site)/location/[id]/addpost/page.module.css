@@ -11,6 +11,14 @@
     height: 100vh;
     display: flex;
 }
+.left{
+    border-radius: 1em;
+    z-index: -1;
+    margin-top: -16em;
+    width: 23%;
+    height: 100vh;
+    background-color:#EFF4FC;
+}
 
 .wrapper .forms
 {
@@ -145,8 +153,8 @@
 .wrapper .forms .postfield1 .createbtn
 {
     position: absolute;
-    bottom: 0;
-    right: 1em;
+    bottom: 1.5em;
+    right: 0.5em;
     cursor: pointer;
     border: 1px solid #03851b;
     border-radius: 0.5em;
@@ -169,11 +177,11 @@
 .wrapper .forms .postfield1 .ratingStar
 {
     position: absolute;
-    bottom: 1.5em;
-    left: 5em;
-    column-gap: 1em;
-    width: 80%;
-    max-width: 10%;
+    bottom: 1.6em;
+    left: 1em;
+    column-gap: 2em;
+    width: 100%;
+    max-width: 70%;
     display: flex;
     flex-direction: row;
 }
@@ -182,7 +190,11 @@
     text-align: center;
     color: #0d2f92;
     font-weight: bold;
-    font-size: 0.8em;
+    font-size: 0.9em;
+}
+
+.rating{
+    color: red;
 }
 
 

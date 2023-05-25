@@ -28,10 +28,7 @@ export default function Login() {
     console.log(googres);
   };
 
-  // const handleSigninFB = async() =>{
-  //   const fbres = await signIn("facebook", { email, password, redirect: false, callbackUrl: '/' })
-  //   console.log(fbres)
-  // }
+
   const handleSignIn = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
