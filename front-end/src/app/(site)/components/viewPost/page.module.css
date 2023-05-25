@@ -61,9 +61,19 @@
     /* background-color:green; */
 }
 
+.rating{
+    width: 100%;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    font-size: medium;
+    font-weight: 400;
+    margin: 5px;
+}
+
 .rCenter{
     width:100%;
-    height: 230px;
+    height: 200px;
     margin: 5px;
     box-sizing: border-box;
     overflow: scroll;
@@ -137,6 +147,13 @@
     box-sizing: border-box;
     overflow: hidden;
     height: 500px;
+}
+
+.rCenter h3{
+    font-size: small;
+    display: inline-flex;
+    margin: 0;
+    height: 10px;
 }
 
 

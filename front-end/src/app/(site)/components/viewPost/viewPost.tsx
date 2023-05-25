@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { ClassNames } from "@emotion/react";
+import Star from "../../post/[id]/component/star";
 
 interface Owner {
   name: string;
@@ -19,7 +20,7 @@ export default function ViewPost({
   likes,
   imageURL,
   owner,
-  rating
+  rating,
 }: {
   id: string;
   location: any;
@@ -75,7 +76,7 @@ export default function ViewPost({
       console.log(error);
     }
   };
-  
+
   return (
     <div className={postStyles.wrapper}>
       <div className={postStyles.left}>
@@ -98,12 +99,12 @@ export default function ViewPost({
           <h3 className={postStyles.uName}>{owner?.name}</h3>
           <h5 className={postStyles.time}>12h</h5>
         </div>
+        <div className={postStyles.rating}>
+          <h5>Rating:  </h5>
+          <Star stars={rating} />
+        </div>
         <div className={postStyles.rCenter}>
-          <p className={postStyles.description}>
-            <h3>Rating: { rating }</h3>
-            <br />
-           {description}
-          </p>
+          <p className={postStyles.description}>{description}</p>
         </div>
         <div className={postStyles.rBottom}>
           <button
