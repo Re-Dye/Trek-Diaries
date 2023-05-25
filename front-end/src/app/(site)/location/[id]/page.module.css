@@ -34,7 +34,7 @@ font-family: raleway;
 }
 
 .addpstbtn{
-
+    background-color: transparent;
     display: inline-block;
     outline: none;
     cursor: pointer;
@@ -65,7 +65,7 @@ font-family: raleway;
 }
 
 .followbtn{
-
+    background-color: transparent;
     display: inline-block;
     outline: none;
     cursor: pointer;

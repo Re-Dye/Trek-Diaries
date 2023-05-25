@@ -43,7 +43,7 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
     return(
         <>
             {(!followed)?
-                <button onClick={handleToggleFollow} className={locateStyle.followbtn}>
+                <button onClick={handleToggleFollow} className={locateStyle.followbtn} >
                     + Follow
                 </button>
             :
