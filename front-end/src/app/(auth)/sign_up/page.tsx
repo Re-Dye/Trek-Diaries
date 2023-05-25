@@ -11,11 +11,6 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 
-export const metadata: Metadata = {
-  title: "Sign Up | TrekDiaries",
-  description: "Sign up page of TrekDiaries",
-};
-
 export default function Page() {
   return (
     <div className={signupStyles.app}>
