@@ -32,7 +32,7 @@
     display: flex;
     flex-direction: column;
     width: 40%;
-    height: 50%;
+    height: 55%;
     margin-top: 10%;
     padding: 2em;
     align-items: center;
@@ -78,16 +78,20 @@
 }
 
 .wrapper .verifiedBox .buttonVerify{
+    font: raleway;
+    position: relative;
     cursor: pointer;
     border: 1px solid #4079CE;
     border-radius: 1em;
     font-weight: 600;
+    font-size: 1em;
     width: 60%;
     padding: 1.2em 0;
     box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
     transition: 0.4s;
-    margin-top: 1.8em;
+    margin-top: 1em;
     text-align: center;
+    color: #535151;
 }
 .wrapper .verifiedBox .buttonVerify:hover{
     color: white;
@@ -97,6 +101,8 @@
 
 .incorrectAlert
 {
-    font-size: small;
+    position: relative;
+    display: flex;
+    font-size: 0.8em;
     color: red;
 }
