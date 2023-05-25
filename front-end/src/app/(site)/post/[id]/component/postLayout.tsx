@@ -98,7 +98,9 @@ export default function Post({
           <h3 className="uName">{name}</h3>
           <h5 className="time">{formattedDiff}</h5>
         </div>
-        <div className="TrialCondition">
+        <div className="rating">
+
+        {/* <div className="TrialCondition">
           <h4>TrialCondition: {rating.TrailCondition}</h4>
         </div>
         <div className="Weather">
@@ -109,6 +111,7 @@ export default function Post({
         </div>
         <div className="overallScore">
           <h4>Final: {rating.overallScore}</h4>
+        </div> */}
         </div>
         <div className="rDesc">
           <p className="description">{description}</p>
