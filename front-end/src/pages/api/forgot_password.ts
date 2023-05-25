@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await token.save();
             
             const url: any = `${process.env.BASE_URL}users/${user._id}/reset/${token.token}`;
-            console.log(token,url)
+            console.log(url)
 
             // sending mail via nodemailer.....
             await sendEmail(user.email,"Reset Your Password",url)

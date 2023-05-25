@@ -47,8 +47,7 @@ export default function ResetPassword() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button type="submit" className={forgetStyles.resetbtn}>
-          {/* {!loading ? 'Request Password Reset': 'Sending...'} */}
+        <button type="submit" className={forgetStyles.resetbtn}>Reset Password
         </button>
         <Link className={forgetStyles.linkforget} href="/login">
           Back to sign in
