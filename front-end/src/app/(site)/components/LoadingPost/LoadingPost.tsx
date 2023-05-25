@@ -1,7 +1,7 @@
 import React from "react";
-import "./Loading.css";
+import "./LoadingPost.css";
 
-const Loading = () => {
+const LoadingPost = () => {
   return (
     <div className="wrapper skeleton">
       <div className="left">
@@ -28,4 +28,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default LoadingPost;

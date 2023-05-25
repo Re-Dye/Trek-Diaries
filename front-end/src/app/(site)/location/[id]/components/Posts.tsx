@@ -1,4 +1,5 @@
 'use client'
+import LoadingPost from "@/app/(site)/components/LoadingPost/LoadingPost";
 import ViewPost from "../../../components/viewPost/viewPost"
 import { useRef, useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -46,7 +47,7 @@ export default function Posts({ locationId }:{ locationId: string }) {
                             dataLength={ posts.length } //This is important field to render the next data
                             next={ fetchPosts as any }
                             hasMore={ hasMore }
-                            loader={<p>Loading...</p>}
+                            loader={<LoadingPost/>}
                             endMessage={
                               <p style={{ textAlign: 'center' }}>
                               <b>Yay! You have seen it all</b>

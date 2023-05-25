@@ -2,6 +2,7 @@
 import ViewPost from "../viewPost/viewPost";
 import { useRef, useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Loading from "../LoadingPost/LoadingPost";
 
 
 interface Post {
@@ -49,7 +50,7 @@ export default function PostFeed({ email }:{ email: string }) {
                             dataLength={ posts.length } //This is important field to render the next data
                             next={ fetchPosts as any }
                             hasMore={ hasMore }
-                            loader={<p>Loading...</p>}
+                            loader={<Loading/>}
                             endMessage={
                               <p style={{ textAlign: 'center' }}>
                               <b>Yay! You have seen it all</b>
