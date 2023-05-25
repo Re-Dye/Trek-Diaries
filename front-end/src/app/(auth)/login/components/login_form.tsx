@@ -117,16 +117,9 @@ export default function Login() {
                 <label htmlFor="show_password">Show Password</label>
               </div>
 
-              {/* <div className={loginStyles.remCtn}>
-                <input
-                  type="checkbox"
-                  id="keep_me_signed_in"
-                  className={loginStyles.check}
-                  // onChange={}
-                />
-                <label htmlFor="keep_me_signed_in">Remember me</label>
+              <div className={loginStyles.remCtn}>
                 <Link className={loginStyles.forget} href='/reset-password'>Forgot Password?</Link>
-              </div> */}
+              </div>
             </div>
 
             <br />

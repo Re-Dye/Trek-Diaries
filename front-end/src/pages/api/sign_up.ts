@@ -34,7 +34,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await user.save()
 
             const token:any = new Token()
-            token.userId = user._id;
             token.token = crypto.randomBytes(32).toString("hex")
             await token.save()
 

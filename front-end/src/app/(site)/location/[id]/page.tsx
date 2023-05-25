@@ -52,7 +52,6 @@ export default async function LocationPage({
           <Posts locationId={params.id} />
         </div>
       </div>
-
       <div className={locateStyle.left}></div>
     </div>
   );
