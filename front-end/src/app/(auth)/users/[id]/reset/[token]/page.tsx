@@ -10,7 +10,7 @@ import axios from "axios";
 const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match.";
 const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8";
 
-export default function reset()
+export default function Reset()
 {
     const [error, setError] = useState<string | null>(null);
     const [password, setPassword, confirmPassword, setConfirmPassword] =
