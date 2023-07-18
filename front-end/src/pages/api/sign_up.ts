@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             token.token = crypto.randomBytes(32).toString("hex")
             await token.save()
 
-            const url: any = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`
+            const url: any = `${process.env.NEXT_PUBLIC_BASE_URL}users/${user._id}/verify/${token.token}`
             // console.log(`user has been created: ${user}`)
             // console.log(`token has been created: ${token}`)
             console.log(`url: ${url}`);
