@@ -8,6 +8,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         try{
+            console.log(process.env.BASE_URL)
             const {email, password, firstName, lastName,dob} = req.body as any
 
             const fullName: String = `${firstName} ${lastName}`;
@@ -18,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
             const countUser = await User.countDocuments({ email });
             console.log(countUser);
+            
             if(countUser) //if email already exists
             {
                 console.log("Duplicate Email!!!")
