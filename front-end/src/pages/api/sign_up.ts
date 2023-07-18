@@ -8,7 +8,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         try{
-            console.log(process.env.BASE_URL)
+            const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
             const {email, password, firstName, lastName,dob} = req.body as any
 
             const fullName: String = `${firstName} ${lastName}`;
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             token.token = crypto.randomBytes(32).toString("hex")
             await token.save()
 
-            const url: any = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`
+            const url: any = `${baseUrl}users/${user._id}/verify/${token.token}`
             // console.log(`user has been created: ${user}`)
             // console.log(`token has been created: ${token}`)
             console.log(`url: ${url}`);
