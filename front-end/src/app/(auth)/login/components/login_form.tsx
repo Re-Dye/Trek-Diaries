@@ -1,72 +1,82 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { SiFacebook } from "react-icons/si";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import loginStyles from "../page.module.css";
 import Image from "next/image";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import Head from "next/head";
+
+const loginSchema = z.object ({
+  email: z.string().email(),
+  password: z.string().min(8)
+});
+
+type FormData = z.infer<typeof loginSchema>;
 
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401;
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter();
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(loginSchema) })
+  const onLogIn: SubmitHandler<FormData> = data => console.log(data)
+  const router: AppRouterInstance = useRouter();
+  const [showPassword, setShowPassword] = useState<boolean>(false)
 
-  const handleSigninGoog = async () => {
-    const googres = await signIn("google", {
-      email,
-      password,
-      redirect: false,
-      callbackUrl: "/",
-    });
-    console.log(googres);
-  };
+  // const handleSigninGoog = async () => {
+  //   const googres = await signIn("google", {
+  //     email,
+  //     password,
+  //     redirect: false,
+  //     callbackUrl: "/",
+  //   });
+  //   console.log(googres);
+  // };
 
 
-  const handleSignIn = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    try {
-      // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
-      const res = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-        callbackUrl: "/",
-      });
+  // const handleSignIn = async (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   try {
+  //     // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
+  //     const res = await signIn("credentials", {
+  //       email,
+  //       password,
+  //       redirect: false,
+  //       callbackUrl: "/",
+  //     });
 
-      /* if error occured */
-      if (res?.error) {
-        /* if the status code matches with the incorrect login credentials status */
-        if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
-          console.log("The email or the password is incorrect.");
-          setError("The email or the password is incorrect.");
-          return
-        }
-        console.log(`Some error occured.\nError code: ${res.error}\n`);
-        setError(res.error)
-        return
-      }
+  //     /* if error occured */
+  //     if (res?.error) {
+  //       /* if the status code matches with the incorrect login credentials status */
+  //       if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
+  //         console.log("The email or the password is incorrect.");
+  //         setError("The email or the password is incorrect.");
+  //         return
+  //       }
+  //       console.log(`Some error occured.\nError code: ${res.error}\n`);
+  //       setError(res.error)
+  //       return
+  //     }
 
-      console.log("log in successfull");
-      router.push(res?.url as string);
-      resetStates();
-      return;
-    } catch {
-      console.log("error");
-    }
-  };
+  //     console.log("log in successfull");
+  //     router.push(res?.url as string);
+  //     resetStates();
+  //     return;
+  //   } catch {
+  //     console.log("error");
+  //   }
+  // };
 
-  const resetStates = () => {
-    setShowPassword(false);
-    setEmail("");
-    setPassword("");
-  };
+  // const resetStates = () => {
+  //   setShowPassword(false);
+  //   setEmail("");
+  //   setPassword("");
+  // };
 
   return (
     <div className={loginStyles.wrapper}>
@@ -78,26 +88,24 @@ export default function Login() {
         <div className={loginStyles.formBox}>
           <h2>Login</h2>
 
-          <form>
-            {error &&
-              <h3 className={loginStyles.incorrectAlert}>{ error }</h3>
+          <form onSubmit={ handleSubmit(onLogIn) }>
+            {errors &&
+              <h3 className={loginStyles.incorrectAlert}>{ errors.email?.message || errors.password?.message }</h3>
             }
             <input
-              value={email}
               placeholder="Email Address"
               className={loginStyles.inputBx}
               type="text"
-              onChange={(e) => setEmail(e.target.value)}
+              { ...register("email", { required: true }) }
             />
 
             <br />
 
             <input
-              value={password}
               placeholder="Password"
               className={loginStyles.inputBx}
               type={showPassword ? "text" : "password"}
-              onChange={(e) => setPassword(e.target.value)}
+              { ...register("password", { minLength: { value: 8, message: 'Password must contain atleast 8 characters.' } }) }
             />
 
             <br />
@@ -123,7 +131,7 @@ export default function Login() {
 
             <button
               className={loginStyles.Sbtn}
-              onClick={(e) => handleSignIn(e)}
+              // onClick={(e) => handleSignIn(e)}
             >
               Sign In
             </button>
@@ -138,7 +146,7 @@ export default function Login() {
               <button
                 type="button"
                 className={loginStyles.Abtn}
-                onClick={handleSigninGoog}
+                // onClick={handleSigninGoog}
               >
                 Continue with google &nbsp;{" "}
                 <FcGoogle className={loginStyles.icon} />
