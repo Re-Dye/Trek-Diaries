@@ -1,7 +1,6 @@
 import loginStyles from "./page.module.css";
 import { Metadata } from "next";
 import Login from "./components/login_form";
-import React, { useEffect } from "react";
 
 export const metadata: Metadata = {
   title: 'Login | TrekDiaries',

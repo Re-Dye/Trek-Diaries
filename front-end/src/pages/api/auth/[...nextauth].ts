@@ -27,6 +27,7 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 try {
+                    console.log("Connecting to database...")
                     await dbConnect(); // establishing connection to mongoDB
                     const { email, password } = credentials as any
                     console.log(`Entered email:${ email }\npassword: ${ password }`)
@@ -66,6 +67,36 @@ export const authOptions: NextAuthOptions = {
         strategy: 'jwt'
     },
     secret: process.env.NEXTAUTH_SECRET,
+    // callbacks: {
+    //     async session({ token, session }) {
+    //       if (token) {
+    //         session.user.id = token.id
+    //         session.user.name = token.name
+    //         session.user.email = token.email
+    //         session.user.image = token.picture
+    //       }
+    
+    //       return session
+    //     },
+    //     async jwt({ token, user }) {
+    //       await dbConnect()
+    //       const dbUser = await User.findOne({ email: token.email })
+    
+    //       if (!dbUser) {
+    //         if (user) {
+    //           token.id = user?.id
+    //         }
+    //         return token
+    //       }
+    
+    //       return {
+    //         id: dbUser.id,
+    //         name: dbUser.name,
+    //         email: dbUser.email,
+    //         picture: dbUser.image,
+    //       }
+    //     },
+    //   },
 }
 
 export default NextAuth(authOptions)
