@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react"
@@ -11,11 +10,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { useSession } from "next-auth/react";
 
 const loginSchema = z.object ({
   email: z.string().email(),
-  password: z.string().min(8)
+  password: z.string().min(8, { message: "Password must atleast 8 characters long" })
 });
 
 type FormData = z.infer<typeof loginSchema>;
@@ -26,15 +24,6 @@ export default function Login() {
   const { register, handleSubmit, formState: { errors }, setError } = useForm<FormData>({ resolver: zodResolver(loginSchema) })
   const router: AppRouterInstance = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false)
-
-  const session = useSession();
-
-  useEffect(() => {
-    console.log(session);
-    if (session.status === "authenticated") {
-      router.push("/");
-    }
-  }, [session]);
 
   const handleSigninGoog = async () => {
       const googres = await signIn("google", {
@@ -87,7 +76,10 @@ export default function Login() {
   return (
     <div className={loginStyles.wrapper}>
       <div className={loginStyles.imgBox}>
-        <Image src="/ncpr.jpg" alt="backgroundImage" fill  />
+        <Image 
+        loading="lazy"
+        src="/ncpr.jpg" 
+        alt="backgroundImage" fill />
       </div>
 
       <div className={loginStyles.loginBox}>
