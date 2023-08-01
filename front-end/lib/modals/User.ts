@@ -57,11 +57,11 @@ const userSchema = new Schema<IUser>({
     }
 },{collection: 'users'})
 
-userSchema.pre('remove', async function (next) {
-    const user = this as any
-    await Post.deleteMany({ owner: user._id })
-    next()
-})
+//userSchema.pre('remove', async function (next) {
+//    const user = this as any
+//    await Post.deleteMany({ owner: user._id })
+//    next()
+//})
 
 const User = mongoose.models.User||mongoose.model("User",userSchema);
 export default User;
