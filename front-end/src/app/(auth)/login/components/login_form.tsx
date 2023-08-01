@@ -1,103 +1,109 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { SiFacebook } from "react-icons/si";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn } from "next-auth/react"
 import Link from "next/link";
 import loginStyles from "../page.module.css";
 import Image from "next/image";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+
+const loginSchema = z.object ({
+  email: z.string().email(),
+  password: z.string().min(8, { message: "Password must atleast 8 characters long" })
+});
+
+type FormData = z.infer<typeof loginSchema>;
 
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401;
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter();
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<FormData>({ resolver: zodResolver(loginSchema) })
+  const router: AppRouterInstance = useRouter();
+  const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const handleSigninGoog = async () => {
-    const googres = await signIn("google", {
-      email,
-      password,
-      redirect: false,
-      callbackUrl: "/",
-    });
-    console.log(googres);
-  };
-
-
-  const handleSignIn = async (e: React.MouseEvent) => {
-    e.preventDefault();
+      const googres = await signIn("google", {
+          redirect: false,
+          callbackUrl: "/",
+        });
+        console.log(googres);
+      };
+      
+      
+  const onLogIn: SubmitHandler<FormData> = async (data) => {
     try {
+      console.log("signing in", data)
       // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
       const res = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
+        email: data.email,
+        password: data.password,
+        redirect: true,
         callbackUrl: "/",
       });
+
+      console.log("response received")
 
       /* if error occured */
       if (res?.error) {
         /* if the status code matches with the incorrect login credentials status */
         if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
           console.log("The email or the password is incorrect.");
-          setError("The email or the password is incorrect.");
+          setError("root", {
+            type: "custom",
+            message: "The email or the password is incorrect."
+          })
           return
         }
-        console.log(`Some error occured.\nError code: ${res.error}\n`);
-        setError(res.error)
-        return
+        throw res.error
       }
 
       console.log("log in successfull");
       router.push(res?.url as string);
-      resetStates();
       return;
-    } catch {
-      console.log("error");
+    } catch (error) {
+      setError("root", {
+        type: "custom", 
+        message: "Error occured. Please try again later."
+      })
+      console.log(error || "error unknown");
     }
-  };
-
-  const resetStates = () => {
-    setShowPassword(false);
-    setEmail("");
-    setPassword("");
   };
 
   return (
     <div className={loginStyles.wrapper}>
       <div className={loginStyles.imgBox}>
-        <Image src="/ncpr.jpg" alt="backgroundImage" fill  />
+        <Image 
+        loading="lazy"
+        src="/ncpr.jpg" 
+        alt="backgroundImage" fill />
       </div>
 
       <div className={loginStyles.loginBox}>
         <div className={loginStyles.formBox}>
           <h2>Login</h2>
 
-          <form>
-            {error &&
-              <h3 className={loginStyles.incorrectAlert}>{ error }</h3>
+          <form onSubmit={ handleSubmit(onLogIn) }>
+            {errors &&
+              <h3 className={loginStyles.incorrectAlert}>{ errors.email?.message || errors.password?.message || errors.root?.message }</h3>
             }
             <input
-              value={email}
               placeholder="Email Address"
               className={loginStyles.inputBx}
               type="text"
-              onChange={(e) => setEmail(e.target.value)}
+              { ...register("email", { required: true }) }
             />
 
             <br />
 
             <input
-              value={password}
               placeholder="Password"
               className={loginStyles.inputBx}
               type={showPassword ? "text" : "password"}
-              onChange={(e) => setPassword(e.target.value)}
+              { ...register("password", { minLength: { value: 8, message: 'Password must contain atleast 8 characters.' } }) }
             />
 
             <br />
@@ -123,7 +129,6 @@ export default function Login() {
 
             <button
               className={loginStyles.Sbtn}
-              onClick={(e) => handleSignIn(e)}
             >
               Sign In
             </button>

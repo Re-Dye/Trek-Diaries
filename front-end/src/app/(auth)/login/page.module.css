@@ -231,6 +231,7 @@
 
 .incorrectAlert
 {
+    padding: 2vh;
     font-size: small;
     color: red;
 }
