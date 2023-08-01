@@ -52,7 +52,7 @@ export default function Login() {
       const res = await signIn("credentials", {
         email: data.email,
         password: data.password,
-        redirect: false,
+        redirect: true,
         callbackUrl: "/",
       });
 
