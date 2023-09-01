@@ -1,11 +1,14 @@
 import { withAuth } from "next-auth/middleware"
 import { NextRequest, NextResponse } from "next/server"
 import { getToken } from "next-auth/jwt"
+import { getAuthSecret } from "../lib/secrets"
+
+const authSecret: string = getAuthSecret()
 
 export default withAuth(
   async function middleware(req: NextRequest) {
     console.log('using middleware...')
-    const token = await getToken({ req, secret: "mysecret" })
+    const token = await getToken({ req, secret: authSecret })
     console.log("Auth Token: ", token)
     const isAuth = !!token
     const isAuthPage = req.nextUrl.pathname.startsWith('/login') || req.nextUrl.pathname.startsWith('/sign_up')
@@ -28,7 +31,7 @@ export default withAuth(
     }
   },
   {
-    secret: "mysecret",
+    secret: authSecret,
     callbacks: {
       authorized(){ return true }
     }
