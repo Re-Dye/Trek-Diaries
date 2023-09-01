@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -31,10 +31,6 @@ export default function Login() {
   } = useForm<FormData>({ resolver: zodResolver(loginSchema) });
   const router: AppRouterInstance = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log("re-rendered")
-  })
 
   const handleSigninGoog = async () => {
     const googres = await signIn("google", {
