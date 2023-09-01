@@ -4,8 +4,7 @@ import { FaCommentAlt } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
-import { ClassNames } from "@emotion/react";
+import { useState } from "react";
 import Star from "../../post/[id]/component/star";
 
 interface Owner {

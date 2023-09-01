@@ -3,7 +3,7 @@
 import { Session } from 'next-auth';
 import './globals.css'
 import { SessionProvider } from 'next-auth/react'
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Metadata } from 'next';
 
 interface IProps {
@@ -17,6 +17,9 @@ interface IProps {
 // }
 // export default function RootLayout({ children }: { children: ReactNode}) {
 export default function RootLayout({ children, session }: IProps) {
+  useEffect(() => {
+    console.log("re-rendered")
+  })
   return (
     <html lang="en">
       <body>
