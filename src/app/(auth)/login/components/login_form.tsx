@@ -189,7 +189,7 @@ export default function Login() {
               </div>
 
               <div className="text-sm font-medium justify-center flex gap-2">
-                <>Don't have an account?</>
+                <>Don&apos;t have an account?</>
                 <Link className="text-blue-500  hover:text-gray-400" href="/sign_up"> Sign Up</Link>
               </div>
 
