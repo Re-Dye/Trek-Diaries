@@ -4,7 +4,6 @@ import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-// import loginStyles from "../page.module.css";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
@@ -14,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -93,9 +93,11 @@ export default function Login() {
         <Image className="object-cover w-full h-full" loading="lazy" src="/ncpr.jpg" alt="backgroundImage" fill />
       </div>
       <div className=" w-full sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/2 h-full flex items-center mx-4 sm:mx-8 md:mx-16 lg:mx-20 xl:mx-24">
+        <div className="flex absolute top-6 right-8 sm:top-7 sm:right-10 md:top-9 md:right-20 lg:top-12 lg:right-24 xl:top-14 xl:right-28">
+            <ModeToggle />
+        </div>
         <div className="w-full p-4 sm:p-2 justify-center">
           <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-5xl xl:text-6xl font-bold text-blue-500 ">Login</h2>
-
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onLogIn)} className=" w-full space-y-4 justify-center items-center">
               {errors && (
@@ -184,7 +186,8 @@ export default function Login() {
 
               <div>
               <Button
-                className=" btn px-3 py-2 text-xs rounded-md w-full bg-cyan-600 "
+                variant="outline"
+                className=" btn px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 "
                 type="submit">Sign In</Button>
               </div>
 
@@ -197,7 +200,7 @@ export default function Login() {
                 <Button
                   type="button"
                   variant="outline"
-                  className=" btn w-full px-3 py-2 text-xs tex rounded-md gap-x-2 text-white bg-gray-800 lg:gap-3"
+                  className=" btn w-full transition ease-in-out delay-100 px-3 py-2 text-xs tex rounded-md gap-x-2 text-white bg-gray-800 lg:gap-3 lg:h-8 xl:h-10"
                   onClick={handleSigninGoog}
                 >
                   Continue with google
