@@ -88,13 +88,13 @@ export default function Login() {
   };
 
   return (
-    <div className="h-screen flex flex-row">
-      <div className="relative w-full h-full border-0 shadow-black shadow-xl rounded-r-3xl">
-        <Image className="object-cover rounded-r-3xl" loading="lazy" src="/ncpr.jpg" alt="backgroundImage" fill />
+    <div className="h-screen flex flex-row sm:flex-row md:flex-row lg:flex-row xl:flex-row ">
+      <div className="relative w-full sm:h-full md:h-full lg:h-full xl:h-full  border-0 shadow-black shadow-xl rounded-r-3xl">
+        <Image className="object-cover w-full h-full" loading="lazy" src="/ncpr.jpg" alt="backgroundImage" fill />
       </div>
-      <div className=" mx-16 w-2/5 h-full flex items-center">
-        <div className="w-full p-2 justify-center">
-          <h2 className="text-5xl mb-14 font-bold text-blue-500 ">Login</h2>
+      <div className=" w-full sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/2 h-full flex items-center mx-4 sm:mx-8 md:mx-16 lg:mx-20 xl:mx-24">
+        <div className="w-full p-4 sm:p-2 justify-center">
+          <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-5xl xl:text-6xl font-bold text-blue-500 ">Login</h2>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onLogIn)} className=" w-full space-y-4 justify-center items-center">
@@ -159,8 +159,8 @@ export default function Login() {
               })}
             /> */}
 
-              <div className="flex gap-5 justify-center ">
-                <div className="flex space-x-2 mt-3">
+              <div className="flex flex-col gap-2 justify-center items-center md:flex-row lg:flex-row  sm:gap-2 md:gap-4 lg:gap-5 ">
+                <div className="flex space-x-1 sm:space-x-2 items-center ">
                   <Checkbox
                     id="show_password"
                     onCheckedChange={() =>
@@ -169,14 +169,14 @@ export default function Login() {
                   />
                   <label
                     htmlFor="show_password"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className=" text-xs font-medium leading-none cursor-pointer sm:text-sm"
                   >
                     Show Password
                   </label>
                 </div>
 
-                <div className="flex mt-3 text-sm font-medium leading-none cursor-pointer hover:text-gray-400 text-blue-500">
-                  <Link href="/reset-password">
+                <div className="flex items-center">
+                  <Link className="text-xs font-medium leading-none cursor-pointer hover:text-gray-400 text-blue-500 sm:text-sm" href="/reset-password">
                     Forgot Password?
                   </Link>
                 </div>
@@ -184,11 +184,11 @@ export default function Login() {
 
               <div>
               <Button
-                className=" p-5 rounded-xl w-full h-10 text-md font-semibold text bg-cyan-600"
+                className=" btn px-3 py-2 text-xs rounded-md w-full bg-cyan-600 "
                 type="submit">Sign In</Button>
               </div>
 
-              <div className="text-sm font-medium justify-center flex gap-2">
+              <div className=" flex flex-col text-xs font-medium justify-center items-center gap-1 md:flex-row sm:text-sm md:text-sm md:gap-2">
                 <>Don&apos;t have an account?</>
                 <Link className="text-blue-500  hover:text-gray-400" href="/sign_up"> Sign Up</Link>
               </div>
@@ -197,11 +197,11 @@ export default function Login() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="p-5 gap-x-2 rounded-xl w-full text-white bg-gray-950 h-10 font-semibold text-md"
+                  className=" btn w-full px-3 py-2 text-xs tex rounded-md gap-x-2 text-white bg-gray-800 lg:gap-3"
                   onClick={handleSigninGoog}
                 >
                   Continue with google
-                  <FcGoogle className="w-6 h-6" />
+                  <FcGoogle className=" relative w-5 h-5 md:w-6 md:h-6" />
                 </Button>
               </div>
             </form>

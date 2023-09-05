@@ -59,3 +59,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.btn{
+  @apply uppercase font-bold cursor-pointer tracking-wider items-center;
+}
