@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1694792239013,
+      "tag": "0000_tricky_red_ghost",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1694794141995,
+      "tag": "0001_typical_elektra",
+      "breakpoints": true
+    }
+  ]
+}
