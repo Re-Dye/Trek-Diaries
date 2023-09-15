@@ -1,6 +1,6 @@
 import dbConnect from "../../../lib/mongoose"
 import User from "../../../lib/modals/User"
-import sendEmail from "../../../lib/nodemailer"
+import sendEmail from "../../lib/nodemailer"
 import Token from "../../../lib/modals/Token"
 import crypto from "crypto" 
 import { NextApiRequest, NextApiResponse } from "next";
