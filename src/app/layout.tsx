@@ -5,6 +5,7 @@ import './globals.css'
 import { SessionProvider } from 'next-auth/react'
 import { ReactNode, useEffect } from 'react';
 import { Metadata } from 'next';
+import { ThemeProvider } from '@/components/ui/theme-provider';
 
 interface IProps {
   children: ReactNode;
@@ -20,9 +21,11 @@ export default function RootLayout({ children, session }: IProps) {
   return (
     <html lang="en">
       <body>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <SessionProvider session={ session }>
           { children }
         </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
