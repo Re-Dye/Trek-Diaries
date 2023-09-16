@@ -14,15 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(8, { message: "Password must atleast 8 characters long" }),
-});
-
-type FormData = z.infer<typeof loginSchema>;
+import { loginSchema, LoginFormData } from "@/lib/zodSchema/login";
 
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401;
 
@@ -32,7 +24,7 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<FormData>({ resolver: zodResolver(loginSchema) });
+  } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
   const router: AppRouterInstance = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -48,7 +40,7 @@ export default function Login() {
     console.log(googres);
   };
 
-  const onLogIn: SubmitHandler<FormData> = async (data) => {
+  const onLogIn: SubmitHandler<LoginFormData> = async (data) => {
     try {
       console.log("signing in", data);
       // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })

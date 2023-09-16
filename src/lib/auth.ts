@@ -1,19 +1,16 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-// import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-// import clientPromise from "../../../../lib/mongoDB";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import dbConnect from "../../../../lib/mongoose";
-import User from "../../../../lib/modals/User";
-import { db } from "@/lib/db";
+import dbConnect from "../../lib/mongoose";
+import User from "../../lib/modals/User";
+import { db } from "@/lib/db/db";
 
 if (!process.env.NEXTAUTH_SECRET) {
   throw new Error("Please provide process.env.NEXTAUTH_SECRET env variable.");
 }
 
 export const authOptions: NextAuthOptions = {
-  // adapter: MongoDBAdapter(clientPromise),
   adapter: DrizzleAdapter(db),
   providers: [
     GoogleProvider({
@@ -97,5 +94,3 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
-
-export default NextAuth(authOptions);
