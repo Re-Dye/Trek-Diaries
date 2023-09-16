@@ -5,9 +5,6 @@ import Token from "../../../../lib/modals/Token";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "edge";
-export const preferredRegion = "bom1" || "sin1";
-
 export async function POST(req: NextRequest) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
