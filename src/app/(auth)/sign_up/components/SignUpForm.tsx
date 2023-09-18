@@ -3,13 +3,15 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import axios from "axios";
 import signupStyles from "../page.module.css";
 import { signupSchema, SignupFormData } from "@/lib/zodSchema/signup";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
+import { useMutation } from "react-query"
 
+/* delete this */
+import axios from "axios";
 
 const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match.";
 const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8";
@@ -18,10 +20,11 @@ export default function SignUpForm() {
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
   })
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
+  /* delete this */
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword, confirmPassword, setConfirmPassword] =
@@ -36,7 +39,7 @@ export default function SignUpForm() {
     confirmPassword,
     error
   );
-
+  
   const resetStates = () => {
     setFirstName("");
     setLastName("");
@@ -47,7 +50,38 @@ export default function SignUpForm() {
     setPassword("");
     setConfirmPassword("");
   };
+  /* till here */
+  
+  const { mutate } = useMutation({
+    mutationKey: "signUp",
+    mutationFn: async (data: SignupFormData) => {
+      const res = await fetch("/api/sign_up", {
+        cache: "no-store",
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        },
+      });
+      const json = await res.json();
+      const status = res.status;
+      return { json, status };
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      alert(`Verification email sent to: ${email}`);
+    },
+    onError: (error) => {
+      console.log(error);
+      alert("Error occured while signing up. Please try again later.")
+    }
+  })
 
+  const onSignUp: SubmitHandler<SignupFormData> = async (data) => mutate(data);
+            
+  const handleShowPassword = () => { setShowPassword((showPassword) => !showPassword) }
+
+  /* delete this @Shashanka */
   const handleSignUp = async (e: React.MouseEvent) => {
     e.preventDefault();
     console.log("signing up");
@@ -150,9 +184,7 @@ export default function SignUpForm() {
                   type="checkbox"
                   id="show_password"
                   className={signupStyles.check}
-                  onChange={() =>
-                    setShowPassword((showPassword) => !showPassword)
-                  }
+                  onChange={ handleShowPassword }
                 />
                 <label htmlFor="show_password">Show Password</label>
               </div>
@@ -183,6 +215,7 @@ export default function SignUpForm() {
   );
 }
 
+/* delete this */
 function useDisableSignUp(
   firstName: string,
   lastName: string,
@@ -216,6 +249,7 @@ function useDisableSignUp(
   return disable;
 }
 
+/* delete this */
 function useConfirmPassword(
   initialValue: string,
   setError: Dispatch<SetStateAction<string | null>>
