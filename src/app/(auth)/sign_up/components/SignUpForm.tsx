@@ -1,15 +1,24 @@
-"use client"
+"use client";
 
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
 import signupStyles from "../page.module.css";
+import { signupSchema, SignupFormData } from "@/lib/zodSchema/signup";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+
 
 const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match.";
 const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8";
 
 export default function SignUpForm() {
+  const form = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
+  })
+
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -54,7 +63,7 @@ export default function SignUpForm() {
 
       console.log(data);
 
-      alert(`Verification email sent to: ${ email }`)
+      alert(`Verification email sent to: ${email}`);
 
       resetStates();
     } catch (error) {

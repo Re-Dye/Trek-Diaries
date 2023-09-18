@@ -19,12 +19,6 @@ import { loginSchema, LoginFormData } from "@/lib/zodSchema/login";
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401;
 
 export default function Login() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
   const router: AppRouterInstance = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -58,7 +52,7 @@ export default function Login() {
         /* if the status code matches with the incorrect login credentials status */
         if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
           console.log("The email or the password is incorrect.");
-          setError("root", {
+          form.setError("root", {
             type: "custom",
             message: "The email or the password is incorrect.",
           });
@@ -71,7 +65,7 @@ export default function Login() {
       router.push(res?.url as string);
       return;
     } catch (error) {
-      setError("root", {
+      form.setError("root", {
         type: "custom",
         message: "Error occured. Please try again later.",
       });
@@ -92,11 +86,11 @@ export default function Login() {
           <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-5xl xl:text-6xl font-bold text-blue-500 ">Login</h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onLogIn)} className=" w-full space-y-4 justify-center items-center">
-              {errors && (
+              {form.formState.errors && (
                 <h3 className=" text-red-600 font-medium">
-                  {errors.email?.message ||
-                    errors.password?.message ||
-                    errors.root?.message}
+                  {form.formState.errors.email?.message ||
+                    form.formState.errors.password?.message ||
+                    form.formState.errors.root?.message}
                 </h3>
               )}
               <FormField
