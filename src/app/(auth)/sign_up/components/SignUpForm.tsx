@@ -8,7 +8,7 @@ import { signupSchema, SignupFormData } from "@/lib/zodSchema/signup";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import { useMutation } from "react-query"
+import { useMutation } from "react-query";
 
 /* delete this */
 import axios from "axios";
@@ -19,7 +19,7 @@ const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8";
 export default function SignUpForm() {
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
-  })
+  });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   /* delete this */
@@ -39,7 +39,7 @@ export default function SignUpForm() {
     confirmPassword,
     error
   );
-  
+
   const resetStates = () => {
     setFirstName("");
     setLastName("");
@@ -51,7 +51,7 @@ export default function SignUpForm() {
     setConfirmPassword("");
   };
   /* till here */
-  
+
   const { mutate } = useMutation({
     mutationKey: "signUp",
     mutationFn: async (data: SignupFormData) => {
@@ -60,7 +60,7 @@ export default function SignUpForm() {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
       });
       const json = await res.json();
@@ -73,13 +73,15 @@ export default function SignUpForm() {
     },
     onError: (error) => {
       console.log(error);
-      alert("Error occured while signing up. Please try again later.")
-    }
-  })
+      alert("Error occured while signing up. Please try again later.");
+    },
+  });
 
   const onSignUp: SubmitHandler<SignupFormData> = async (data) => mutate(data);
-            
-  const handleShowPassword = () => { setShowPassword((showPassword) => !showPassword) }
+
+  const handleShowPassword = () => {
+    setShowPassword((showPassword) => !showPassword);
+  };
 
   /* delete this @Shashanka */
   const handleSignUp = async (e: React.MouseEvent) => {
@@ -184,7 +186,7 @@ export default function SignUpForm() {
                   type="checkbox"
                   id="show_password"
                   className={signupStyles.check}
-                  onChange={ handleShowPassword }
+                  onChange={handleShowPassword}
                 />
                 <label htmlFor="show_password">Show Password</label>
               </div>
