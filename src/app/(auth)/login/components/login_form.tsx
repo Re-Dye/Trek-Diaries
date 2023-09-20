@@ -126,26 +126,6 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              {/* <input
-              placeholder="Email Address"
-              className={loginStyles.inputBx}
-              type="text"
-              {...register("email", { required: true })}
-            /> */}
-
-              {/* <br /> */}
-
-              {/* <input
-              placeholder="Password"
-              className={loginStyles.inputBx}
-              type={showPassword ? "text" : "password"}
-              {...register("password", {
-                minLength: {
-                  value: 8,
-                  message: "Password must contain atleast 8 characters.",
-                },
-              })}
-            /> */}
 
               <div className="flex flex-col gap-2 justify-center items-center md:flex-row lg:flex-row  sm:gap-2 md:gap-4 lg:gap-5 ">
                 <div className="flex space-x-1 sm:space-x-2 items-center ">

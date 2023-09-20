@@ -1,4 +1,3 @@
-import loginStyles from "./page.module.css";
 import { Metadata } from "next";
 import Login from "./components/login_form";
 
@@ -9,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className={loginStyles.app}>
+    <div>
       <Login />
     </div>
   );
