@@ -1,32 +1,44 @@
 "use client";
 
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState } from "react";
+
 import Link from "next/link";
 import Image from "next/image";
-import signupStyles from "../page.module.css";
-import { signupSchema, SignupFormData } from "@/lib/zodSchema/signup";
+
+import {
+  signupFormSchema,
+  SignupFormData,
+  SignupData,
+} from "@/lib/zodSchema/signup";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import bcrypt from "bcryptjs";
+
 import { useMutation } from "react-query";
+
 import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-
-const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match.";
-const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8";
+import { Button, ButtonLoading } from "@/components/ui/button";
 
 export default function SignUpForm() {
-  const form = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
+  const form = useForm<z.infer<typeof signupFormSchema>>({
+    resolver: zodResolver(signupFormSchema),
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const { mutate, isLoading } = useMutation({
     mutationKey: "signUp",
-    mutationFn: async (data: SignupFormData) => {
+    mutationFn: async (data: SignupData) => {
       const res = await fetch("/api/sign_up", {
         cache: "no-store",
         method: "POST",
@@ -41,7 +53,7 @@ export default function SignUpForm() {
     },
     onSuccess: (data) => {
       console.log(data);
-      alert(`Verification email sent to: ${email}`);
+      alert(`Verification email sent to: ${form.getValues().email}`);
     },
     onError: (error) => {
       console.log(error);
@@ -50,19 +62,33 @@ export default function SignUpForm() {
   });
 
   const onSignUp: SubmitHandler<SignupFormData> = async (data) => {
-     console.log(data);
+    const salt = await bcrypt.genSalt(10);
+    const res: SignupData = {
+      name: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      dob: data.dob,
+      salt,
+      password: (await bcrypt.hash(data.password, salt)),
+    };
+    console.log(res);
+    console.log(salt.length)
+    console.log(res.password.length)
+    // mutate(res);
+  };
 
-      mutate(data);
-    }
   const handleShowPassword = () => {
     setShowPassword((showPassword) => !showPassword);
   };
 
-
   return (
     <div className="h-screen flex flex-row sm:flex-row">
       <div className="relative w-full sm:h-full md:h-full lg:h-full xl:h-full  border-0 shadow-black shadow-xl rounded-r-3xl">
-        <Image className="object-cover w-full h-full" src="/ncpr.jpg" alt="backgroundImage" fill />
+        <Image
+          className="object-cover w-full h-full"
+          src="/ncpr.jpg"
+          alt="backgroundImage"
+          fill
+        />
       </div>
 
       <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/2 h-full flex items-center mx-4 sm:mx-8 md:mx-16 lg:mx-20 xl:mx-24">
@@ -70,10 +96,15 @@ export default function SignUpForm() {
           <ModeToggle />
         </div>
         <div className="w-full p-4 sm:p-2 justify-center">
-          <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-5xl xl:text-6xl font-bold text-blue-500 ">Sign Up</h2>
+          <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-5xl xl:text-6xl font-bold text-blue-500 ">
+            Sign Up
+          </h2>
 
           <Form {...form}>
-            <form className=" w-full space-y-1 justify-center items-center" onSubmit={form.handleSubmit(onSignUp)}>
+            <form
+              className=" w-full space-y-1 justify-center items-center"
+              onSubmit={form.handleSubmit(onSignUp)}
+            >
               {/* {form.formState.errors && (
                 <h3 className="text-red-600 font-medium">{error}</h3>)} */}
 
@@ -82,11 +113,14 @@ export default function SignUpForm() {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">First Name</FormLabel>
+                    <FormLabel className="text-black justify-start flex">
+                      First Name
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="h-12 w-full"
-                        placeholder="First Name" {...field}
+                        placeholder="First Name"
+                        {...field}
                         type="text"
                       ></Input>
                     </FormControl>
@@ -99,11 +133,14 @@ export default function SignUpForm() {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">Last Name</FormLabel>
+                    <FormLabel className="text-black justify-start flex">
+                      Last Name
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="h-12 w-full"
-                        placeholder="Last Name" {...field}
+                        placeholder="Last Name"
+                        {...field}
                         type="text"
                       ></Input>
                     </FormControl>
@@ -116,11 +153,14 @@ export default function SignUpForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">Email</FormLabel>
+                    <FormLabel className="text-black justify-start flex">
+                      Email
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="h-12 w-full"
-                        placeholder="Email Address" {...field}
+                        placeholder="Email Address"
+                        {...field}
                         type="email"
                       ></Input>
                     </FormControl>
@@ -133,11 +173,14 @@ export default function SignUpForm() {
                 name="dob"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">Date of Birth</FormLabel>
+                    <FormLabel className="text-black justify-start flex">
+                      Date of Birth
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="h-12 w-full"
-                        placeholder="DOB" {...field}
+                        placeholder="DOB"
+                        {...field}
                         type="date"
                       ></Input>
                     </FormControl>
@@ -150,12 +193,16 @@ export default function SignUpForm() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black flex justify-start">Password</FormLabel>
+                    <FormLabel className="text-black flex justify-start">
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="h-12 w-full"
-                        placeholder="password" {...field}
-                        type={showPassword ? "text" : "password"}></Input>
+                        placeholder="password"
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                      ></Input>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -166,12 +213,16 @@ export default function SignUpForm() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black flex justify-start">Confirm Password</FormLabel>
+                    <FormLabel className="text-black flex justify-start">
+                      Confirm Password
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className="h-12 w-full"
-                        placeholder="Confirm Password" {...field}
-                        type={showPassword ? "text" : "password"}></Input>
+                        placeholder="Confirm Password"
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                      ></Input>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -182,9 +233,7 @@ export default function SignUpForm() {
                 <div className="flex space-x-1 sm:space-x-2 mt-3">
                   <Checkbox
                     id="show_password"
-                    onCheckedChange={() =>
-                      setShowPassword((showPassword) => !showPassword)
-                    }
+                    onCheckedChange={handleShowPassword}
                   />
                   <label
                     htmlFor="show_password"
@@ -194,22 +243,30 @@ export default function SignUpForm() {
                   </label>
                 </div>
               </div>
-              
+
               <div>
-                <Button
-                  variant="outline"
-                  className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 "
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  Sign Up
-                </Button>
+                {isLoading ? (
+                  <ButtonLoading className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 " />
+                ) : (
+                  <Button
+                    variant="outline"
+                    className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 "
+                    type="submit"
+                  >
+                    Sign Up
+                  </Button>
+                )}
               </div>
               {/* <button onClick={ signInWithGoogle }>Sign In with Google</button> */}
 
               <div className="flex flex-col text-xs font-medium justify-center items-center gap-1 md:flex-row sm:text-sm md:text-sm md:gap-2">
                 <>Already have an account?&nbsp; </>
-                <Link className="text-blue-400 hover:text-gray-400" href="/login">Login</Link>
+                <Link
+                  className="text-blue-400 hover:text-gray-400"
+                  href="/login"
+                >
+                  Login
+                </Link>
               </div>
             </form>
           </Form>

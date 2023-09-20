@@ -1,6 +1,6 @@
 import dbConnect from "../../../../lib/mongoose";
 import User from "../../../../lib/modals/User";
-import sendEmail from "../../../lib/nodemailer";
+import sendEmail from "@/lib/nodemailer";
 import Token from "../../../../lib/modals/Token";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
@@ -9,7 +9,7 @@ import { signupSchema } from "@/lib/zodSchema/signup";
 export async function POST(req: NextRequest) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    const { email, password, firstName, lastName, dob} = signupSchema.parse(await req.json())
+    const { email, password, firstName, lastName, dob, salt} = signupSchema.parse(await req.json())
 
     const fullName: String = `${firstName} ${lastName}`;
     if (await dbConnect()) {
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     user.dob = dob;
     await user.save();
 
-    const token: any = new Token();
+    const token = new Token();
     token.token = crypto.randomBytes(32).toString("hex");
     await token.save();
 
