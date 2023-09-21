@@ -43,6 +43,7 @@ export default function Login() {
         password: data.password,
         redirect: true,
         callbackUrl: "/",
+        
       });
 
       console.log("response received");

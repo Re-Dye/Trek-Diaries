@@ -4,30 +4,39 @@ import {
   text,
   primaryKey,
   integer,
-  serial,
+  uuid,
   char,
   boolean
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
+import { CONSTANTS } from "../constants";
+
+type UserType = "credential" | "google";
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
-  name: text("name"),
+  name: text("name").notNull(),
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-  dob: timestamp("dob", { mode: "date" }),
+  type: text("type").$type<UserType>().notNull().default("google"),
 });
 
 export const credentialUsers = pgTable( "credentialUser", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  password: char("password", { length: 32 }).notNull(),
-  dob: timestamp("dob", { mode: "date" }),
+  userId: text("id").primaryKey().references(() => users.id, { onDelete: "cascade" }),
+  password: char("password", { length: CONSTANTS.ENCRYPTED_PASSWORD_LENGTH }).notNull(),
+  salt: char("salt", { length: CONSTANTS.SALT_LENGTH }).notNull(),
+  dob: timestamp("dob", { mode: "date" }).notNull(),
   verified: boolean("verified").notNull().default(false),
 });
+
+export const userRelation = relations(users, ({ one }) => ({
+  credentialUsers: one(credentialUsers, {
+    fields: [users.id],
+    references: [credentialUsers.userId],
+  }),
+}));
 
 export const accounts = pgTable(
   "account",

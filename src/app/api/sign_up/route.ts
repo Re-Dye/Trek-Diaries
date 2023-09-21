@@ -1,54 +1,92 @@
-import dbConnect from "../../../../lib/mongoose";
-import User from "../../../../lib/modals/User";
 import sendEmail from "@/lib/nodemailer";
 import Token from "../../../../lib/modals/Token";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { signupSchema } from "@/lib/zodSchema/signup";
+import { db } from "@/lib/db/db";
+import { credentialUsers, users, verificationTokens } from "@/lib/db/schema";
+import { eq, sql, and } from "drizzle-orm";
+import { generateUUID } from "@/lib/uuid";
+import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    const { email, password, firstName, lastName, dob, salt} = signupSchema.parse(await req.json())
 
-    const fullName: String = `${firstName} ${lastName}`;
-    if (await dbConnect()) {
-      console.log("Connection established....");
-    }
+    /* check if request sent is valid */
+    const { email, password, name, dob, salt } = signupSchema.parse(
+      await req.json()
+    );
 
-    const countUser = await User.countDocuments({ email });
+    /* count users with same email */
+    const preparedCountUser = db
+      .select({ count: sql<number>`count(*)` })
+      .from(users)
+      .where(
+        and(
+          eq(users.email, sql.placeholder("email")),
+          eq(users.type, "credential")
+        )
+      )
+      .prepare("count_users");
+    const countUser = await preparedCountUser.execute({ email });
     console.log(countUser);
 
-    if (countUser) {
-      //if email already exists
+    /* if email already exists */
+    if (countUser[0].count > 0) {
       console.log("Duplicate Email!!!");
       return NextResponse.json(
-        { success: false, error: "user already exists" },
+        "Email already exists. Please try with another email.",
         { status: 400 }
       );
     }
 
-    const user: any = new User(); //create mongo model of given data and store in database
-    user.email = email;
-    user.password = password;
-    user.first_name = firstName;
-    user.last_name = lastName;
-    user.name = fullName;
-    user.dob = dob;
-    await user.save();
+    /* generate uuid for new user */
+    const uuid = generateUUID(email);
 
-    const token = new Token();
-    token.token = crypto.randomBytes(32).toString("hex");
-    await token.save();
+    /* insert user into db */
+    const preparedInsertUser = db
+      .insert(users)
+      .values({
+        id: sql.placeholder("id"),
+        name: sql.placeholder("name"),
+        email: sql.placeholder("email"),
+        type: "credential",
+      })
+      .prepare("insert_user");
+    await preparedInsertUser.execute({ id: uuid, name, email });
+    const pInsertCredentialUser = db
+      .insert(credentialUsers)
+      .values({
+        userId: sql.placeholder("userId"),
+        password: sql.placeholder("password"),
+        salt: sql.placeholder("salt"),
+        dob: sql.placeholder("dob"),
+      })
+      .prepare("insert_credential_user");
+    await pInsertCredentialUser.execute({ userId: uuid, password, salt, dob });
 
-    const url: any = `${baseUrl}users/${user._id}/verify/${token.token}`;
-    // console.log(`user has been created: ${user}`)
-    // console.log(`token has been created: ${token}`)
+    /* generate token and store in database */
+    const token = crypto.randomBytes(32).toString("hex");
+    const pInsertToken = db
+      .insert(verificationTokens)
+      .values({
+        identifier: sql.placeholder("identifier"),
+        token: sql.placeholder("token"),
+        expires: sql.placeholder("expires"),
+      })
+      .prepare("insert_token");
+    await pInsertToken.execute({ identifier: email, token, expires: 3600 });
+
+    const url: any = `${baseUrl}users/${uuid}/verify/${token}`;
+
     console.log(`url: ${url}`);
-    await sendEmail(user.email, "Verification Mail", url);
+    await sendEmail(email, "Verification Mail", url);
 
-    return NextResponse.json({ success: true, data: user }, { status: 201 });
+    return NextResponse.json("User Created", { status: 201 });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 500 });
+    if (error instanceof ZodError) {
+      return NextResponse.json({ success: false, error }, { status: 500 });
+    }
   }
 }

@@ -68,12 +68,10 @@ export default function SignUpForm() {
       email: data.email,
       dob: data.dob,
       salt,
-      password: (await bcrypt.hash(data.password, salt)),
+      password: await bcrypt.hash(data.password, salt),
     };
     console.log(res);
-    console.log(salt.length)
-    console.log(res.password.length)
-    // mutate(res);
+    mutate(res);
   };
 
   const handleShowPassword = () => {

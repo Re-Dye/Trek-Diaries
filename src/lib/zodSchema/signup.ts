@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { CONSTANTS } from "../constants";
 
 export const signupFormSchema = z
   .object({
@@ -6,11 +7,12 @@ export const signupFormSchema = z
     lastName: z.string().min(1, { message: "Last name is required" }),
     password: z
       .string()
-      .min(8, { message: "Length of password should be between 8 to 30 characters." })
-      .max(30, { message: "Length of password should be between 8 to 30 characters." }),
+      .min(CONSTANTS.MIN_PASSWORD_LENGTH, { message: "Length of password should be between 8 to 30 characters." })
+      .max(CONSTANTS.MAX_PASSWORD_LENGTH, { message: "Length of password should be between 8 to 30 characters." }),
     confirmPassword: z
       .string()
-      .min(8, { message: "Length of password should be at least 8" }),
+      .min(CONSTANTS.MIN_PASSWORD_LENGTH, { message: "Length of password should be at least 8" })
+      .max(CONSTANTS.MAX_PASSWORD_LENGTH, { message: "Length of password should be between 8 to 30 characters." }),
     email: z.string().email({ message: "Invalid email address" }),
     dob: z
       .string({ required_error: "A date of birth is required" })
@@ -28,8 +30,8 @@ export const signupFormSchema = z
 
 export const signupSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  password: z.string().length(60, { message: "Invalid password" }),
-  salt: z.string({ required_error: "Salt is required." }).length(29, { message: "Invalid salt" }),
+  password: z.string().length(CONSTANTS.ENCRYPTED_PASSWORD_LENGTH, { message: "Invalid password" }),
+  salt: z.string({ required_error: "Salt is required." }).length(CONSTANTS.SALT_LENGTH, { message: "Invalid salt" }),
   email: z.string().email({ message: "Invalid email address" }),
   dob: z
     .string({ required_error: "A date of birth is required" })

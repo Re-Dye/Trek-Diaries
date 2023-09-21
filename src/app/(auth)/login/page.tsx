@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Login from "./components/login_form";
+import Login from "./components/LoginForm";
 
 export const metadata: Metadata = {
   title: 'Login | TrekDiaries',
