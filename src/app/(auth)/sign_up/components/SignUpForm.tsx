@@ -47,13 +47,21 @@ export default function SignUpForm() {
           "Content-Type": "application/json",
         },
       });
-      const json = await res.json();
+      const message = await res.json();
       const status = res.status;
-      return { json, status };
+      return { message, status };
     },
     onSuccess: (data) => {
       console.log(data);
-      alert(`Verification email sent to: ${form.getValues().email}`);
+      if (data.status === 201){
+        alert(`Verification email sent to: ${form.getValues().email}`);
+      }
+      else if (data.status === 409){
+        alert(`User with email ${form.getValues().email} already exists.`);
+      }
+      else{
+        alert(`Error occured while signing up. Please try again later.`);
+      }
     },
     onError: (error) => {
       console.log(error);

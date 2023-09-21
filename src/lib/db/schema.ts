@@ -4,9 +4,8 @@ import {
   text,
   primaryKey,
   integer,
-  uuid,
   char,
-  boolean
+  boolean,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
@@ -14,7 +13,7 @@ import { CONSTANTS } from "../constants";
 
 type UserType = "credential" | "google";
 
-export const users = pgTable("user", {
+export const users = pgTable("users", {
   id: text("id").notNull().primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull(),
@@ -23,23 +22,25 @@ export const users = pgTable("user", {
   type: text("type").$type<UserType>().notNull().default("google"),
 });
 
-export const credentialUsers = pgTable( "credentialUser", {
-  userId: text("id").primaryKey().references(() => users.id, { onDelete: "cascade" }),
-  password: char("password", { length: CONSTANTS.ENCRYPTED_PASSWORD_LENGTH }).notNull(),
-  salt: char("salt", { length: CONSTANTS.SALT_LENGTH }).notNull(),
+export const credentialUsers = pgTable("credentialUsers", {
+  userId: text("userId")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  password: text("password").notNull(),
+  salt: text("salt").notNull(),
   dob: timestamp("dob", { mode: "date" }).notNull(),
   verified: boolean("verified").notNull().default(false),
 });
 
 export const userRelation = relations(users, ({ one }) => ({
-  credentialUsers: one(credentialUsers, {
+  belongsTo: one(credentialUsers, {
     fields: [users.id],
     references: [credentialUsers.userId],
   }),
 }));
 
 export const accounts = pgTable(
-  "account",
+  "accounts",
   {
     userId: text("userId")
       .notNull()
@@ -60,7 +61,7 @@ export const accounts = pgTable(
   })
 );
 
-export const sessions = pgTable("session", {
+export const sessions = pgTable("sessions", {
   sessionToken: text("sessionToken").notNull().primaryKey(),
   userId: text("userId")
     .notNull()
@@ -69,7 +70,7 @@ export const sessions = pgTable("session", {
 });
 
 export const verificationTokens = pgTable(
-  "verificationToken",
+  "verificationTokens",
   {
     identifier: text("identifier").notNull(),
     token: text("token").notNull(),
