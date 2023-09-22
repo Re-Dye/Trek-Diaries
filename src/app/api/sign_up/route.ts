@@ -45,48 +45,22 @@ export async function POST(req: NextRequest) {
     /* generate uuid for new user */
     const uuid = generateUUID(email);
 
-    /* insert user into db */
-    await db.transaction(async () => {
-      await db
-        .insert(users)
-        .values({
-          id: uuid,
-          name,
-          email,
-          type: "credential",
-        })
-      // const preparedInsertUser = db
-      //   .insert(users)
-      //   .values({
-      //     id: sql.placeholder("id"),
-      //     name: sql.placeholder("name"),
-      //     email: sql.placeholder("email"),
-      //     type: "credential",
-      //   })
-      // .prepare("insert_user");
-      // await preparedInsertUser.execute({ id: uuid, name, email });
-      console.log("User inserted");
-
-      await db
-        .insert(credentialUsers)
-        .values({
-          userId: uuid,
-          password,
-          salt,
-          dob: new Date(dob),
-        })
-      // const pInsertCredentialUser = db
-      //   .insert(credentialUsers)
-      //   .values({
-      //     userId: sql.placeholder("userId"),
-      //     password: sql.placeholder("password"),
-      //     salt: sql.placeholder("salt"),
-      //     dob: sql.placeholder("dob"),
-      //   })
-      //   .prepare("insert_credential_user");
-      // await pInsertCredentialUser.execute({ userId: uuid, password, salt, dob });
-      console.log("Credential User inserted");
-    });
+    await db
+      .insert(users)
+      .values({
+        id: uuid,
+        name,
+        email,
+        type: "credential",
+      });
+    await db
+      .insert(credentialUsers)
+      .values({
+        userId: uuid,
+        password,
+        dob: new Date(dob),
+        salt
+      });
 
     /* generate token and store in database */
     // const token = crypto.randomBytes(32).toString("hex");
