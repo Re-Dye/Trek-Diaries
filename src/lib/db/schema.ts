@@ -6,6 +6,7 @@ import {
   integer,
   char,
   boolean,
+  date
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
@@ -26,9 +27,9 @@ export const credentialUsers = pgTable("credentialUsers", {
   userId: text("userId")
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
-  password: text("password").notNull(),
-  salt: text("salt").notNull(),
-  dob: timestamp("dob", { mode: "date" }).notNull(),
+  password: char("password", { length: CONSTANTS.ENCRYPTED_PASSWORD_LENGTH }).notNull(),
+  salt: char("salt", { length: CONSTANTS.SALT_LENGTH }).notNull(),
+  dob: date("dob", { mode: "string" }).notNull(),
   verified: boolean("verified").notNull().default(false),
 });
 

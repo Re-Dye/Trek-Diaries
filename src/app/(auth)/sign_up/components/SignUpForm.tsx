@@ -58,6 +58,8 @@ export default function SignUpForm() {
       }
       else if (data.status === 409){
         alert(`User with email ${form.getValues().email} already exists.`);
+      }else if (data.status === 400){
+        alert(`Invalid Request. Please try again later with proper information.`);
       }
       else{
         alert(`Error occured while signing up. Please try again later.`);

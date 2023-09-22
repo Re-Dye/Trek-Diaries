@@ -1,0 +1,1 @@
+ALTER TABLE "credentialUsers" ALTER COLUMN "dob" SET DATA TYPE date;
