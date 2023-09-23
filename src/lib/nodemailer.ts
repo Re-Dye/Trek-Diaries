@@ -1,7 +1,15 @@
 import { url } from "inspector";
 import nodemailer, { TransportOptions } from "nodemailer";
 
-const sendEmail = async (email: string, subject: string, link: string) => {
+const sendEmail = async ({
+  email,
+  subject,
+  link,
+}: {
+  email: string;
+  subject: string;
+  link: string;
+}) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
@@ -78,13 +86,14 @@ const sendEmail = async (email: string, subject: string, link: string) => {
       to: email,
       subject: subject,
       text: "Please Verify your Email!!!" + link,
-      html: emailContent
+      html: emailContent,
     });
     if (success) {
       console.log("Email has been sent successfully");
     }
   } catch (error) {
     console.log(error);
+    throw new Error("Error in sending email");
   }
 };
 

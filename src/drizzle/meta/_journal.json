@@ -1,0 +1,41 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1695303599932,
+      "tag": "0000_hot_masked_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1695307814171,
+      "tag": "0001_famous_unicorn",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1695307867186,
+      "tag": "0002_wakeful_tyrannus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1695379654960,
+      "tag": "0003_calm_butterfly",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1695455855099,
+      "tag": "0004_past_gargoyle",
+      "breakpoints": true
+    }
+  ]
+}

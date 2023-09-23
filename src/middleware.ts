@@ -1,7 +1,7 @@
 import { withAuth } from "next-auth/middleware"
 import { NextRequest, NextResponse } from "next/server"
 import { getToken } from "next-auth/jwt"
-import { getAuthSecret } from "../lib/secrets"
+import { getAuthSecret } from "./lib/secrets"
 
 const authSecret: string = getAuthSecret()
 

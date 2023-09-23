@@ -6,7 +6,6 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -14,26 +13,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(8, { message: "Password must atleast 8 characters long" }),
-});
-
-type FormData = z.infer<typeof loginSchema>;
+import { loginSchema, LoginFormData } from "@/lib/zodSchema/login";
 
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401;
 
 export default function Login() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<FormData>({ resolver: zodResolver(loginSchema) });
-  const router: AppRouterInstance = useRouter();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -48,7 +33,7 @@ export default function Login() {
     console.log(googres);
   };
 
-  const onLogIn: SubmitHandler<FormData> = async (data) => {
+  const onLogIn: SubmitHandler<LoginFormData> = async (data) => {
     try {
       console.log("signing in", data);
       // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
@@ -57,6 +42,7 @@ export default function Login() {
         password: data.password,
         redirect: true,
         callbackUrl: "/",
+        
       });
 
       console.log("response received");
@@ -66,7 +52,7 @@ export default function Login() {
         /* if the status code matches with the incorrect login credentials status */
         if (res.status === STATUS_INCORRECT_LOGIN_CREDENTIALS) {
           console.log("The email or the password is incorrect.");
-          setError("root", {
+          form.setError("root", {
             type: "custom",
             message: "The email or the password is incorrect.",
           });
@@ -79,7 +65,7 @@ export default function Login() {
       router.push(res?.url as string);
       return;
     } catch (error) {
-      setError("root", {
+      form.setError("root", {
         type: "custom",
         message: "Error occured. Please try again later.",
       });
@@ -90,7 +76,13 @@ export default function Login() {
   return (
     <div className="h-screen flex flex-row sm:flex-row md:flex-row lg:flex-row xl:flex-row ">
       <div className="relative w-full sm:h-full md:h-full lg:h-full xl:h-full  border-0 shadow-black shadow-xl rounded-r-3xl">
-        <Image className="object-cover w-full h-full" loading="lazy" src="/ncpr.jpg" alt="backgroundImage" fill />
+        <Image 
+          className="object-cover w-full h-full" 
+          loading="lazy" 
+          src="/ncpr.jpg" 
+          alt="backgroundImage" 
+          fill 
+        />
       </div>
       <div className=" w-full sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/2 h-full flex items-center mx-4 sm:mx-8 md:mx-16 lg:mx-20 xl:mx-24">
         <div className="flex absolute top-6 right-8 sm:top-7 sm:right-10 md:top-9 md:right-20 lg:top-12 lg:right-24 xl:top-14 xl:right-28">
@@ -100,11 +92,11 @@ export default function Login() {
           <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-5xl xl:text-6xl font-bold text-blue-500 ">Login</h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onLogIn)} className=" w-full space-y-4 justify-center items-center">
-              {errors && (
+              {form.formState.errors && (
                 <h3 className=" text-red-600 font-medium">
-                  {errors.email?.message ||
-                    errors.password?.message ||
-                    errors.root?.message}
+                  {form.formState.errors.email?.message ||
+                    form.formState.errors.password?.message ||
+                    form.formState.errors.root?.message}
                 </h3>
               )}
               <FormField
@@ -140,26 +132,6 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              {/* <input
-              placeholder="Email Address"
-              className={loginStyles.inputBx}
-              type="text"
-              {...register("email", { required: true })}
-            /> */}
-
-              {/* <br /> */}
-
-              {/* <input
-              placeholder="Password"
-              className={loginStyles.inputBx}
-              type={showPassword ? "text" : "password"}
-              {...register("password", {
-                minLength: {
-                  value: 8,
-                  message: "Password must contain atleast 8 characters.",
-                },
-              })}
-            /> */}
 
               <div className="flex flex-col gap-2 justify-center items-center md:flex-row lg:flex-row  sm:gap-2 md:gap-4 lg:gap-5 ">
                 <div className="flex space-x-1 sm:space-x-2 items-center ">

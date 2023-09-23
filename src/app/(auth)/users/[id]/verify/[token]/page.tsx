@@ -1,50 +1,50 @@
-"use client"
-import verifystyles from "./page.module.css"
+import { VerifyEmail } from "@/lib/zodSchema/verifyEmail";
+import verifystyles from "./page.module.css";
 import Image from "next/image";
-import Link from "next/link";
-import axios from "axios";
-import { GoVerified } from "react-icons/go"
-import { useRouter, usePathname } from "next/navigation"
-import { useEffect } from 'react'
+import { BadgeCheck } from "lucide-react"
+import { Metadata } from "next";
 
-export default function UserVerifyPage() {
-    return (
-        <div>
-        <VerifyMail/>
-        </div>
-    )
+export const metadata: Metadata = {
+  title: "TrekDiaries | Verify Email",
+  description: "Verify your email address",
 }
 
-function VerifyMail() {
-    const router: any = useRouter()
-    const pathname: any = usePathname();
-    let split_id = pathname.split('/');
-    const required_id: any = split_id[2];
-    const handleClick = async (e: React.MouseEvent) =>{
-        e.preventDefault();
-        console.log("count")
-        try {
-            const { data } = await axios.post('/api/verify_email',{ required_id })
-            console.log(data)
-            if(data)
-            {
-                router.push('/login')
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    return(
-        <div className={verifystyles.wrapper}>
-            <Image className={verifystyles.img} src="/ncpr.jpg" alt="backgroundImage" fill  />
-        <form className={verifystyles.verifiedBox}>
-        <GoVerified className={verifystyles.icon}/>
-            <h1>Verify Your Email Address !!</h1>
-            <h2>Thank you for signing up with Trek Diaries!</h2>
-            <p>As an extra security precaution, please verify your email address to continue signing up</p>
-            <button className={verifystyles.buttonVerify} onClick = {(e)=>{handleClick(e)}}> Verify and Continue </button>
-        </form>
-        </div>
-    )
-}
+export default async function UserVerifyPage({ params }: { params: { id: string, token: string }}) {
+  const data: VerifyEmail = { id: params.id, token: params.token };
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const res = await fetch(`${baseUrl}/api/verify_email`, {
+    method: "POST",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  let message: string;
+  
+  if (res.status === 201) {
+    message = "Email Verified Successfully";
+  } else if (res.status === 400) {
+    message = "Invalid request. Please try again with valid request";
+  } else if (res.status === 409) {
+    message = "Email already verified";
+  } else {
+    message = "Something went wrong. Please try again later";
+  }
 
+  return (
+    <div>
+      {/* <VerifyMail /> */}
+      <div className={verifystyles.wrapper}>
+        {/* <Image
+          className={verifystyles.img}
+          src="/ncpr.jpg"
+          alt="backgroundImage"
+          fill
+        /> */}
+        <BadgeCheck className={verifystyles.icon} />
+        <h1>{ message }</h1>
+      </div>
+    </div>
+  );
+}

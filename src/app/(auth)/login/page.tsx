@@ -1,6 +1,5 @@
-import loginStyles from "./page.module.css";
 import { Metadata } from "next";
-import Login from "./components/login_form";
+import Login from "./components/LoginForm";
 
 export const metadata: Metadata = {
   title: 'Login | TrekDiaries',
@@ -9,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className={loginStyles.app}>
+    <div>
       <Login />
     </div>
   );
