@@ -93,6 +93,7 @@ export default function SignUpForm() {
       <div className="relative w-full sm:h-full md:h-full lg:h-full xl:h-full  border-0 shadow-black shadow-xl rounded-r-3xl">
         <Image
           className="object-cover w-full h-full"
+          loading="lazy"
           src="/ncpr.jpg"
           alt="backgroundImage"
           fill

@@ -6,7 +6,6 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,7 @@ import { loginSchema, LoginFormData } from "@/lib/zodSchema/login";
 const STATUS_INCORRECT_LOGIN_CREDENTIALS = 401;
 
 export default function Login() {
-  const router: AppRouterInstance = useRouter();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -77,7 +76,13 @@ export default function Login() {
   return (
     <div className="h-screen flex flex-row sm:flex-row md:flex-row lg:flex-row xl:flex-row ">
       <div className="relative w-full sm:h-full md:h-full lg:h-full xl:h-full  border-0 shadow-black shadow-xl rounded-r-3xl">
-        <Image className="object-cover w-full h-full" loading="lazy" src="/ncpr.jpg" alt="backgroundImage" fill />
+        <Image 
+          className="object-cover w-full h-full" 
+          loading="lazy" 
+          src="/ncpr.jpg" 
+          alt="backgroundImage" 
+          fill 
+        />
       </div>
       <div className=" w-full sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/2 h-full flex items-center mx-4 sm:mx-8 md:mx-16 lg:mx-20 xl:mx-24">
         <div className="flex absolute top-6 right-8 sm:top-7 sm:right-10 md:top-9 md:right-20 lg:top-12 lg:right-24 xl:top-14 xl:right-28">

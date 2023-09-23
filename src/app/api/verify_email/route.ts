@@ -5,6 +5,8 @@ import { countUserById, insertUser } from "@/lib/db/actions";
 import { ZodError } from "zod";
 import { CachedUser } from "@/lib/zodSchema/cachedUser";
 
+export const runtime = "edge";
+
 export async function POST(req: NextRequest) {
   try{
     const { id, token } = verifyEmailSchema.parse(await req.json());
