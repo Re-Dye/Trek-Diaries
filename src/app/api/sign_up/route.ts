@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     /* count users with same email */
     const count: number = await countUserByEmail(email);
-
+    
     /* if email already exists */
     if (count > 0) {
       console.log("Duplicate Email!!!");
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     /* insert user in cache for validation */
     await cacheUser({ uuid, email, password, name, dob, salt, token });
 
-    const url: string = `${baseUrl}users/${uuid}/verify/${token}`;
+    const url: string = `${baseUrl}/users/${uuid}/verify/${token}`;
     await sendEmail({ email, subject: "Verification Mail", link: url });
 
     return NextResponse.json("User Created", { status: 201 });

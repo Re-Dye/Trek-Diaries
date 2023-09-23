@@ -8,11 +8,12 @@ import { CachedUser } from "@/lib/zodSchema/cachedUser";
 export async function POST(req: NextRequest) {
   try{
     const { id, token } = verifyEmailSchema.parse(await req.json());
-    console.log(id, token)
 
     /* check if user exists */
     const count = await countUserById(id);
-    if (count !== 0) {
+    console.log(count)
+    if (count > 0) {
+      console.log("User already exists")
       return NextResponse.json("User already exists", { status: 409 });
     }
 
@@ -20,12 +21,13 @@ export async function POST(req: NextRequest) {
     
     /* check if ids match */
     if (user.uuid !== id) {
+      console.log("IDs don't match");
       return NextResponse.json("Internal Server Error", { status: 500 });
     }
 
     /* insert user in db */
     await insertUser(user);
-
+    console.log("User Created")
     return NextResponse.json("User Created", { status: 201 });
   } catch (err) {
     if (err instanceof ZodError) {

@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 export default async function UserVerifyPage({ params }: { params: { id: string, token: string }}) {
   const data: VerifyEmail = { id: params.id, token: params.token };
-  const res = await fetch("/api/verify_email", {
+  const baseUrl = process.env.BASE_URL;
+  const res = await fetch(`${baseUrl}/api/verify_email`, {
     method: "POST",
     cache: "no-store",
     headers: {
@@ -35,12 +36,12 @@ export default async function UserVerifyPage({ params }: { params: { id: string,
     <div>
       {/* <VerifyMail /> */}
       <div className={verifystyles.wrapper}>
-        <Image
+        {/* <Image
           className={verifystyles.img}
           src="/ncpr.jpg"
           alt="backgroundImage"
           fill
-        />
+        /> */}
         <BadgeCheck className={verifystyles.icon} />
         <h1>{ message }</h1>
       </div>
