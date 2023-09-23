@@ -1,5 +1,5 @@
 "use client";
-import verifystyles from "./page.module.css";
+import verifystyles from "../page.module.css";
 import Image from "next/image";
 import axios from "axios";
 import { GoVerified } from "react-icons/go";
@@ -18,7 +18,15 @@ export default function VerifyMail() {
       e.preventDefault();
       console.log("count");
       try {
-        const { data } = await axios.post("/api/verify_email", { required_id });
+        const res = await fetch("/api/verify_email", {
+          method: "POST",
+          cache: "no-store",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(required_id),
+        });
+        const data = await res.json();
         console.log(data);
         if (data) {
           router.push("/login");

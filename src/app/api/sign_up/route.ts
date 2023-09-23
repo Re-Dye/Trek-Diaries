@@ -3,11 +3,12 @@ import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { signupSchema } from "@/lib/zodSchema/signup";
 import { ZodError } from "zod";
-import { countUser, cacheUser } from "@/lib/db/actions";
+import { countUserByEmail, cacheUser } from "@/lib/db/actions";
+import { getBaseUrl } from "@/lib/secrets";
 
 export async function POST(req: NextRequest) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl: string = getBaseUrl();
 
     /* check if request sent is valid */
     const { email, password, name, dob, salt } = signupSchema.parse(
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest) {
     );
 
     /* count users with same email */
-    const count = await countUser(email);
+    const count: number = await countUserByEmail(email);
 
     /* if email already exists */
     if (count > 0) {
@@ -37,25 +38,6 @@ export async function POST(req: NextRequest) {
 
     const url: string = `${baseUrl}users/${uuid}/verify/${token}`;
     await sendEmail({ email, subject: "Verification Mail", link: url });
-
-    // const insertUser = db
-    //   .insert(users)
-    //   .values({
-    //     id: sql.placeholder("id"),
-    //     name: sql.placeholder("name"),
-    //     email: sql.placeholder("email"),
-    //     type: "credential",
-    //   }).prepare("insert_user");
-    // await insertUser.execute({ id: uuid, name, email });
-    // const insertCredential = db
-    //   .insert(credentialUsers)
-    //   .values({
-    //     userId: sql.placeholder("userId"),
-    //     password: sql.placeholder("password"),
-    //     dob: sql.placeholder("dob"),
-    //     salt: sql.placeholder("salt"),
-    //   }).prepare("insert_credential");
-    // await insertCredential.execute({ userId: uuid, password, dob, salt });
 
     return NextResponse.json("User Created", { status: 201 });
   } catch (error) {

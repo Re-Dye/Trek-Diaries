@@ -37,3 +37,13 @@ export const getUpstashToken = (): string => {
 
     return secret
 }
+
+export const getBaseUrl = (): string => {
+    const secret = process.env.BASE_URL
+
+    if (!secret || secret.length === 0) {
+        throw new Error("The environment variable BASE_URL is not set.")
+    }
+
+    return secret
+}
