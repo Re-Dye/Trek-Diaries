@@ -4,6 +4,7 @@ import sendEmail from "../../lib/nodemailer";
 import Token from "../../../lib/modals/Token";
 import crypto from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getBaseUrl } from "@/lib/secrets";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,7 +32,7 @@ export default async function handler(
       token.token = crypto.randomBytes(32).toString("hex");
       await token.save();
 
-      const url: any = `${process.env.BASE_URL}users/${user._id}/reset/${token.token}`;
+      const url: any = `${getBaseUrl()}/users/${user._id}/reset/${token.token}`;
       console.log(url);
 
       // sending mail via nodemailer.....
