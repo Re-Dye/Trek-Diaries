@@ -30,7 +30,6 @@ export const credentialUsers = pgTable("credentialUsers", {
   password: char("password", { length: CONSTANTS.ENCRYPTED_PASSWORD_LENGTH }).notNull(),
   salt: char("salt", { length: CONSTANTS.SALT_LENGTH }).notNull(),
   dob: date("dob", { mode: "string" }).notNull(),
-  verified: boolean("verified").notNull().default(false),
 });
 
 export const userRelation = relations(users, ({ one }) => ({
