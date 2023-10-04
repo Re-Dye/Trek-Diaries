@@ -1,8 +1,17 @@
 import { VerifyEmail } from "@/lib/zodSchema/verifyEmail";
-import verifystyles from "./page.module.css";
 import Image from "next/image";
-import { BadgeCheck } from "lucide-react"
+import { BadgeCheck, CheckIcon, MailCheck } from "lucide-react"
 import { Metadata } from "next";
+import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "TrekDiaries | Verify Email",
@@ -23,28 +32,50 @@ export default async function UserVerifyPage({ params }: { params: { id: string,
   let message: string;
   
   if (res.status === 201) {
-    message = "Email Verified Successfully";
+    message = "Your email has been sucessfully verified. You can continue using the application.";
   } else if (res.status === 400) {
-    message = "Invalid request. Please try again with valid request";
+    message = "Invalid request. We are unable to process your request at this time. Please try again with valid request";
   } else if (res.status === 409) {
-    message = "Email already verified";
+    message = "It looks like you have already verified your email with us. Thank you!!";
   } else {
-    message = "Something went wrong. Please try again later";
+    message = "Oops! Something went wrong. Please try again later";
   }
 
   return (
-    <div>
-      {/* <VerifyMail /> */}
-      <div className={verifystyles.wrapper}>
-        {/* <Image
-          className={verifystyles.img}
-          src="/ncpr.jpg"
-          alt="backgroundImage"
-          fill
-        /> */}
-        <BadgeCheck className={verifystyles.icon} />
-        <h1>{ message }</h1>
+    <div className="flex h-screen justify-center items-center">
+      <Image
+        className="object-cover filter blur-sm w-full h-full"
+        src="/ncpr.jpg"
+        alt="backgroundImage"
+        fill
+      />
+      <Card className="justify-center flex-row space-y-2 items-center absolute w-4/5 h-3/5 rounded-xl p-4 sm:w-3/5 sm:p-6 md:rounded-2xl md:p-8 ">
+      <div className="flex absolute top-5 right-5 sm:top-7 sm:right-7 md:top-9 md:right-9">
+        <ModeToggle />
       </div>
+        <CardHeader className="flex justify-center items-center mt-2 sm:mt-6 md:mt-8">
+          <CardTitle><MailCheck className="w-8 h-8 text-lime-600 sm:w-12 sm:h-12 md:w-14 md:h-14" /></CardTitle>
+          <CardDescription className="text-2xl text-center text-lime-600 sm:text-3xl">Email Verification</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className=" flex items-center rounded-md border p-4 sm:p-5 md:p-5">
+            <div className="flex-1 space-y-4 sm:space-y-5">
+              <h1 className="text-sm font-medium leading-none sm:text-md md:text-lg">{message}</h1>
+              <p className=" text-xs text-muted-foreground sm:text-sm md:text-md">
+                Click on continue button
+              </p>
+            </div>
+          </div>
+          <div>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full">
+            <CheckIcon className="mr-2 h-4 w-4" /> Continue
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
+    
   );
 }

@@ -1,5 +1,4 @@
 "use client";
-import verifystyles from "../page.module.css";
 import Image from "next/image";
 import axios from "axios";
 import { GoVerified } from "react-icons/go";
@@ -36,22 +35,22 @@ export default function VerifyMail() {
       }
     };
     return (
-      <div className={verifystyles.wrapper}>
+      <div className="">
         <Image
-          className={verifystyles.img}
+          className=""
           src="/ncpr.jpg"
           alt="backgroundImage"
           fill
         />
-        <form className={verifystyles.verifiedBox}>
-          <GoVerified className={verifystyles.icon} />
+        <form className="">
+          <GoVerified className="" />
           <h1>Verify Your Email Address !!</h1>
           <h2>Thank you for signing up with Trek Diaries!</h2>
           <p>
             As an extra security precaution, please verify your email address to
             continue signing up
           </p>
-          <button className={verifystyles.buttonVerify} onClick={handleClick}>
+          <button className="" onClick={handleClick}>
             {" "}
             Verify and Continue{" "}
           </button>
