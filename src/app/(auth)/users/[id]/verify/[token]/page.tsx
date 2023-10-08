@@ -1,6 +1,6 @@
 import { VerifyEmail } from "@/lib/zodSchema/verifyEmail";
 import Image from "next/image";
-import { BadgeCheck, CheckIcon, MailCheck } from "lucide-react"
+import { MailCheck } from "lucide-react"
 import { Metadata } from "next";
 import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";
 import {
@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Button } from "@/components/ui/button";
+import ButtonVerify from "./components/button";
 
 export const metadata: Metadata = {
   title: "TrekDiaries | Verify Email",
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 }
 
 export default async function UserVerifyPage({ params }: { params: { id: string, token: string }}) {
+
   const data: VerifyEmail = { id: params.id, token: params.token };
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const res = await fetch(`${baseUrl}/api/verify_email`, {
@@ -49,7 +50,7 @@ export default async function UserVerifyPage({ params }: { params: { id: string,
         alt="backgroundImage"
         fill
       />
-      <Card className="justify-center flex-row space-y-2 items-center absolute w-4/5 h-3/5 rounded-xl p-4 sm:w-3/5 sm:p-6 md:rounded-2xl md:p-8 ">
+      <Card className="justify-center flex-row space-y-2 items-center absolute w-4/5 h-3/5 rounded-xl p-4 sm:w-3/5 sm:p-6 md:rounded-2xl md:p-8 lg: ">
       <div className="flex absolute top-5 right-5 sm:top-7 sm:right-7 md:top-9 md:right-9">
         <ModeToggle />
       </div>
@@ -70,9 +71,7 @@ export default async function UserVerifyPage({ params }: { params: { id: string,
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full">
-            <CheckIcon className="mr-2 h-4 w-4" /> Continue
-          </Button>
+          <ButtonVerify />
         </CardFooter>
       </Card>
     </div>
