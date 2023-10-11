@@ -29,60 +29,6 @@
   color: rgb(6, 156, 73);
 }
 
-.dp{
-    width: 50px;
-    height: 50px;
-    overflow: hidden;
-    border: 1px solid white;
-    border-radius: 50%;
-}
-
-.drop ul{
-  list-style: none;
-  padding: 0;
-}
-
-.dropdownItem a {
-  text-decoration: none;
-}
-
-.drop{
-  position: absolute;
-  top: 89px;
-  right: 20px;
-  background-color: rgba(217, 217, 217, 0.3);
-  border: 2px solid;
-  border-color: rgba(217, 217, 217, 0.8);
-  border-radius: 10px;
-  padding: 10px 20px;
-  width: 150px;
-}
-
-.drop ul li{
-  padding: 10px  0;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.drop ul li:hover a{
-  color: rgb(212, 33, 9);
-  cursor: pointer;
-}
-
-.dropdown ul li:hover img{
-  opacity: 1;
-  cursor: pointer;
-}
-
-.dropdownItem{
-  display: flex;
-  margin: 10px auto;
-}
-
-.dropdownItem a{
-  max-width: 100px;
-  margin-left: 10px;
-}
-
 .logo{
   cursor: pointer;
   

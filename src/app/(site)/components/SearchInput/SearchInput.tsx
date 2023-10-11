@@ -3,6 +3,8 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import SearchBoxStyles from "./page.module.css";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 export default function SearchInput() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -19,14 +21,13 @@ export default function SearchInput() {
 
   return (
     <div className={SearchBoxStyles.container}>
-      <form onSubmit={handleSearch} className={SearchBoxStyles.box}>
-        <input
-          placeholder={`Search TrekDiaries`}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      <form onSubmit={handleSearch} className="flex">
+        <Input 
+          placeholder="Search Location"
+          value={searchQuery} 
+          onChange={(e) => setSearchQuery(e.target.value)}/>
         <button type="submit">
-          <FaSearch className={SearchBoxStyles.icon} />
+          <Search />
         </button>
       </form>
     </div>

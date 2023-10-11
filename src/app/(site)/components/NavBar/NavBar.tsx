@@ -2,14 +2,27 @@
 import React, { useEffect, useState } from "react";
 import navStyles from "./navbar.module.css";
 import SearchInput from "../SearchInput/SearchInput";
-import Image from "next/image";
-import { CgProfile } from "react-icons/cg";
-import { FiLogOut } from "react-icons/fi";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaHiking } from "react-icons/fa";
 import ProfilePicture from "./components/profilePicture";
 import { useSession } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button";
+import { LogOut, UserCircle } from "lucide-react";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
@@ -46,11 +59,10 @@ export default function NavBar() {
             <FaHiking className={navStyles.icon} />D
           </h1>
         </div>
-        <div className={navStyles.BarCenter}>
+        <div>
           <SearchInput />
         </div>
-        {/* <div className={navStyles.dp} ref={dropRef}> */}
-        <div className={navStyles.dp} onClick={() => setOpen((open) => !open)}>
+        {/* <div className={navStyles.dp} onClick={() => setOpen((open) => !open)}>
           <ProfilePicture userFirst={name} />
         </div>
         {open && (
@@ -65,8 +77,28 @@ export default function NavBar() {
                 <a>Logout</a>
               </li>
             </ul>
-          </div>
-        )}
+          </div> */}
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="w-14 h-14 bg-transparent border-0 rounded-3xl flex relative justify-center items-center cursor-pointer"><ProfilePicture userFirst={name} /></div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 rounded-2xl p-3">
+              <DropdownMenuLabel className="flex justify-center text-md">My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="flex gap-4">
+                  <UserCircle />
+                  <>{(session.data?.user?.name as string)}</>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSignOut} className="flex gap-4">
+                <LogOut />Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );
