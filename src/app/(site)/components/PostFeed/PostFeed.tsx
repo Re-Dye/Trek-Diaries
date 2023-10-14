@@ -43,7 +43,7 @@ export default function PostFeed({ email }:{ email: string }) {
     const [posts, fetchPosts, hasMore, didMount] = useFetchPosts(email);
 
     return(
-        <div className="PostBody">
+        <div>
             {didMount && <>
                     {(posts.length) &&
                         <InfiniteScroll

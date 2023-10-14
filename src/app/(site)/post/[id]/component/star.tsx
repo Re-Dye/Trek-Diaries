@@ -1,5 +1,5 @@
 import React from "react";
-import { FaStar, FaStarHalf } from "react-icons/fa";
+import { FaStar} from "react-icons/fa";
 import { AiOutlineStar } from "react-icons/ai";
 
 const Star = ({ stars }: { stars: number }) => {
@@ -18,7 +18,7 @@ const Star = ({ stars }: { stars: number }) => {
     );
   });
 
-  return <div className="icon-style">{ratingStar}</div>;
+  return <div className="flex mt-1 gap-1">{ratingStar}</div>;
 };
 
 export default Star;

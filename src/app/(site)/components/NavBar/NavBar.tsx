@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import navStyles from "./navbar.module.css";
 import SearchInput from "../SearchInput/SearchInput";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -13,16 +12,12 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import { LogOut, UserCircle } from "lucide-react";
+import { ModeToggle } from "../DarkMode/Darkmode";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
@@ -47,41 +42,26 @@ export default function NavBar() {
   };
 
   return (
-    <div className={navStyles.wrapper}>
-      <div className={navStyles.Bar}>
-        <div className={navStyles.BarLeft}>
-          <h1
-            onClick={() => {
-              router.push("/");
-            }}
-            className={navStyles.logo}
-          >
-            <FaHiking className={navStyles.icon} />D
-          </h1>
+    <nav className="w-full pr-8 pl-8 bg-custom_gray">
+      <div className="flex justify-between p-2 items-center">
+        <div
+          className="flex cursor-pointer "
+          onClick={() => {
+            router.push("/");
+          }}>
+          <FaHiking className="text-green-500 w-8 h-8" />
         </div>
         <div>
           <SearchInput />
         </div>
-        {/* <div className={navStyles.dp} onClick={() => setOpen((open) => !open)}>
-          <ProfilePicture userFirst={name} />
-        </div>
-        {open && (
-          <div className={navStyles.drop}>
-            <ul>
-              <li className={navStyles.dropdownItem}>
-                <CgProfile />
-                <>{(session.data?.user?.name as string)}</>
-              </li>
-              <li className={navStyles.dropdownItem} onClick={handleSignOut}>
-                <FiLogOut />
-                <a>Logout</a>
-              </li>
-            </ul>
-          </div> */}
-        <div>
+        <div className="flex gap-4">
+          <div className="flex">
+            <ModeToggle />
+          </div>
+          <div className="rounded-3xl flex cursor-pointer ">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="w-14 h-14 bg-transparent border-0 rounded-3xl flex relative justify-center items-center cursor-pointer"><ProfilePicture userFirst={name} /></div>
+              <div className="w-10 h-10"><ProfilePicture userFirst={name} /></div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 rounded-2xl p-3">
               <DropdownMenuLabel className="flex justify-center text-md">My Account</DropdownMenuLabel>
@@ -99,7 +79,8 @@ export default function NavBar() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        </div>
       </div>
-    </div>
+    </nav>
   );
 }
