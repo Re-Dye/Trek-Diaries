@@ -49,12 +49,14 @@ export default function SearchPage() {
   );
 
   return (
-    <div className={searchStyle.wrapper}>
-      <div className={searchStyle.left}></div>
-      <div className={searchStyle.center}>
-        <AddLocation />
+    <div className="flex justify-between h-screen">
+      <div className="w-1/4 bg-custom_gray mt-2 border"></div>
+      <div className="mt-2 bg-custom_gray border w-2/4 box-border space-y-2">
+        <div className="flex justify-center mt-3">          
+          <AddLocation />
+        </div>
         {didMount && (
-          <div className={searchStyle.search}>
+          <div>
             {locations.length && (
               <InfiniteScroll
                 dataLength={locations.length} //This is important field to render the next data
@@ -82,7 +84,7 @@ export default function SearchPage() {
         )}
         {!didMount && <Loading />}
       </div>
-      <div className={searchStyle.right}></div>
+      <div className="w-1/5 bg-custom_gray border mt-2"></div>
     </div>
   );
 }

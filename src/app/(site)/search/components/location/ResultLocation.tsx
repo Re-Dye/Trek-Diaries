@@ -1,9 +1,8 @@
 "use client"
 import React from "react";
-import loc from "./page.module.css";
-import { HiLocationMarker } from "react-icons/hi";
-import { IoInformationCircle } from "react-icons/io5";
 import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
+import { MapPin } from "lucide-react";
 
 export default function ResultLocation({ id, address, description }: {
   id: string,
@@ -17,24 +16,18 @@ export default function ResultLocation({ id, address, description }: {
   }
 
   return (
-    <div className={loc.wrapper}>
-      <div className={loc.content}>
-        <div className={loc.header}>
-          <HiLocationMarker size={30} />
+    <Card className="flex items-center justify-between rounded-2xl m-2 p-6 shadow-md">
+      <div className="flex-row">
+        <div className="text-xl flex gap-2 cursor-pointer">
+          <MapPin className="w-6 h-6 text-red-500"/>
           <a onClick={ handleClick }>{ address }</a>
         </div>
-
-        <div className={loc.description}>
-          <div className={loc.decLeft}>
-            <IoInformationCircle size={20} color="grey" className={loc.icon} />
-          </div>
-          <div className={loc.decRight}>
+        <div className="flex mt-3 box-border text-md">
             <p>
               { description }
             </p>
           </div>
         </div>
-      </div>
-    </div>
+    </Card>
   );
 }

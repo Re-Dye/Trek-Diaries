@@ -8,7 +8,7 @@ export default function PlacetoVisit(){
                 <h2 className="text-2xl">Places to Visit</h2>
                 <Palmtree className="w-7 h-7 text-green-500"/>
             </div>
-            <div className="overflow-y-auto h-screen space-y-3 ">
+            <div className="overflow-y-auto h-96 space-y-3 ">
             <div className="flex-row space-y-1">
                 <div className="flex relative w-40 h-32 justify-center items-center">
                 <Image 

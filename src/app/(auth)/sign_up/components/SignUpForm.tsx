@@ -122,7 +122,7 @@ export default function SignUpForm() {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">
+                    <FormLabel className="justify-start flex">
                       First Name
                     </FormLabel>
                     <FormControl>
@@ -142,7 +142,7 @@ export default function SignUpForm() {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">
+                    <FormLabel className="justify-start flex">
                       Last Name
                     </FormLabel>
                     <FormControl>
@@ -162,7 +162,7 @@ export default function SignUpForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">
+                    <FormLabel className="justify-start flex">
                       Email
                     </FormLabel>
                     <FormControl>
@@ -182,7 +182,7 @@ export default function SignUpForm() {
                 name="dob"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">
+                    <FormLabel className="justify-start flex">
                       Date of Birth
                     </FormLabel>
                     <FormControl>
@@ -202,7 +202,7 @@ export default function SignUpForm() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black flex justify-start">
+                    <FormLabel className="flex justify-start">
                       Password
                     </FormLabel>
                     <FormControl>
@@ -222,7 +222,7 @@ export default function SignUpForm() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black flex justify-start">
+                    <FormLabel className="flex justify-start">
                       Confirm Password
                     </FormLabel>
                     <FormControl>

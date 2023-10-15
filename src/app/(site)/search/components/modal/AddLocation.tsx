@@ -1,21 +1,29 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import modalStyles from "./page.module.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button} from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { addLocationFormSchema } from "@/lib/zodSchema/addLocation";
+import { Textarea } from "@/components/ui/textarea";
+import { Info } from "lucide-react";
 
 export default function AddLocation() {
-  const [show, setShow] = useState(false);
+
+  const form = useForm<z.infer<typeof addLocationFormSchema>>({
+    resolver: zodResolver(addLocationFormSchema),
+  });
   const [address, setAddress] = useState("");
   const [state, setState] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
   const disable = useDisable(address, state, country, description);
   const router = useRouter();
-
-  const toggleModal = () => {
-    setShow((prev) => !prev);
-  };
 
   const handleAddLocation = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -37,73 +45,114 @@ export default function AddLocation() {
   };
 
   return (
-    <>
-      <button onClick={toggleModal} className={modalStyles.btn}>
-        Add Location
-      </button>
-
-      {show && (
-        <div className={modalStyles.wrapper}>
-          <div className={modalStyles.content}>
-            <div className={modalStyles.header}>
-              <h2>Add Location</h2>
+    <Popover>
+        <PopoverTrigger asChild>
+        <Button variant="default" className="w-1/4 h-10">Add Location</Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-96 rounded-2xl">
+        <div className="flex-row space-y-4">
+            <div className="flex justify-center items-center gap-3">
+              <h2 className="text-2xl ">Location Information</h2>
+              <Info className="w-7 h-7 text-cyan-600"/>
             </div>
-            <form>
-              <label htmlFor="address">Address:</label>
-              <input
-                id="address"
-                placeholder="Address"
-                className={modalStyles.inputBx}
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
+            <Form {...form}>
+            <form
+              className=" w-full space-y-2 justify-center items-center"
+              onSubmit={form.handleSubmit(handleAddLocation)}>
+            <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="justify-start flex">
+                      Address
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="address"
+                        className="h-8 w-full"
+                        placeholder="Address"
+                        {...field}
+                        type="text"
+                      ></Input>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-
-              <label htmlFor="state">State:</label>
-              <input
-                id="state"
-                placeholder="District/State Name"
-                className={modalStyles.inputBx}
-                type="text"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
+                <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="justify-start flex">
+                      District/State name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="state"
+                        className="h-8 w-full"
+                        placeholder="District/State name"
+                        {...field}
+                        type="text"
+                      ></Input>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-
-              <label htmlFor="country">Country:</label>
-              <input
-                id="country"
-                placeholder="Country Name"
-                className={modalStyles.inputBx}
-                type="text"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
+                      <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="justify-start flex">
+                      Country name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="country"
+                        className="h-8 w-full"
+                        placeholder="Country name"
+                        {...field}
+                        type="text"
+                      ></Input>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-
-              <label htmlFor="description">Description:</label>
-              <input
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Type full description"
-                className={modalStyles.inputBx}
-                type="text"
+              <FormField
+                control={form.control}
+                name="desc"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="justify-start flex">
+                      Description
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        id="message"
+                        className="h-8 w-full"
+                        placeholder="type full description"
+                        {...field}
+                      ></Textarea>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
+              <div className="flex justify-center">
+              <Button
+              className="w-full mt-4"
+              type="submit">Add
+            </Button>
+            </div>
             </form>
-
-            <button onClick={toggleModal} className={modalStyles.btn}>
-              Close
-            </button>
-            <button
-              onClick={handleAddLocation}
-              disabled={disable}
-              className={modalStyles.btn}
-            >
-              Add
-            </button>
-          </div>
+            </Form>
         </div>
-      )}
-    </>
+      </PopoverContent>
+      </Popover>
   );
 }
 
