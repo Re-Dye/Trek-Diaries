@@ -1,6 +1,7 @@
 "use client"
 import { useRouter } from "next/navigation";
-import locateStyle from "../page.module.css"
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 
 export default function ButtonAddPost({ locationID }: { locationID: string }) {
     const router = useRouter();
@@ -11,8 +12,8 @@ export default function ButtonAddPost({ locationID }: { locationID: string }) {
     };
 
     return(
-        <button onClick={handleADDPOST} className={locateStyle.addpstbtn}>
-          + ADD POST
-        </button>
+        <Button onClick={handleADDPOST} className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300">
+          ADD POST<PlusCircle className="w-5 h-5"/>
+        </Button>
     )
 }

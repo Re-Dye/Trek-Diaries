@@ -1,10 +1,10 @@
 "use client"
-import { SlUserFollow } from "react-icons/sl";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import locateStyle from "../page.module.css"
 import { useContext, useEffect, useState } from "react"
 import { FLocationContext, ReloadFLocationContext } from "@/app/(site)/layout";
+import { Button } from "@/components/ui/button";
+import { UserMinus, UserPlus } from "lucide-react";
 
 export default function ButtonFollow({ locationID }: { locationID: string}) {
     const router = useRouter();
@@ -43,13 +43,13 @@ export default function ButtonFollow({ locationID }: { locationID: string}) {
     return(
         <>
             {(!followed)?
-                <button onClick={handleToggleFollow} className={locateStyle.followbtn} >
-                    + Follow
-                </button>
+                <Button onClick={handleToggleFollow} className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300" >
+                    Follow<UserPlus className="w-5 h-5"/>
+                </Button>
             :
-                <button onClick={ handleToggleFollow } className={locateStyle.followbtn}>
-                    x Unfollow
-                </button>
+                <Button onClick={ handleToggleFollow } className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all ease-in-out uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300">
+                    Unfollow<UserMinus className="w-5 h-5"/>
+                </Button>
             }
         </>
     )

@@ -1,6 +1,4 @@
 import React from "react";
-import postStyles from "./page.module.css";
-import Comment from "./component/comment_sec/Comment";
 import Post from "./component/postLayout";
 import { notFound } from "next/navigation";
 
@@ -23,9 +21,9 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className={postStyles.wrapper}>
-      <div className={postStyles.left}></div>
-      <div className={postStyles.right}>
+    <div className="flex justify-between h-full">
+      <div className="w-1/4 bg-custom_gray mt-2 border"></div>
+      <div className="mt-2 bg-custom_gray border w-2/4 box-border">
         <Post
           address={data.location.address}
           name={data.owner.name}
@@ -37,6 +35,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           postID={params.id}
         />
       </div>
+      <div className="w-1/5 bg-custom_gray border mt-2"></div>
     </div>
   );
 }

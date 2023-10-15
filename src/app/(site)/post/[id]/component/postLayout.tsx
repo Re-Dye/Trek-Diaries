@@ -1,15 +1,12 @@
 "use client";
-import { AiTwotoneLike } from "react-icons/ai";
-import { FaCommentAlt } from "react-icons/fa";
-import "./postLayout.css";
 import Image from "next/image";
-import ViewComment from "./comment/viewComment";
 import Comment from "./comment_sec/Comment";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Star from "./star";
 import FinalRating from "./finalRating";
+import { ThumbsUp, UserCircle } from "lucide-react";
 
 export default function Post({
   address,
@@ -84,62 +81,58 @@ export default function Post({
   };
 
   return (
-    <div className="wrapper">
-      <div className="leftCtn">
-        <div className="imgCtn">
+    <div className="flex-row items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md">
+      <div className="flex-row space-y-4">
+        <div className="flex-row">
+          <div className="flex gap-2">
+            <UserCircle className="mt-1 w-6 h-6" />
+            <h3 className="text-2xl">{name}</h3>
+          </div>
+          <h5 className="ml-8 opacity-50 mt-1">{formattedDiff}</h5>
+        </div>
+        <div className="relative w-full h-60">
           <Image
+            className=" rounded-2xl object-cover"
             alt="Error: Image could not be loaded."
             fill={true}
-            style={{ objectFit: "cover" }}
             src={pictureURL}
           />
         </div>
       </div>
-      <div className="rightCtn">
-        <div className="rTop">
-          <h3 className="uName">{name}</h3>
-          <h5 className="time">{formattedDiff}</h5>
-        </div>
-        <div className="rating">
-          <div className="lRating">
+      <div className="flex-row space-y-2">
+        <div className="flex p-4 mt-3 gap-4 rounded-xl shadow-md border-2 bg-transparent border-teal-600">
+          <div className="box-border">
+            <p className="text-sm text-left overflow-y-scroll">{description}</p>
+            <div className="flex gap-3 cursor-pointer mt-4">
+              <div className="text-xl">{Likes}</div>
+              <ThumbsUp
+                className="w-6 h-6 hover:text-blue-600"
+                onClick={handleLike}
+              />
+            </div>
+          </div>
+          <div className="flex-row space-y-1">
             <div className="TrialCondition">
               <h4>
                 TrialCondition: <Star stars={rating.TrailCondition} />
               </h4>
-
-              {/* <h4>TrialCondition: {rating.TrailCondition}</h4> */}
             </div>
             <div className="Weather">
               <h4>
                 Weather: <Star stars={rating.Weather} />
               </h4>
-              {/* <h4>Weather: {rating.Weather}</h4> */}
             </div>
             <div className="Accessibility">
               <h4>
                 Accessibility: <Star stars={rating.Accessibility} />
               </h4>
-              {/* <h4>Accessibility: {rating.Accessibility}</h4> */}
             </div>
           </div>
-          <div className="rRating">
-            <FinalRating stars={rating.overallScore} />
-            {/* <h4>Final: {rating.overallScore}</h4> */}
+          <div className="flex justify-center items-center">
+              <FinalRating stars={rating.overallScore} />
           </div>
         </div>
-        <div className="rDesc">
-          <p className="description">{description}</p>
-        </div>
-        <div className="rReact">
-          <AiTwotoneLike
-            className="icons like"
-            size={35}
-            onClick={handleLike}
-          />
-          {Likes}
-        </div>
-
-        <div className="rComment">
+        <div className="flex justify-center">
           <Comment postId={postID} />
         </div>
       </div>

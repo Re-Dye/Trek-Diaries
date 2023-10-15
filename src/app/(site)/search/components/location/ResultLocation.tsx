@@ -26,8 +26,8 @@ export default function ResultLocation({ id, address, description }: {
             <p>
               { description }
             </p>
-          </div>
         </div>
+      </div>
     </Card>
   );
 }

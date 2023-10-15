@@ -1,7 +1,8 @@
 import React from "react";
-import comStyles from "./page.module.css"
+import { Card } from "@/components/ui/card";
+import { UserCircle } from "lucide-react";
 
-const ViewComment = ({content, owner, registeredTime}: {
+const ViewComment = ({ content, owner, registeredTime }: {
   content: string,
   owner: string,
   registeredTime: Date
@@ -24,19 +25,22 @@ const ViewComment = ({content, owner, registeredTime}: {
     formattedDiff = seconds + "s ago";
   }
   return (
-    <div className={comStyles.wrapper}>
-      <div>
-        <h5>{formattedDiff}</h5>
+    <Card className="flex-row p-2 m-1 shadow-md bg-custom_gray opacity-70 space-x-2 mt-3">
+        <div className="flex justify-end">
+          <h5 className="text-xs">{formattedDiff}</h5>
+        </div>
+      <div className="flex-row">
+        <div className="flex gap-2 text-lg">
+          <UserCircle className="w-5 h-5 mt-1" />
+          <h3>{owner}</h3>
+        </div>
+        <div className="ml-7">
+          <p className="text-sm">
+            {content}
+          </p>
+        </div>
       </div>
-      <div className={comStyles.userName}>
-        <h3>{owner}</h3>
-      </div>
-      <div className={comStyles.text}>
-        <p>
-          {content}
-        </p>
-      </div>
-    </div>
+    </Card>
   );
 };
 
