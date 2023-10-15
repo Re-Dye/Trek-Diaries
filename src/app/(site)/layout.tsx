@@ -4,6 +4,7 @@ import Fbar from "./components/FollowedBar/Fbar";
 import React, { useEffect, useState, createContext } from "react";
 import { SessionContextValue, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import PlacetoVisit from "./components/PlacetoVisit/PlaceVisit";
 
 export const FLocationContext = createContext<Array<Location>>([])
 export const ReloadFLocationContext = createContext<Function>(() => {})
@@ -69,6 +70,9 @@ export default function Layout({
         </div>
         <div className="fbar">
           <Fbar locations={ locations }/>
+        </div>
+        <div className="rbar">
+          <PlacetoVisit />
         </div>
         <FLocationContext.Provider value={ locations }>
           <ReloadFLocationContext.Provider value={ updateLocations }>

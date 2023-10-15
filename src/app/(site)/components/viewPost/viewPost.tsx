@@ -1,11 +1,10 @@
-import postStyles from "./page.module.css";
-import { AiTwotoneLike } from "react-icons/ai";
-import { FaCommentAlt } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Star from "../../post/[id]/component/star";
+import { LocateFixed, MessageSquare, ThumbsUp, UserCircle } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 interface Owner {
   name: string;
@@ -77,62 +76,57 @@ export default function ViewPost({
   };
 
   return (
-    <div className={postStyles.wrapper}>
-      <div className={postStyles.left}>
-        <div className={postStyles.Tleft}>
+    <Card className="flex items-center justify-between rounded-2xl m-2 p-4 gap-10">
+      <div className="flex-row space-y-4">
+        <div className="text-sm flex gap-2">
+          <LocateFixed className="w-4 h-4 text-red-500"/>
           <h3>{location.address}</h3>
         </div>
-        <div className={postStyles.Bleft}>
-          <div className={postStyles.imgCtn}>
-            <Image
-              alt="Error: Image could not be loaded."
-              fill={true}
-              style={{ objectFit: "cover" }}
-              src={imageURL}
-            />
-          </div>
+        <div className="relative w-64 h-72">
+          <Image
+            className="w-12 h-12 object-cover rounded-xl"
+            alt="Error: Image could not be loaded."
+            fill={true}
+            src={imageURL}
+          />
         </div>
       </div>
-      <div className={postStyles.right}>
-        <div className={postStyles.rTop}>
-          <h3 className={postStyles.uName}>{owner?.name}</h3>
-          <h5 className={postStyles.time}>12h</h5>
+      <div className="flex-row space-y-6">
+        <div className="text-lg flex justify-start gap-32">
+          <div className="flex gap-2">
+          <UserCircle className="mt-1"/>
+          <h3>{owner?.name}</h3>
+          </div>
+          <div>
+            <h5>12h</h5>
+          </div>
         </div>
-        <div className={postStyles.rating}>
+        <div className="box-border p-1 overflow-y-scroll">
+          <p className="text-sm">{description}</p>
+        </div>
+        <div className="flex gap-2 text-md justify-end">
           <h5>Rating:  </h5>
-          <Star stars={rating} />
+          <Star stars={rating}/>
         </div>
-        <div className={postStyles.rCenter}>
-          <p className={postStyles.description}>{description}</p>
-        </div>
-        <div className={postStyles.rBottom}>
+        <div className="flex gap-8 justify-start">
           <button
-            className={`${postStyles.icons} ${postStyles.like}`}
-            style={{ color: `${Color}` }}
+            className="flex gap-2 cursor-pointer"
             onClick={() => {
               handleLike();
             }}
-            // size={35}
           >
-            <div className={postStyles.likeCount}>{Likes}</div>
-            <AiTwotoneLike
-              className={`${postStyles.icons} ${postStyles.like}`}
-              size={35}
-            />
+            <div className="text-xl">{Likes}</div>
+            <ThumbsUp className="w-6 h-6 hover:text-blue-600"/>
           </button>
 
           <button
-            className={`${postStyles.icons} ${postStyles.comment}`}
-            // size={28}
+            className="cursor-pointer"
             onClick={handleComment}
           >
-            <FaCommentAlt
-              className={`${postStyles.icons} ${postStyles.comment}`}
-              size={27}
-            />
+            <MessageSquare className="w-6 h-6 hover:text-blue-600"/>
           </button>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

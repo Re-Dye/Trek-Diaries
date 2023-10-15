@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import mainStyles from "./page.module.css";
 import PostFeed from "./components/PostFeed/PostFeed";
 
 export default function Home() {
@@ -14,16 +13,15 @@ export default function Home() {
   });
 
   return (
-    <div className={mainStyles.wrapper}>
-      <div className={mainStyles.left}></div>
-      <div className={mainStyles.center}>
-        <div className={mainStyles.post}>
+    <div className="flex justify-between w-full h-full">
+      <div className="w-1/4 bg-custom_gray mt-2 border">
+        </div>
+      <div className="mt-2 bg-custom_gray border w-2/4 box-border">
           {session.status === "authenticated" && (
             <PostFeed email={session.data?.user?.email as string} />
           )}
-        </div>
       </div>
-      <div className={mainStyles.right}></div>
+      <div className="w-1/5 bg-custom_gray border mt-2 "></div>
     </div>
   );
 }
