@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ViewComment from "../comment/viewComment";
-import commentStyle from "./page.module.css";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { addCommentFormSchema } from "@/lib/zodSchema/addComment";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 interface Comment {
   id: string;
@@ -33,24 +39,38 @@ async function fetchPostComments(
 
 export default function Comment({ postId }: { postId: string }) {
   const [comment, setComment] = useState("");
-
   const [comments, fetchComments, hasMore, didMount, handleComment] = useFetchComments(postId, comment);
+
+  const form = useForm<z.infer<typeof addCommentFormSchema>>({
+    resolver: zodResolver(addCommentFormSchema),
+  });
   return (
-    <div className={commentStyle.wrapper}>
-      <div className={commentStyle.commentText}>
-        <form onSubmit={handleComment} className={commentStyle.commentSection}>
-          <textarea
-            name="text"
-            id="description"
-            placeholder="Comment"
-            className={commentStyle.commentBox}
-            onChange={(e) => setComment(e.target.value)}
-            rows={2}
-          />
-          <button type="submit" className={commentStyle.btn}>Submit Comment</button>
+    <div className="flex-row items-center rounded-2xl p-3 shadow-md space-y-4 w-full ">
+      <Form {...form}>
+        <form 
+          className=" w-full flex gap-2 justify-center"
+          onSubmit={form.handleSubmit(handleComment)}>
+        <FormField
+                control={form.control}
+                name="desc"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        id="message"
+                        className="h-6 w-96 shadow-md"
+                        placeholder="comment"
+                        {...field}
+                      ></Textarea>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+          <Button type="submit" className="w-24 mt-3 flex justify-center">Comment</Button>
         </form>
-      </div>
-      <div className={commentStyle.PostBody}>
+        </Form>
+      <div>
         {didMount && (
           <>
             {comments.length && (

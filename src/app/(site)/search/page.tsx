@@ -9,7 +9,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import Loading from "./loading";
 import ResultLocation from "./components/location/ResultLocation";
-import searchStyle from "./page.module.css";
 
 interface Location {
   _id: string;
