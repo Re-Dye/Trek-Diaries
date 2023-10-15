@@ -76,7 +76,7 @@ export default function ViewPost({
   };
 
   return (
-    <Card className="flex items-center justify-between rounded-2xl m-2 p-4 gap-10">
+    <Card className="flex items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md">
       <div className="flex-row space-y-4">
         <div className="text-sm flex gap-2">
           <LocateFixed className="w-4 h-4 text-red-500"/>

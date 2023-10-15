@@ -104,7 +104,7 @@ export default function Login() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black justify-start flex">Email</FormLabel>
+                    <FormLabel className="justify-start flex">Email</FormLabel>
                     <FormControl>
                       <Input
                         className="h-12 w-full"
@@ -121,7 +121,7 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-black flex justify-start">Password</FormLabel>
+                    <FormLabel className="flex justify-start">Password</FormLabel>
                     <FormControl>
                       <Input
                         className="h-12 w-full"
