@@ -36,13 +36,12 @@ export default function Login() {
   const onLogIn: SubmitHandler<LoginFormData> = async (data) => {
     try {
       console.log("signing in", data);
-      // const res = await signIn('credentials', { email, password, redirect: true, callbackUrl: '/feeds' })
+  
       const res = await signIn("credentials", {
         email: data.email,
         password: data.password,
         redirect: true,
         callbackUrl: "/",
-        
       });
 
       console.log("response received");
@@ -65,11 +64,13 @@ export default function Login() {
       router.push(res?.url as string);
       return;
     } catch (error) {
-      form.setError("root", {
-        type: "custom",
-        message: "Error occured. Please try again later.",
-      });
-      console.log(error || "error unknown");
+      const err = error as string;
+      if (err.length > 0) {
+        form.setError("root", {
+          type: "custom",
+          message: "Error occured. Please try again later.",
+        });
+      }
     }
   };
 
