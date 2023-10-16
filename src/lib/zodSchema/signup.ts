@@ -31,7 +31,6 @@ export const signupFormSchema = z
 export const signupSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   password: z.string().length(CONSTANTS.ENCRYPTED_PASSWORD_LENGTH, { message: "Invalid password" }),
-  salt: z.string({ required_error: "Salt is required." }).length(CONSTANTS.SALT_LENGTH, { message: "Invalid salt" }),
   email: z.string().email({ message: "Invalid email address" }),
   dob: z
     .string({ required_error: "A date of birth is required" })

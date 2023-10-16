@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const baseUrl: string = getBaseUrl();
 
     /* check if request sent is valid */
-    const { email, password, name, dob, salt } = signupSchema.parse(
+    const { email, password, name, dob } = signupSchema.parse(
       await req.json()
     );
 
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const token: string = crypto.randomBytes(32).toString("hex");
 
     /* insert user in cache for validation */
-    await cacheUser({ uuid, email, password, name, dob, salt, token });
+    await cacheUser({ uuid, email, password, name, dob, token });
 
     const url: string = `${baseUrl}/users/${uuid}/verify/${token}`;
     await sendEmail({ email, subject: "Verification Mail", link: url });

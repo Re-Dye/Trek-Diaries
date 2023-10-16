@@ -19,7 +19,6 @@ export const users = pgTable("users", {
   password: char("password", {
     length: CONSTANTS.ENCRYPTED_PASSWORD_LENGTH,
   }).notNull(),
-  salt: char("salt", { length: CONSTANTS.SALT_LENGTH }).notNull(),
   dob: date("dob", { mode: "string" }).notNull(),
   image: text("image"),
 }, (users) => ({

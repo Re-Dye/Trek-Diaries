@@ -44,7 +44,6 @@ export const cacheUser = async ({
   password,
   name,
   dob,
-  salt,
   token,
 }: {
   uuid: string;
@@ -52,12 +51,11 @@ export const cacheUser = async ({
   password: string;
   name: string;
   dob: string;
-  salt: string;
   token: string;
 }) => {
   const res = await redis.set(
     token,
-    JSON.stringify({ email, password, name, dob, salt, uuid }),
+    JSON.stringify({ email, password, name, dob, uuid }),
     { ex: 3600 }
   );
 
@@ -92,7 +90,7 @@ export const deleteCachedUser = async (token: string) => {
 
 export const insertUser = async (user: CachedUser) => {
   try {
-    const { uuid, email, password, name, dob, salt } = user;
+    const { uuid, email, password, name, dob } = user;
     const insertUser = db
       .insert(users)
       .values({
@@ -100,13 +98,29 @@ export const insertUser = async (user: CachedUser) => {
         name: sql.placeholder("name"),
         email: sql.placeholder("email"),
         password: sql.placeholder("password"),
-        salt: sql.placeholder("salt"),
         dob: sql.placeholder("dob"),
       })
       .prepare("insert_user");
-    await insertUser.execute({ id: uuid, name, email, password, dob, salt });
+    await insertUser.execute({ id: uuid, name, email, password, dob });
   } catch {
     console.error("Error in inserting user");
     throw new Error("Error in inserting user");
   }
 };
+
+export const findUser = async (email: string) => {
+  try {
+    const findUser = db
+      .select()
+      .from(users)
+      .where(
+        eq(users.email, sql.placeholder("email"))
+      )
+      .prepare("find_user");
+    const result = await findUser.execute({ email });
+    return result[0];
+  } catch {
+    console.error("Error in finding user");
+    throw new Error("Error in finding user");
+  }
+}

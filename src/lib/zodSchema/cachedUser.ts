@@ -6,7 +6,6 @@ export const cacheUserSchema = z.object({
     password: z.string(),
     name: z.string(),
     dob: z.string(),
-    salt: z.string(),
 });
 
 export type CachedUser = z.infer<typeof cacheUserSchema>;
