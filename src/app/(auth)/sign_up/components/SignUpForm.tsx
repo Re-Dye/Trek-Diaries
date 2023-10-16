@@ -77,7 +77,6 @@ export default function SignUpForm() {
       name: `${data.firstName} ${data.lastName}`,
       email: data.email,
       dob: data.dob,
-      salt,
       password: await bcrypt.hash(data.password, salt),
     };
     console.log(res);

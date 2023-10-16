@@ -5,78 +5,82 @@ import {
   primaryKey,
   integer,
   char,
-  boolean,
-  date
+  date,
+  uuid,
+  index,
 } from "drizzle-orm/pg-core";
-import type { AdapterAccount } from "@auth/core/adapters";
 import { relations } from "drizzle-orm";
 import { CONSTANTS } from "../constants";
-
-type UserType = "credential" | "google";
 
 export const users = pgTable("users", {
   id: text("id").notNull().primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  image: text("image"),
-  type: text("type").$type<UserType>().notNull().default("google"),
-});
-
-export const credentialUsers = pgTable("credentialUsers", {
-  userId: text("userId")
-    .primaryKey()
-    .references(() => users.id, { onDelete: "cascade" }),
-  password: char("password", { length: CONSTANTS.ENCRYPTED_PASSWORD_LENGTH }).notNull(),
-  salt: char("salt", { length: CONSTANTS.SALT_LENGTH }).notNull(),
+  password: char("password", {
+    length: CONSTANTS.ENCRYPTED_PASSWORD_LENGTH,
+  }).notNull(),
   dob: date("dob", { mode: "string" }).notNull(),
-});
-
-export const userRelation = relations(users, ({ one }) => ({
-  belongsTo: one(credentialUsers, {
-    fields: [users.id],
-    references: [credentialUsers.userId],
-  }),
+  image: text("image"),
+}, (users) => ({
+  emailIdx: index("email_idx").on(users.email),
 }));
 
-export const accounts = pgTable(
-  "accounts",
-  {
-    userId: text("userId")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
-  },
-  (account) => ({
-    compoundKey: primaryKey(account.provider, account.providerAccountId),
-  })
-);
+export const userRelations = relations(users, ({ many }) => ({
+  usersToLocations: many(usersToLocations),
+}));
 
-export const sessions = pgTable("sessions", {
-  sessionToken: text("sessionToken").notNull().primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
+export const locations = pgTable("locations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  address: text("address").notNull(),
+  registered_time: timestamp("registered_time", { mode: "string" }).notNull(),
+  description: text("description").notNull(),
 });
 
-export const verificationTokens = pgTable(
-  "verificationTokens",
+export const locationRelations = relations(locations, ({ many }) => ({
+  usersToLocations: many(usersToLocations),
+}));
+
+export const posts = pgTable("posts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  registered_time: timestamp("registered_time", { mode: "string" }).notNull(),
+  description: text("description").notNull(),
+  picture_url: text("picture_url").notNull(),
+  likes_count: integer("likes_count").notNull(),
+});
+
+export const comments = pgTable(
+  "comments",
   {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    user_id: text("user_id").references(() => users.id, {
+      onDelete: "cascade",
+    }),
+    post_id: uuid("post_id").references(() => posts.id, {
+      onDelete: "cascade",
+    }),
+    content: text("content").notNull(),
+    registered_time: timestamp("registered_time", { mode: "string" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey(vt.identifier, vt.token),
+  (comments) => ({
+    pk: primaryKey(comments.user_id, comments.post_id),
   })
 );
+
+export const usersToLocations = pgTable("users_to_locations", {
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
+  locationId: uuid("location_id").references(() => locations.id, {
+    onDelete: "cascade",
+  }),
+}, (usersToLocations) => ({
+  pk: primaryKey(usersToLocations.userId, usersToLocations.locationId),
+}));
+
+export const usersToLocationsRelations = relations(usersToLocations, ({ one }) => ({
+  location: one(locations, {
+    fields: [usersToLocations.locationId],
+    references: [locations.id],
+  }),
+  user: one(users, {
+    fields: [usersToLocations.userId],
+    references: [users.id],
+  })
+}));

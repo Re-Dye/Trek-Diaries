@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { findCachedUser } from "@/lib/db/actions";
 import { verifyEmailSchema } from "@/lib/zodSchema/verifyEmail";
-import { countUserById, insertUser } from "@/lib/db/actions";
+import { countUserById, insertUser, deleteCachedUser } from "@/lib/db/actions";
 import { ZodError } from "zod";
 import { CachedUser } from "@/lib/zodSchema/cachedUser";
 
@@ -30,6 +30,11 @@ export async function POST(req: NextRequest) {
     /* insert user in db */
     await insertUser(user);
     console.log("User Created")
+
+    /* delete user from redis */
+    await deleteCachedUser(token);
+    console.log("User deleted from redis");
+
     return NextResponse.json("User Created", { status: 201 });
   } catch (err) {
     if (err instanceof ZodError) {

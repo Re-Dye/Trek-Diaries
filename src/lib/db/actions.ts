@@ -1,6 +1,6 @@
 import { db } from "@/lib/db/db";
-import { credentialUsers, users, verificationTokens } from "@/lib/db/schema";
-import { eq, sql, and } from "drizzle-orm";
+import { users } from "@/lib/db/schema";
+import { eq, sql } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
 
@@ -10,10 +10,7 @@ export const countUserByEmail = async (email: string) => {
       .select({ count: sql<number>`count(*)` })
       .from(users)
       .where(
-        and(
-          eq(users.email, sql.placeholder("email")),
-          eq(users.type, "credential")
-        )
+        eq(users.email, sql.placeholder("email")),
       )
       .prepare("count_users");
     const result = await countUser.execute({ email });
@@ -30,7 +27,7 @@ export const countUserById = async (id: string) => {
       .select({ count: sql<number>`count(*)` })
       .from(users)
       .where(
-        and(eq(users.id, sql.placeholder("id")), eq(users.type, "credential"))
+        eq(users.id, sql.placeholder("id"))
       )
       .prepare("count_users");
     const result = await countUser.execute({ id });
@@ -47,7 +44,6 @@ export const cacheUser = async ({
   password,
   name,
   dob,
-  salt,
   token,
 }: {
   uuid: string;
@@ -55,12 +51,11 @@ export const cacheUser = async ({
   password: string;
   name: string;
   dob: string;
-  salt: string;
   token: string;
 }) => {
   const res = await redis.set(
     token,
-    JSON.stringify({ email, password, name, dob, salt, uuid }),
+    JSON.stringify({ email, password, name, dob, uuid }),
     { ex: 3600 }
   );
 
@@ -80,31 +75,52 @@ export const findCachedUser = async (token: string) => {
   }
 };
 
+export const deleteCachedUser = async (token: string) => {
+  try {
+    const res = await redis.del(token);
+    if (res !== 1) {
+      console.error("Error in deleting cache");
+      throw new Error("Error in deleting cache");
+    }
+  } catch {
+    console.error("Error in deleting cache");
+    throw new Error("Error in deleting cache");
+  }
+}
+
 export const insertUser = async (user: CachedUser) => {
   try {
-    const { uuid, email, password, name, dob, salt } = user;
+    const { uuid, email, password, name, dob } = user;
     const insertUser = db
       .insert(users)
       .values({
         id: sql.placeholder("id"),
         name: sql.placeholder("name"),
         email: sql.placeholder("email"),
-        type: "credential",
-      })
-      .prepare("insert_user");
-    await insertUser.execute({ id: uuid, name, email });
-    const insertCredential = db
-      .insert(credentialUsers)
-      .values({
-        userId: sql.placeholder("userId"),
         password: sql.placeholder("password"),
         dob: sql.placeholder("dob"),
-        salt: sql.placeholder("salt"),
       })
-      .prepare("insert_credential");
-    await insertCredential.execute({ userId: uuid, password, dob, salt });
+      .prepare("insert_user");
+    await insertUser.execute({ id: uuid, name, email, password, dob });
   } catch {
     console.error("Error in inserting user");
     throw new Error("Error in inserting user");
   }
 };
+
+export const findUser = async (email: string) => {
+  try {
+    const findUser = db
+      .select()
+      .from(users)
+      .where(
+        eq(users.email, sql.placeholder("email"))
+      )
+      .prepare("find_user");
+    const result = await findUser.execute({ email });
+    return result[0];
+  } catch {
+    console.error("Error in finding user");
+    throw new Error("Error in finding user");
+  }
+}
