@@ -5,6 +5,7 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import dbConnect from "../../lib/mongoose";
 import User from "../../lib/modals/User";
 import { db } from "@/lib/db/db";
+import { loginSchema } from "@/lib/zodSchema/login";
 
 if (!process.env.NEXTAUTH_SECRET) {
   throw new Error("Please provide process.env.NEXTAUTH_SECRET env variable.");
@@ -27,7 +28,8 @@ export const authOptions: NextAuthOptions = {
         try {
           console.log("Connecting to database...");
           await dbConnect(); // establishing connection to mongoDB
-          const { email, password } = credentials as any;
+          const { email, password } = loginSchema.parse(credentials); // validating the credentials
+          
           console.log(`Entered email:${email}\npassword: ${password}`);
 
           /* check on database here */

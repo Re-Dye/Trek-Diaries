@@ -1,6 +1,6 @@
 import { db } from "@/lib/db/db";
-import { credentialUsers, users, verificationTokens } from "@/lib/db/schema";
-import { eq, sql, and } from "drizzle-orm";
+import { users } from "@/lib/db/schema";
+import { eq, sql } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
 
@@ -10,10 +10,7 @@ export const countUserByEmail = async (email: string) => {
       .select({ count: sql<number>`count(*)` })
       .from(users)
       .where(
-        and(
-          eq(users.email, sql.placeholder("email")),
-          eq(users.type, "credential")
-        )
+        eq(users.email, sql.placeholder("email")),
       )
       .prepare("count_users");
     const result = await countUser.execute({ email });
@@ -30,7 +27,7 @@ export const countUserById = async (id: string) => {
       .select({ count: sql<number>`count(*)` })
       .from(users)
       .where(
-        and(eq(users.id, sql.placeholder("id")), eq(users.type, "credential"))
+        eq(users.id, sql.placeholder("id"))
       )
       .prepare("count_users");
     const result = await countUser.execute({ id });
@@ -80,6 +77,19 @@ export const findCachedUser = async (token: string) => {
   }
 };
 
+export const deleteCachedUser = async (token: string) => {
+  try {
+    const res = await redis.del(token);
+    if (res !== 1) {
+      console.error("Error in deleting cache");
+      throw new Error("Error in deleting cache");
+    }
+  } catch {
+    console.error("Error in deleting cache");
+    throw new Error("Error in deleting cache");
+  }
+}
+
 export const insertUser = async (user: CachedUser) => {
   try {
     const { uuid, email, password, name, dob, salt } = user;
@@ -89,20 +99,12 @@ export const insertUser = async (user: CachedUser) => {
         id: sql.placeholder("id"),
         name: sql.placeholder("name"),
         email: sql.placeholder("email"),
-        type: "credential",
+        password: sql.placeholder("password"),
+        salt: sql.placeholder("salt"),
+        dob: sql.placeholder("dob"),
       })
       .prepare("insert_user");
-    await insertUser.execute({ id: uuid, name, email });
-    const insertCredential = db
-      .insert(credentialUsers)
-      .values({
-        userId: sql.placeholder("userId"),
-        password: sql.placeholder("password"),
-        dob: sql.placeholder("dob"),
-        salt: sql.placeholder("salt"),
-      })
-      .prepare("insert_credential");
-    await insertCredential.execute({ userId: uuid, password, dob, salt });
+    await insertUser.execute({ id: uuid, name, email, password, dob, salt });
   } catch {
     console.error("Error in inserting user");
     throw new Error("Error in inserting user");
