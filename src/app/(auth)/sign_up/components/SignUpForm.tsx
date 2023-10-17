@@ -11,7 +11,6 @@ import {
   SignupData,
 } from "@/lib/zodSchema/signup";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import bcrypt from "bcryptjs";
 
@@ -31,7 +30,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button, ButtonLoading } from "@/components/ui/button";
 
 export default function SignUpForm() {
-  const form = useForm<z.infer<typeof signupFormSchema>>({
+  const form = useForm<SignupFormData>({
     resolver: zodResolver(signupFormSchema),
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -265,7 +264,6 @@ export default function SignUpForm() {
                   </Button>
                 )}
               </div>
-              {/* <button onClick={ signInWithGoogle }>Sign In with Google</button> */}
 
               <div className="flex flex-col text-xs font-medium justify-center items-center gap-1 md:flex-row sm:text-sm md:text-sm md:gap-2">
                 <>Already have an account?&nbsp; </>
