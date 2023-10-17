@@ -1,5 +1,5 @@
 import { db } from "@/lib/db/db";
-import { users } from "@/lib/db/schema";
+import { users, locations } from "@/lib/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
@@ -122,5 +122,38 @@ export const findUser = async (email: string) => {
   } catch {
     console.error("Error in finding user");
     throw new Error("Error in finding user");
+  }
+}
+
+export const countLocationByAddress = async (address: string) => {
+  try {
+    const countLocation = db
+      .select({ count: sql<number>`count(*)` })
+      .from(locations)
+      .where(
+        eq(locations.address, sql.placeholder("address"))
+      )
+      .prepare("count_location");
+    const result = await countLocation.execute({ address });
+    return result[0].count;
+  } catch {
+    console.error("Error in counting locations");
+    throw new Error("Error in counting locations");
+  }
+}
+
+export const addLocation = async (address: string, description: string) => {
+  try {
+    const addLocation = db
+      .insert(locations)
+      .values({
+        address: sql.placeholder("address"),
+        description: sql.placeholder("description"),
+      })
+      .prepare("add_location");
+      await addLocation.execute({ address, description });
+  } catch {
+    console.error("Error in adding location");
+    throw new Error("Error in adding location");
   }
 }

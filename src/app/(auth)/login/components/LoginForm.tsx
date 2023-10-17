@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";

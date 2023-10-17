@@ -1,12 +1,20 @@
 import * as z from "zod";
 import { CONSTANTS } from "../constants";
 
-export const addLocationFormSchema = z
-.object({
-    address: z.string().min(1, { message: "Address is required" }),
-    state: z.string().min(1, { message: "State is required" }),
-    country: z.string().min(1, { message: "Country is required" }),
-    desc: z.string().min(1, { message: "Description is required" }),
-})
+export const AddLocationFormSchema = z.object({
+  place: z.string().min(1, { message: "Place is required" }),
+  state: z.string().min(1, { message: "State is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  description: z.string().min(1, { message: "Description is required" }).refine(
+    (val) => {
+      const words = val.split(" ");
+      return (words.length >= CONSTANTS.MIN_DESCRIPTION_WORDS && words.length <= CONSTANTS.MAX_DESCRIPTION_WORDS);
+    },
+    {
+      message: `Description must be at least ${ CONSTANTS.MIN_DESCRIPTION_WORDS } words and at most ${ CONSTANTS.MAX_DESCRIPTION_WORDS } words.`,
+      path: ["description"],
+    }
+  ),
+});
 
-export type addLocationFormData = z.infer<typeof addLocationFormSchema>;
+export type AddLocationFormData = z.infer<typeof AddLocationFormSchema>;
