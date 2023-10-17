@@ -4,8 +4,9 @@ import { verifyEmailSchema } from "@/lib/zodSchema/verifyEmail";
 import { countUserById, insertUser, deleteCachedUser } from "@/lib/db/actions";
 import { ZodError } from "zod";
 import { CachedUser } from "@/lib/zodSchema/cachedUser";
+import { ServerRuntime } from "next";
 
-export const runtime = "edge";
+export const runtime: ServerRuntime = "edge";
 
 export async function POST(req: NextRequest) {
   try{
