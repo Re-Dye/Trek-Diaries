@@ -1,6 +1,5 @@
 import Select from 'react-select';
 import { useEffect, useState } from 'react';
-import styling from "../page.module.css";
 
 interface RatingOption {
   value: number;
@@ -31,7 +30,7 @@ const RatingDropdown: React.FC<RatingDropdownProps> = ({onRatingSelect}) => {
 
   return (
     <Select<RatingOption, false>
-      className={styling.rating}
+      className="text-red-800 text-sm w-48"
       options={ratingOptions}
       value={selectedRating}
       onChange={handleRatingChange}

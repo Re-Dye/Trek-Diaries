@@ -25,14 +25,6 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   })
 
-  const handleSigninGoog = async () => {
-    const googres = await signIn("google", {
-      redirect: false,
-      callbackUrl: "/",
-    });
-    console.log(googres);
-  };
-
   const onLogIn: SubmitHandler<LoginFormData> = async (data) => {
     try {
       console.log("signing in", data);
@@ -134,8 +126,8 @@ export default function Login() {
                 )}
               />
 
-              <div className="flex flex-col gap-2 justify-center items-center md:flex-row lg:flex-row  sm:gap-2 md:gap-4 lg:gap-5 ">
-                <div className="flex space-x-1 sm:space-x-2 items-center ">
+              <div className="flex flex-col gap-3 space-y-1 justify-center items-center md:flex-row lg:flex-row  sm:gap-2 md:gap-4 lg:gap-5 ">
+                <div className="flex space-x-1 gap-2 sm:space-x-2 items-center ">
                   <Checkbox
                     id="show_password"
                     onCheckedChange={() =>
@@ -164,21 +156,9 @@ export default function Login() {
                 type="submit">Sign In</Button>
               </div>
 
-              <div className=" flex flex-col text-xs font-medium justify-center items-center gap-1 md:flex-row sm:text-sm md:text-sm md:gap-2">
+              <div className=" flex flex-col text-xs font-medium justify-center items-center gap-2 md:flex-row sm:text-sm md:text-sm md:gap-2">
                 <>Don&apos;t have an account?</>
                 <Link className="text-blue-500  hover:text-gray-400" href="/sign_up"> Sign Up</Link>
-              </div>
-
-              <div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className=" btn w-full transition ease-in-out delay-100 px-3 py-2 text-xs tex rounded-md gap-x-2 text-white bg-gray-800 lg:gap-3 lg:h-8 xl:h-10"
-                  onClick={handleSigninGoog}
-                >
-                  Continue with google
-                  <FcGoogle className=" relative w-5 h-5 md:w-6 md:h-6" />
-                </Button>
               </div>
             </form>
           </Form>

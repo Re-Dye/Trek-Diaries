@@ -95,7 +95,9 @@ export default function Comment({ postId }: { postId: string }) {
                 ))}
               </InfiniteScroll>
             )}
-            {!comments.length && <h1>Not Found!</h1>}
+            <div className="flex justify-center items-center">
+              {!comments.length && <h1>No comment yet!</h1>}
+            </div>
           </>
         )}
         {!didMount}

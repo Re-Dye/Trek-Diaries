@@ -70,7 +70,8 @@ export default function Posts({ locationId }:{ locationId: string }) {
                             }
                         </InfiniteScroll>
                     }
-                    {!(posts.length) && <h1>Not Found!</h1>}
+                    {!(posts.length) && 
+                    <h1>Not Found!</h1>}
                 </>
             }
             {!didMount} 

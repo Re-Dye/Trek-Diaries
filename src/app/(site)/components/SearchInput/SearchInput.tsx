@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import SearchBoxStyles from "./page.module.css";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 

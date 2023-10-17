@@ -3,12 +3,12 @@ import Image from "next/image";
 
 export default function PlacetoVisit(){
     return(
-        <div className="flex-row absolute space-y-4 right-4 mt-8 box-border border rounded-2xl shadow-md p-6">
+        <div className="flex-row absolute space-y-4 right-4 mt-8 box-border border rounded-2xl shadow-md p-6 h-4/5">
             <div className="flex gap-3">
                 <h2 className="text-2xl">Places to Visit</h2>
                 <Palmtree className="w-7 h-7 text-green-500"/>
             </div>
-            <div className="overflow-y-auto h-96 space-y-3 ">
+            <div className="overflow-y-auto h-4/5 space-y-3 ">
             <div className="flex-row space-y-1">
                 <div className="flex relative w-40 h-32 justify-center items-center">
                 <Image 
