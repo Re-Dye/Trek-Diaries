@@ -3,15 +3,14 @@ import { users, locations } from "@/lib/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
+import { InsertLocation, ReturnLocation, ReturnUser, insertLocationSchema } from "@/lib/zodSchema/dbTypes";
 
 export const countUserByEmail = async (email: string) => {
   try {
     const countUser = db
       .select({ count: sql<number>`count(*)` })
       .from(users)
-      .where(
-        eq(users.email, sql.placeholder("email")),
-      )
+      .where(eq(users.email, sql.placeholder("email")))
       .prepare("count_users");
     const result = await countUser.execute({ email });
     return result[0].count;
@@ -26,9 +25,7 @@ export const countUserById = async (id: string) => {
     const countUser = db
       .select({ count: sql<number>`count(*)` })
       .from(users)
-      .where(
-        eq(users.id, sql.placeholder("id"))
-      )
+      .where(eq(users.id, sql.placeholder("id")))
       .prepare("count_users");
     const result = await countUser.execute({ id });
     return result[0].count;
@@ -86,7 +83,7 @@ export const deleteCachedUser = async (token: string) => {
     console.error("Error in deleting cache");
     throw new Error("Error in deleting cache");
   }
-}
+};
 
 export const insertUser = async (user: CachedUser) => {
   try {
@@ -108,14 +105,12 @@ export const insertUser = async (user: CachedUser) => {
   }
 };
 
-export const findUser = async (email: string) => {
+export const findUser = async (email: string): Promise<ReturnUser> => {
   try {
     const findUser = db
       .select()
       .from(users)
-      .where(
-        eq(users.email, sql.placeholder("email"))
-      )
+      .where(eq(users.email, sql.placeholder("email")))
       .prepare("find_user");
     const result = await findUser.execute({ email });
     return result[0];
@@ -123,16 +118,14 @@ export const findUser = async (email: string) => {
     console.error("Error in finding user");
     throw new Error("Error in finding user");
   }
-}
+};
 
 export const countLocationByAddress = async (address: string) => {
   try {
     const countLocation = db
       .select({ count: sql<number>`count(*)` })
       .from(locations)
-      .where(
-        eq(locations.address, sql.placeholder("address"))
-      )
+      .where(eq(locations.address, sql.placeholder("address")))
       .prepare("count_location");
     const result = await countLocation.execute({ address });
     return result[0].count;
@@ -140,20 +133,23 @@ export const countLocationByAddress = async (address: string) => {
     console.error("Error in counting locations");
     throw new Error("Error in counting locations");
   }
-}
+};
 
-export const addLocation = async (address: string, description: string) => {
+export const addLocation = async (location: InsertLocation): Promise<ReturnLocation> => {
   try {
+    const { address, description } = insertLocationSchema.parse(location);
     const addLocation = db
       .insert(locations)
       .values({
         address: sql.placeholder("address"),
         description: sql.placeholder("description"),
       })
+      .returning()
       .prepare("add_location");
-      await addLocation.execute({ address, description });
+    const res = await addLocation.execute({ address, description });
+    return res[0];
   } catch {
     console.error("Error in adding location");
     throw new Error("Error in adding location");
   }
-}
+};

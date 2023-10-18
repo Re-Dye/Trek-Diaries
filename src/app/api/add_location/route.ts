@@ -3,11 +3,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { countLocationByAddress, addLocation } from "@/lib/db/actions";
 import { ZodError } from "zod";
 import { ServerRuntime } from "next";
+import {
+  getAlgoliaAdminKey,
+  getAlgoliaAppId,
+} from "@/lib/secrets";
+import algoliasearch from "algoliasearch";
+import { ReturnLocation } from "@/lib/zodSchema/dbTypes";
 
 export const runtime: ServerRuntime = "edge";
 
 export async function POST(req: NextRequest) {
   try {
+    const client = algoliasearch(getAlgoliaAppId(), getAlgoliaAdminKey());
+    console.log(client);
+    const index = client.initIndex("locations");
+    console.log(index);
     const { place, country, description, state } = AddLocationFormSchema.parse(
       await req.json()
     );
@@ -19,9 +29,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json("Location already exists", { status: 409 });
     }
 
-    await addLocation(address, description);
+    const location: ReturnLocation = await addLocation({
+      address,
+      description,
+    });
 
-    return NextResponse.json("Location Created", { status: 201 });
+    index.saveObject({
+      objectID: location.id,
+      address: location.address,
+      description: location.description,
+      registered_time: location.registered_time,
+    });
+
+    return NextResponse.json(JSON.stringify(location), { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json("Invalid Request", { status: 400 });
