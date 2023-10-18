@@ -6,13 +6,11 @@ import { ServerRuntime } from "next";
 import {
   getAlgoliaAdminKey,
   getAlgoliaAppId,
-  getTriggerToken,
-  getTriggerUrl,
 } from "@/lib/secrets";
 import algoliasearch from "algoliasearch";
 import { ReturnLocation } from "@/lib/zodSchema/dbTypes";
 
-// export const runtime: ServerRuntime = "edge";
+export const runtime: ServerRuntime = "edge";
 
 export async function POST(req: NextRequest) {
   try {
