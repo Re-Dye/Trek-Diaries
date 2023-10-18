@@ -53,7 +53,7 @@ export default function AddLocation() {
     },
     onSuccess: (data) => {
       if (data.status === 201) {
-        alert(`Location added successfully.`);
+        alert(`Location added successfully. Might take some time to appear in search.`);
         router.refresh();
         return;
       }

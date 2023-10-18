@@ -47,3 +47,23 @@ export const getBaseUrl = (): string => {
 
     return secret
 }
+
+export const getTriggerUrl = (): string => {
+    const secret = process.env.CENSUS_TRIGGER_URL;
+
+    if (!secret || secret.length === 0) {
+        throw new Error("The environment variable CENSUS_TRIGGER_URL is not set.")
+    }
+
+    return secret
+}
+
+export const getTriggerToken = (): string => {
+    const secret = process.env.CENSUS_TRIGGER_SECRET_TOKEN;
+
+    if (!secret || secret.length === 0) {
+        throw new Error("The environment variable CENSUS_TRIGGER_SECRET_TOKEN is not set.")
+    }
+
+    return secret
+}

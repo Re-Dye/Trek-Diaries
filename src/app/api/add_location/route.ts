@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { countLocationByAddress, addLocation } from "@/lib/db/actions";
 import { ZodError } from "zod";
 import { ServerRuntime } from "next";
+import { getTriggerToken, getTriggerUrl } from "@/lib/secrets";
 
 export const runtime: ServerRuntime = "edge";
 
@@ -20,6 +21,22 @@ export async function POST(req: NextRequest) {
     }
 
     await addLocation(address, description);
+
+    const res = await fetch(getTriggerUrl(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + getTriggerToken(),
+      },
+    });
+
+    const data = await res.json();
+    console.log(data);
+
+    if (data.status !== "success") {
+      console.log(data);
+      return NextResponse.json("Internal Server Error", { status: 500 });
+    }
 
     return NextResponse.json("Location Created", { status: 201 });
   } catch (error) {
