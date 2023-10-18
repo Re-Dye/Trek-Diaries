@@ -11,6 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { CONSTANTS } from "../constants";
+import { createInsertSchema } from "drizzle-zod"
 
 export const users = pgTable(
   "users",
@@ -37,7 +38,7 @@ export const locations = pgTable(
   "locations",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    address: text("address").notNull(),
+    address: text("address").notNull().unique(),
     registered_time: timestamp("registered_time", { mode: "string" }).defaultNow().notNull(),
     description: text("description").notNull(),
   },
