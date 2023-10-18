@@ -25,7 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Info } from "lucide-react";
 import { useMutation } from "react-query";
-import { ReturnLocation } from "@/lib/zodSchema/dbTypes";
+import { ReturnLocation, selectLocationSchema } from "@/lib/zodSchema/dbTypes";
 
 export default function AddLocation() {
   const form = useForm<AddLocationFormData>({
@@ -54,9 +54,9 @@ export default function AddLocation() {
     },
     onSuccess: (data) => {
       if (data.status === 201) {
-        console.log(data.message)
+        const location: ReturnLocation = selectLocationSchema.parse(JSON.parse(data.message));
         alert(`Location added successfully. Might take some time to appear in search.`);
-        router.refresh();
+        router.push(`/location/${location.id}`);
         return;
       }
 
