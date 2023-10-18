@@ -3,6 +3,10 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import algoliasearch from "algoliasearch/lite";
+import { getAlgoliaApiKey, getAlgoliaAppId } from "@/lib/secrets";
+
+const searchClient = algoliasearch(getAlgoliaAppId(), getAlgoliaApiKey());
 
 export default function SearchInput() {
   const [searchQuery, setSearchQuery] = useState<string>("");

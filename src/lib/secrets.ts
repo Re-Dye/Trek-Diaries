@@ -49,10 +49,10 @@ export const getBaseUrl = (): string => {
 }
 
 export const getAlgoliaAppId = (): string => {
-    const secret = process.env.ALGOLIA_APP_ID;
+    const secret = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
 
     if (!secret || secret.length === 0) {
-        throw new Error("The environment variable ALGOLIA_APP_ID is not set.")
+        throw new Error("The environment variable NEXT_PUBLIC_ALGOLIA_APP_ID is not set.")
     }
 
     return secret
@@ -63,6 +63,16 @@ export const getAlgoliaAdminKey = (): string => {
 
     if (!secret || secret.length === 0) {
         throw new Error("The environment variable ALGOLIA_ADMIN_API_KEY is not set.")
+    }
+
+    return secret
+}
+
+export const getAlgoliaApiKey = (): string => {
+    const secret = process.env.NEXT_PUBLIC_ALGOLIA_API_KEY;
+
+    if (!secret || secret.length === 0) {
+        throw new Error("The environment variable NEXT_PUBLIC_ALGOLIA_API_KEY is not set.")
     }
 
     return secret
