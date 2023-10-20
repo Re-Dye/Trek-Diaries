@@ -1,5 +1,5 @@
 import ButtonFollow from "./components/ButtonFollow";
-import ButtonAddPost from "./components/ButtonAddPost";
+import AddPost from "./components/AddPost";
 import Posts from "./components/Posts";
 import { notFound } from "next/navigation";
 import { LocateFixed } from "lucide-react";
@@ -41,7 +41,7 @@ export default async function LocationPage({
             <p className="text-sm">{data.description}</p>
           </div>
           <div className="flex mt-5 justify-center gap-8">
-            <ButtonAddPost locationID={locationID} />
+            <AddPost locationID={locationID} />
             <ButtonFollow locationID={locationID} />
           </div>
         </div>
