@@ -11,19 +11,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
 import RatingDropdown from "./RatingDropdown";
 import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus } from "lucide-react";
+
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { addPostFormSchema, AddPostFormData } from "@/lib/zodSchema/addPost";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import axios from "axios";
 
 export default function AddPost({ locationID }: { locationID: string }) {
   const router = useRouter();
   const session = useSession({ required: true });
   const userId = session?.data?.user?.email;
+  const form = useForm<AddPostFormData>({ resolver: zodResolver(addPostFormSchema) });
 
   const [Description, setDescription] = useState("");
   const [TrailCondition, setTrialCondition] = useState<null | number>(0);
