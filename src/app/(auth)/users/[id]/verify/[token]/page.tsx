@@ -43,13 +43,7 @@ export default async function UserVerifyPage({ params }: { params: { id: string,
   }
 
   return (
-    <div className="flex h-screen justify-center items-center">
-      <Image
-        className="object-cover filter blur-sm w-full h-full"
-        src="/ncpr.jpg"
-        alt="backgroundImage"
-        fill
-      />
+    <div className="fixed flex w-full h-screen justify-center items-center">
       <Card className="justify-center flex-row space-y-2 items-center absolute w-4/5 h-3/5 rounded-xl p-4 sm:w-3/5 sm:p-6 md:rounded-2xl md:p-8 lg: ">
       <div className="flex absolute top-5 right-5 sm:top-7 sm:right-7 md:top-9 md:right-9">
         <ModeToggle />
