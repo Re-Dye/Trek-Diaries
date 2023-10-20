@@ -1,9 +1,9 @@
 import { db } from "@/lib/db/db";
-import { users, locations } from "@/lib/db/schema";
+import { users, locations, usersToLocations } from "@/lib/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
-import { InsertLocation, ReturnLocation, ReturnUser, insertLocationSchema } from "@/lib/zodSchema/dbTypes";
+import { InsertLocation, InsertUsersToLocations, ReturnLocation, ReturnUser, insertLocationSchema } from "@/lib/zodSchema/dbTypes";
 
 export const countUserByEmail = async (email: string) => {
   try {
@@ -168,3 +168,43 @@ export const getLocation = async (id: string): Promise<ReturnLocation> => {
     throw new Error("Error in getting location");
   }
 };
+
+export const checkFollowLocation = async (data: InsertUsersToLocations) => { 
+  try{
+    const { userId, locationId } = data;
+
+    const checkFollowLocation = db
+      .select({ count: sql<number>`count(*)` })
+      .from(usersToLocations)
+      .where(eq(usersToLocations.userId, sql.placeholder("userId")))
+      .where(eq(usersToLocations.locationId, sql.placeholder("locationId")))
+      .prepare("check_follow_location");
+    const res = await checkFollowLocation.execute({ userId, locationId });
+
+    if(res[0].count === 0){
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error(`Error in checking if user:${ data.userId } has followed location:${ data.locationId }`);
+    throw new Error("Error in checking follow location");
+  }
+}
+
+export const followLocation = async (data: InsertUsersToLocations) => {
+  try {
+    const { userId, locationId } = data;
+
+    const followLocation = db
+      .insert(usersToLocations)
+      .values({
+        userId: sql.placeholder("userId"),
+        locationId: sql.placeholder("locationId"),
+      })
+      .prepare("follow_location");
+    await followLocation.execute({ userId, locationId });
+  } catch {
+    console.error("Error in following location");
+    throw new Error("Error in following location");
+  }
+} 

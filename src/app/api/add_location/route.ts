@@ -18,12 +18,12 @@ export async function POST(req: NextRequest) {
     console.log(client);
     const index = client.initIndex("locations");
     console.log(index);
-    const { place, country, description, state } = AddLocationFormSchema.parse(
+    const data = AddLocationFormSchema.parse(
       await req.json()
     );
-    const address = `${place}, ${state}, ${country}`;
+    const address = `${data.place}, ${data.state}, ${data.country}`;
     console.log(address);
-    console.log(description);
+    console.log(data.description);
 
     if ((await countLocationByAddress(address)) > 0) {
       return NextResponse.json("Location already exists", { status: 409 });
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     const location: ReturnLocation = await addLocation({
       address,
-      description,
+      description: data.description,
     });
 
     index.saveObject({

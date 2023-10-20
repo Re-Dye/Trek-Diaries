@@ -40,10 +40,7 @@ export const locations = pgTable(
     address: text("address").notNull().unique(),
     registered_time: timestamp("registered_time", { mode: "string" }).defaultNow().notNull(),
     description: text("description").notNull(),
-  },
-  (locations) => ({
-    addressIdx: index("address_idx").on(locations.address),
-  })
+  }
 );
 
 export const locationRelations = relations(locations, ({ many }) => ({
@@ -78,13 +75,14 @@ export const comments = pgTable(
 export const usersToLocations = pgTable(
   "users_to_locations",
   {
-    userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
-    locationId: uuid("location_id").references(() => locations.id, {
+    userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    locationId: uuid("location_id").notNull().references(() => locations.id, {
       onDelete: "cascade",
     }),
   },
   (usersToLocations) => ({
     pk: primaryKey(usersToLocations.userId, usersToLocations.locationId),
+    userIdIdx: index("user_id_idx").on(usersToLocations.userId),
   })
 );
 
