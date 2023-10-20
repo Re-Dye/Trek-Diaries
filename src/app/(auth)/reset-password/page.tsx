@@ -9,19 +9,18 @@ export default function ResetPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleForgot = async (e:React.FormEvent) => {
+  const handleForgot = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent form submission
     console.log(email);
     try {
       const { data } = await axios.post("/api/forgot_password", {
-        email
+        email,
       });
 
       console.log(data);
       alert(`Verification email sent to: ${email}`);
 
-      setEmail("")
-
+      setEmail("");
     } catch (error) {
       console.log(error);
     }
@@ -29,12 +28,6 @@ export default function ResetPassword() {
 
   return (
     <div className={forgetStyles.wrapper}>
-      <Image
-        className={forgetStyles.img}
-        src="/ncpr.jpg"
-        alt="backgroundImage"
-        fill
-      />
       <form onSubmit={handleForgot} className={forgetStyles.forgetBox}>
         <h1>Forgot Your Password ?</h1>
         <p>Please enter the email you use to sign in to Trek-Diaries</p>
@@ -47,7 +40,8 @@ export default function ResetPassword() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button type="submit" className={forgetStyles.resetbtn}>Reset Password
+        <button type="submit" className={forgetStyles.resetbtn}>
+          Reset Password
         </button>
         <Link className={forgetStyles.linkforget} href="/login">
           Back to sign in
