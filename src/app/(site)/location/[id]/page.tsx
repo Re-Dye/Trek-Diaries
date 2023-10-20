@@ -1,19 +1,19 @@
-import locateStyle from "./page.module.css";
 import ButtonFollow from "./components/ButtonFollow";
 import ButtonAddPost from "./components/ButtonAddPost";
 import Posts from "./components/Posts";
 import { notFound } from "next/navigation";
 import { LocateFixed } from "lucide-react";
+import { getLocation } from "@/lib/db/actions";
+import { ReturnLocation } from "@/lib/zodSchema/dbTypes";
 
-async function fetchLocationData(id: string) {
-  const res: Response = await fetch(
-    `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/fetchLocaitonData?id=${id}`,
-    { cache: "no-store" }
-  );
-
-  if (!res.ok) return undefined
-
-  return res.json();
+const fetchLocation = async (locationID: string): Promise<ReturnLocation|null>  => {
+  try {
+    const location: ReturnLocation = await getLocation(locationID);
+    return location;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 export default async function LocationPage({
@@ -22,7 +22,7 @@ export default async function LocationPage({
   params: { id: string };
 }) {
   const locationID: string = params.id;
-  const data = await fetchLocationData(locationID);
+  const data = await fetchLocation(locationID);
 
   if (!data) {
     notFound()

@@ -153,3 +153,18 @@ export const addLocation = async (location: InsertLocation): Promise<ReturnLocat
     throw new Error("Error in adding location");
   }
 };
+
+export const getLocation = async (id: string): Promise<ReturnLocation> => {
+  try {
+    const getLocation = db
+      .select()
+      .from(locations)
+      .where(eq(locations.id, sql.placeholder("id")))
+      .prepare("get_location");
+    const res = await getLocation.execute({ id });
+    return res[0];
+  } catch {
+    console.error("Error in getting location");
+    throw new Error("Error in getting location");
+  }
+};

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { getBase64Url } from "@/lib/plaiceholder";
+import { getBaseUrl } from "@/lib/secrets";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-    const blurDataURL = await getBase64Url(`${process.env.NEXT_PUBLIC_BASE_URL}/ncpr.jpg`);
+    const blurDataURL = await getBase64Url(`${ getBaseUrl() }/ncpr.jpg`);
     return (
     <>
       <main>
