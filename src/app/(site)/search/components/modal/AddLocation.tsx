@@ -37,7 +37,7 @@ export default function AddLocation() {
   const { mutate, isLoading } = useMutation({
     mutationKey: "add_location",
     mutationFn: async (data: AddLocationFormData) => {
-      const res = await fetch("/api/add_location", {
+      const res = await fetch("/api/location/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export default function AddLocation() {
     },
   });
 
-  const handleAddLocation: SubmitHandler<AddLocationFormData> = async (data) => mutate(data);
+  const handleAddLocation: SubmitHandler<AddLocationFormData> = (data) => mutate(data);
 
   return (
     <Popover>

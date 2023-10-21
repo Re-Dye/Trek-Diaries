@@ -1,9 +1,15 @@
 import { db } from "@/lib/db/db";
 import { users, locations, usersToLocations } from "@/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, and } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
-import { InsertLocation, InsertUsersToLocations, ReturnLocation, ReturnUser, insertLocationSchema } from "@/lib/zodSchema/dbTypes";
+import {
+  InsertLocation,
+  InsertUsersToLocations,
+  ReturnLocation,
+  ReturnUser,
+  insertLocationSchema,
+} from "@/lib/zodSchema/dbTypes";
 
 export const countUserByEmail = async (email: string) => {
   try {
@@ -135,7 +141,9 @@ export const countLocationByAddress = async (address: string) => {
   }
 };
 
-export const addLocation = async (location: InsertLocation): Promise<ReturnLocation> => {
+export const addLocation = async (
+  location: InsertLocation
+): Promise<ReturnLocation> => {
   try {
     const { address, description } = insertLocationSchema.parse(location);
     const addLocation = db
@@ -169,27 +177,35 @@ export const getLocation = async (id: string): Promise<ReturnLocation> => {
   }
 };
 
-export const checkFollowLocation = async (data: InsertUsersToLocations) => { 
-  try{
+export const checkFollowLocation = async (data: InsertUsersToLocations) => {
+  try {
     const { userId, locationId } = data;
 
     const checkFollowLocation = db
       .select({ count: sql<number>`count(*)` })
       .from(usersToLocations)
-      .where(eq(usersToLocations.userId, sql.placeholder("userId")))
-      .where(eq(usersToLocations.locationId, sql.placeholder("locationId")))
+      .where(
+        and(
+          eq(usersToLocations.userId, sql.placeholder("userId")),
+          eq(usersToLocations.locationId, sql.placeholder("locationId"))
+        )
+      )
       .prepare("check_follow_location");
     const res = await checkFollowLocation.execute({ userId, locationId });
+    console.log(res[0].count);
 
-    if(res[0].count === 0){
+    if (res[0].count < 0) {
+      return true;
+    } else {
       return false;
     }
-    return true;
   } catch (error) {
-    console.error(`Error in checking if user:${ data.userId } has followed location:${ data.locationId }`);
+    console.error(
+      `Error in checking if user:${data.userId} has followed location:${data.locationId}`
+    );
     throw new Error("Error in checking follow location");
   }
-}
+};
 
 export const followLocation = async (data: InsertUsersToLocations) => {
   try {
@@ -207,4 +223,42 @@ export const followLocation = async (data: InsertUsersToLocations) => {
     console.error("Error in following location");
     throw new Error("Error in following location");
   }
-} 
+};
+
+export const getFollowedLocations = async (userId: string) => {
+  try {
+    const getFollowedLocations1 = db.query.usersToLocations
+      .findMany({
+        where: eq(usersToLocations.userId, sql.placeholder("userId")),
+        with: {
+          location: {
+            columns: {
+              address: true,
+            },
+          },
+        },
+      })
+      .prepare("get_followed_locations");
+    const getFollowedLocations2 = db
+      .select()
+      .from(usersToLocations)
+      .where(eq(usersToLocations.userId, sql.placeholder("userId")))
+      .leftJoin(locations, eq(usersToLocations.locationId, locations.id))
+      .prepare("get_followed_locations");
+
+    const st1 = performance.now();
+    const res = await getFollowedLocations1.execute({ userId });
+    const et1 = performance.now();
+
+    const st2 = performance.now();
+    const res2 = await getFollowedLocations2.execute({ userId });
+    const et2 = performance.now();
+
+    console.log("Time taken by query: ", et1 - st1);
+    console.log("Time taken by sql: ", et2 - st2);
+    return res;
+  } catch {
+    console.error("Error in getting followed locations");
+    throw new Error("Error in getting followed locations");
+  }
+};
