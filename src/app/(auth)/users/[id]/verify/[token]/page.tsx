@@ -18,7 +18,6 @@ export const metadata: Metadata = {
 }
 
 export default async function UserVerifyPage({ params }: { params: { id: string, token: string }}) {
-
   const data: VerifyEmail = { id: params.id, token: params.token };
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   const res = await fetch(`${baseUrl}/api/verify_email`, {

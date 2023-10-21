@@ -10,7 +10,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
-export default function Fbar({ locations }: { locations: Array<Location> }) {
+export default function Fbar() {
   const session = useSession();
   const { mutate, isLoading } = useMutation({
     mutationKey: "followLocation",
@@ -74,13 +74,13 @@ export default function Fbar({ locations }: { locations: Array<Location> }) {
         <MapPin className="w-7 h-7 text-red-600" />
       </div>
       <div className="flex-row cursor-pointer space-y-2">
-        {locations.map((location) => (
+        {/* {locations.map((location) => (
           <Flocation
             key={location._id}
             id={location._id}
             address={location.address}
           />
-        ))}
+        ))} */}
       </div>
     </div>
   );
