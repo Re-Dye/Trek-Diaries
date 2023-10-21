@@ -7,8 +7,8 @@ import { Button, ButtonLoading } from "@/components/ui/button";
 import { UserMinus, UserPlus } from "lucide-react";
 import { useMutation } from "react-query";
 import {
-  InsertUsersToLocations,
-  insertUsersToLocationsSchema,
+  UsersToLocations,
+  usersToLocationsSchema,
 } from "@/lib/zodSchema/dbTypes";
 
 export default function ButtonFollow({ locationID }: { locationID: string }) {
@@ -29,7 +29,7 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
     mutationFn: async () => {
       if (session.status === "authenticated") {
         const userId = session.data.user?.id;
-        const data: InsertUsersToLocations = insertUsersToLocationsSchema.parse(
+        const data: UsersToLocations = usersToLocationsSchema.parse(
           { locationId: locationID, userId }
         );
         const res = await fetch("/api/location/follow", {

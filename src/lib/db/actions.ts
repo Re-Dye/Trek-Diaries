@@ -5,7 +5,7 @@ import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
 import {
   InsertLocation,
-  InsertUsersToLocations,
+  UsersToLocations,
   ReturnLocation,
   ReturnUser,
   insertLocationSchema,
@@ -20,9 +20,9 @@ export const countUserByEmail = async (email: string) => {
       .prepare("count_users");
     const result = await countUser.execute({ email });
     return result[0].count;
-  } catch {
-    console.error("Error in counting users");
-    throw new Error("Error in counting users");
+  } catch (error) {
+    console.error("Error in counting users: ", error);
+    throw new Error("Error in counting users: " + error);
   }
 };
 
@@ -35,9 +35,9 @@ export const countUserById = async (id: string) => {
       .prepare("count_users");
     const result = await countUser.execute({ id });
     return result[0].count;
-  } catch {
-    console.error("Error in counting users");
-    throw new Error("Error in counting users");
+  } catch (error) {
+    console.error("Error in counting users: ", error);
+    throw new Error("Error in counting users: " + error);
   }
 };
 
@@ -72,9 +72,9 @@ export const findCachedUser = async (token: string) => {
   try {
     const user: CachedUser = cacheUserSchema.parse(await redis.get(token));
     return user;
-  } catch {
-    console.error("Error in finding cached user");
-    throw new Error("Error in finding cached user");
+  } catch (error) {
+    console.error("Error in finding cached user: ", error);
+    throw new Error("Error in finding cached user: " + error);
   }
 };
 
@@ -85,9 +85,9 @@ export const deleteCachedUser = async (token: string) => {
       console.error("Error in deleting cache");
       throw new Error("Error in deleting cache");
     }
-  } catch {
-    console.error("Error in deleting cache");
-    throw new Error("Error in deleting cache");
+  } catch (error) {
+    console.error("Error in deleting cache: ", error);
+    throw new Error("Error in deleting cache: " + error);
   }
 };
 
@@ -105,9 +105,9 @@ export const insertUser = async (user: CachedUser) => {
       })
       .prepare("insert_user");
     await insertUser.execute({ id: uuid, name, email, password, dob });
-  } catch {
-    console.error("Error in inserting user");
-    throw new Error("Error in inserting user");
+  } catch (error) {
+    console.error("Error in inserting user: ", error);
+    throw new Error("Error in inserting user: " + error);
   }
 };
 
@@ -120,9 +120,9 @@ export const findUser = async (email: string): Promise<ReturnUser> => {
       .prepare("find_user");
     const result = await findUser.execute({ email });
     return result[0];
-  } catch {
-    console.error("Error in finding user");
-    throw new Error("Error in finding user");
+  } catch (error) {
+    console.error("Error in finding user: ", error);
+    throw new Error("Error in finding user: " + error);
   }
 };
 
@@ -135,9 +135,9 @@ export const countLocationByAddress = async (address: string) => {
       .prepare("count_location");
     const result = await countLocation.execute({ address });
     return result[0].count;
-  } catch {
-    console.error("Error in counting locations");
-    throw new Error("Error in counting locations");
+  } catch (error) {
+    console.error("Error in counting locations: ", error);
+    throw new Error("Error in counting locations: " + error);
   }
 };
 
@@ -156,9 +156,9 @@ export const addLocation = async (
       .prepare("add_location");
     const res = await addLocation.execute({ address, description });
     return res[0];
-  } catch {
-    console.error("Error in adding location");
-    throw new Error("Error in adding location");
+  } catch (error) {
+    console.error("Error in adding location: ", error);
+    throw new Error("Error in adding location: " + error);
   }
 };
 
@@ -171,13 +171,13 @@ export const getLocation = async (id: string): Promise<ReturnLocation> => {
       .prepare("get_location");
     const res = await getLocation.execute({ id });
     return res[0];
-  } catch {
-    console.error("Error in getting location");
-    throw new Error("Error in getting location");
+  } catch (error) {
+    console.error("Error in getting location: ", error);
+    throw new Error("Error in getting location: " + error);
   }
 };
 
-export const checkFollowLocation = async (data: InsertUsersToLocations) => {
+export const checkFollowLocation = async (data: UsersToLocations) => {
   try {
     const { userId, locationId } = data;
 
@@ -192,22 +192,21 @@ export const checkFollowLocation = async (data: InsertUsersToLocations) => {
       )
       .prepare("check_follow_location");
     const res = await checkFollowLocation.execute({ userId, locationId });
-    console.log(res[0].count);
-
-    if (res[0].count < 0) {
+    const count: number = res[0].count;
+    if (count > 0) {
       return true;
     } else {
       return false;
     }
   } catch (error) {
     console.error(
-      `Error in checking if user:${data.userId} has followed location:${data.locationId}`
+      `Error in checking if user:${data.userId} has followed location:${data.locationId}: ${error}`
     );
-    throw new Error("Error in checking follow location");
+    throw new Error("Error in checking follow location: " + error);
   }
 };
 
-export const followLocation = async (data: InsertUsersToLocations) => {
+export const followLocation = async (data: UsersToLocations) => {
   try {
     const { userId, locationId } = data;
 
@@ -219,46 +218,31 @@ export const followLocation = async (data: InsertUsersToLocations) => {
       })
       .prepare("follow_location");
     await followLocation.execute({ userId, locationId });
-  } catch {
-    console.error("Error in following location");
-    throw new Error("Error in following location");
+  } catch (error) {
+    console.error("Error in following location", error);
+    throw new Error("Error in following location: " + error);
   }
 };
 
-export const getFollowedLocations = async (userId: string) => {
+export const getFollowedLocations = async (
+  userId: string
+): Promise<Array<UsersToLocations & { address: string }>> => {
   try {
-    const getFollowedLocations1 = db.query.usersToLocations
-      .findMany({
-        where: eq(usersToLocations.userId, sql.placeholder("userId")),
-        with: {
-          location: {
-            columns: {
-              address: true,
-            },
-          },
-        },
+    const getFollowedLocations = db
+      .select({
+        userId: usersToLocations.userId,
+        locationId: usersToLocations.locationId,
+        address: locations.address,
       })
-      .prepare("get_followed_locations");
-    const getFollowedLocations2 = db
-      .select()
       .from(usersToLocations)
       .where(eq(usersToLocations.userId, sql.placeholder("userId")))
-      .leftJoin(locations, eq(usersToLocations.locationId, locations.id))
+      .innerJoin(locations, eq(usersToLocations.locationId, locations.id))
       .prepare("get_followed_locations");
 
-    const st1 = performance.now();
-    const res = await getFollowedLocations1.execute({ userId });
-    const et1 = performance.now();
-
-    const st2 = performance.now();
-    const res2 = await getFollowedLocations2.execute({ userId });
-    const et2 = performance.now();
-
-    console.log("Time taken by query: ", et1 - st1);
-    console.log("Time taken by sql: ", et2 - st2);
-    return res;
-  } catch {
-    console.error("Error in getting followed locations");
-    throw new Error("Error in getting followed locations");
+    const res2 = await getFollowedLocations.execute({ userId });
+    return res2;
+  } catch (error) {
+    console.error("Error in getting followed locations: ", error);
+    throw new Error(`Error in getting followed locations: ${error}`);
   }
 };

@@ -1,5 +1,4 @@
 import { VerifyEmail } from "@/lib/zodSchema/verifyEmail";
-import Image from "next/image";
 import { MailCheck } from "lucide-react"
 import { Metadata } from "next";
 import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";

@@ -14,5 +14,5 @@ export type ReturnLocation = z.infer<typeof selectLocationSchema>;
 
 export const insertPostSchema = createInsertSchema(posts);
 
-export const insertUsersToLocationsSchema = createInsertSchema(usersToLocations);
-export type InsertUsersToLocations = z.infer<typeof insertUsersToLocationsSchema>;
+export const usersToLocationsSchema = createInsertSchema(usersToLocations);
+export type UsersToLocations = z.infer<typeof usersToLocationsSchema>;

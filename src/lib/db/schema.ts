@@ -9,7 +9,6 @@ import {
   uuid,
   index,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
 import { CONSTANTS } from "../constants";
 
 export const users = pgTable(
@@ -29,10 +28,6 @@ export const users = pgTable(
   })
 );
 
-export const userRelations = relations(users, ({ many }) => ({
-  usersToLocations: many(usersToLocations),
-}));
-
 export const locations = pgTable(
   "locations",
   {
@@ -42,10 +37,6 @@ export const locations = pgTable(
     description: text("description").notNull(),
   }
 );
-
-export const locationRelations = relations(locations, ({ many }) => ({
-  usersToLocations: many(usersToLocations),
-}));
 
 export const posts = pgTable("posts", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -83,19 +74,5 @@ export const usersToLocations = pgTable(
   (usersToLocations) => ({
     pk: primaryKey(usersToLocations.userId, usersToLocations.locationId),
     userIdIdx: index("user_id_idx").on(usersToLocations.userId),
-  })
-);
-
-export const usersToLocationsRelations = relations(
-  usersToLocations,
-  ({ one }) => ({
-    location: one(locations, {
-      fields: [usersToLocations.locationId],
-      references: [locations.id],
-    }),
-    user: one(users, {
-      fields: [usersToLocations.userId],
-      references: [users.id],
-    }),
   })
 );

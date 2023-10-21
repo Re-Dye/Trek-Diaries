@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import PostFeed from "./components/PostFeed/PostFeed";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
@@ -11,6 +12,10 @@ export default function Home() {
       router.push("/login");
     },
   });
+
+  useEffect(() => {
+    console.log("rendered");
+  }, []);
 
   return (
     <div className="flex justify-between min-h-screen">
