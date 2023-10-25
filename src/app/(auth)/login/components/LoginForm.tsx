@@ -1,9 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
-import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -32,7 +30,7 @@ export default function Login() {
 
   const onLogIn: SubmitHandler<LoginFormData> = async (data) => {
     try {
-      console.log("signing in", data);
+      const signIn = (await import("next-auth/react")).signIn;
 
       const res = await signIn("credentials", {
         email: data.email,

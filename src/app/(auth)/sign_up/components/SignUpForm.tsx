@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
 import Link from "next/link";
-import Image from "next/image";
 
 import {
   signupFormSchema,
@@ -12,7 +10,6 @@ import {
 } from "@/lib/zodSchema/signup";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import bcrypt from "bcryptjs";
 
 import { useMutation } from "react-query";
 
@@ -71,6 +68,7 @@ export default function SignUpForm() {
   });
 
   const onSignUp: SubmitHandler<SignupFormData> = async (data) => {
+    const bcrypt = (await import("bcryptjs")).default;
     const salt = await bcrypt.genSalt(10);
     const res: SignupData = {
       name: `${data.firstName} ${data.lastName}`,
