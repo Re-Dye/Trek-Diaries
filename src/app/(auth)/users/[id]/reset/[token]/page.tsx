@@ -1,7 +1,5 @@
 "use client";
 import confirmstyles from "./page.module.css";
-import Image from "next/image";
-import Link from "next/link";
 import { BsPersonFillLock } from "react-icons/bs";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";

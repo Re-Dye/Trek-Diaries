@@ -6,7 +6,9 @@ import { LocateFixed } from "lucide-react";
 import { getLocation } from "@/lib/db/actions";
 import { ReturnLocation } from "@/lib/zodSchema/dbTypes";
 
-const fetchLocation = async (locationID: string): Promise<ReturnLocation|null>  => {
+const fetchLocation = async (
+  locationID: string
+): Promise<ReturnLocation | null> => {
   try {
     const location: ReturnLocation = await getLocation(locationID);
     return location;
@@ -14,7 +16,7 @@ const fetchLocation = async (locationID: string): Promise<ReturnLocation|null>  
     console.error(error);
     return null;
   }
-}
+};
 
 export default async function LocationPage({
   params,
@@ -25,7 +27,7 @@ export default async function LocationPage({
   const data = await fetchLocation(locationID);
 
   if (!data) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -46,7 +48,7 @@ export default async function LocationPage({
           </div>
         </div>
         <div>
-          <Posts locationId={params.id} />
+          {/* <Posts locationId={params.id} /> */}
         </div>
       </div>
       <div className="w-1/5 bg-custom_gray border mt-2"></div>
