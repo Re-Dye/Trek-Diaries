@@ -14,6 +14,7 @@ import {
 import type { Action } from "@/lib/zodSchema/followLocation";
 
 export default function ButtonFollow({ locationID }: { locationID: string }) {
+  const locationContext = useContext(LocationContext);
   const router = useRouter();
   const queryClient = useQueryClient();
   const followed = useGetFollow(locationID);
@@ -56,7 +57,8 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
         return;
       }
       if (data.status === 201) {
-        await queryClient.invalidateQueries({ queryKey: ["locations"]});
+        // await queryClient.invalidateQueries({ queryKey: ["locations"]});
+        locationContext.load();
         console.log(data.message);
         return;
       } else if (data.status === 409) {
