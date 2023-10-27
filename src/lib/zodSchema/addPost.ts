@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 import { CONSTANTS } from "@/lib/constants";
 export const addPostFormSchema = z.object({
     description: z.string().min(1, "Description is required"),

@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const locations = await getFollowedLocations(userId);
+
     return NextResponse.json(JSON.stringify(locations), { status: 200 });
   } catch (error) {
     console.error(error);

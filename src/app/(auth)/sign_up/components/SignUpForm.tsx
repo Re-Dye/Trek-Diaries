@@ -11,7 +11,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";
 import {
@@ -32,8 +32,7 @@ export default function SignUpForm() {
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const { mutate, isLoading } = useMutation({
-    mutationKey: "signUp",
+  const { mutate, isPending } = useMutation({
     mutationFn: async (data: SignupData) => {
       const res = await fetch("/api/sign_up", {
         cache: "no-store",
@@ -235,7 +234,7 @@ export default function SignUpForm() {
             </div>
 
             <div>
-              {isLoading ? (
+              {isPending ? (
                 <ButtonLoading className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 " />
               ) : (
                 <Button

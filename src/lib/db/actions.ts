@@ -246,3 +246,23 @@ export const getFollowedLocations = async (
     throw new Error(`Error in getting followed locations: ${error}`);
   }
 };
+
+export const unfollowLocation = async (data: UsersToLocations) => {
+  try {
+    const { userId, locationId } = data;
+
+    const unfollowLocation = db
+      .delete(usersToLocations)
+      .where(
+        and(
+          eq(usersToLocations.userId, sql.placeholder("userId")),
+          eq(usersToLocations.locationId, sql.placeholder("locationId"))
+        )
+      )
+      .prepare("unfollow_location");
+    await unfollowLocation.execute({ userId, locationId });
+  } catch (error) {
+    console.error("Error in unfollowing location", error);
+    throw new Error("Error in unfollowing location: " + error);
+  }
+}

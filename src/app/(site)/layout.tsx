@@ -1,13 +1,8 @@
-"use client";
 import NavBar from "./components/NavBar/NavBar";
-import Fbar from "./components/FollowedBar/Fbar";
-import React, { useEffect, useState, createContext } from "react";
-import { SessionContextValue, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import PlacetoVisit from "./components/PlacetoVisit/PlaceVisit";
-
-export const FLocationContext = createContext<Array<Location>>([]);
-export const ReloadFLocationContext = createContext<Function>(() => {});
+import Fbar from "./components/FollowedLocation/Fbar";
+import React from "react";
+import FollowedLocationProvider from "./components/FollowedLocation/FollowedLocationProvider";
+// import PlacetoVisit from "./components/PlacetoVisit/PlaceVisit";
 
 export interface Location {
   _id: string;
@@ -47,35 +42,23 @@ export interface Location {
 // }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  // const router = useRouter();
-
-  // /* Sessions is used to extract email from the users... */
-  // const session = useSession({
-  //   required: true,
-  //   onUnauthenticated() {
-  //     router.push("/login");
-  //   },
-  // });
-
-  // const [locations, updateLocations] = useFetchLocations(session);
-
   return (
     <>
       <main>
-        <div className="navbar">
-          <NavBar />
-        </div>
-        <div className="fbar">
-          <Fbar />
-        </div>
-        <div className="rbar">
-          <PlacetoVisit />
-        </div>
-        {/* <FLocationContext.Provider value={locations}>
+        <FollowedLocationProvider>
+          <div className="navbar">
+            <NavBar />
+          </div>
+          <div className="fbar">
+            <Fbar />
+          </div>
+          <div className="rbar">{/* <PlacetoVisit /> */}</div>
+          {/* <FLocationContext.Provider value={locations}>
           <ReloadFLocationContext.Provider value={updateLocations}> */}
-            {children}
+          {children}
           {/* </ReloadFLocationContext.Provider>
         </FLocationContext.Provider> */}
+        </FollowedLocationProvider>
       </main>
     </>
   );

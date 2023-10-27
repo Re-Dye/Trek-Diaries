@@ -7,9 +7,7 @@ const authSecret: string = getAuthSecret()
 
 export default withAuth(
   async function middleware(req: NextRequest) {
-    console.log('using middleware...')
     const token = await getToken({ req, secret: authSecret })
-    console.log("Auth Token: ", token)
     const isAuth = !!token
     const isAuthPage = req.nextUrl.pathname.startsWith('/login') || req.nextUrl.pathname.startsWith('/sign_up')
     if(isAuthPage){

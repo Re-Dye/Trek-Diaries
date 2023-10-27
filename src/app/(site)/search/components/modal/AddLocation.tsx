@@ -24,7 +24,7 @@ import {
 } from "@/lib/zodSchema/addLocation";
 import { Textarea } from "@/components/ui/textarea";
 import { Info } from "lucide-react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { ReturnLocation, selectLocationSchema } from "@/lib/zodSchema/dbTypes";
 
 export default function AddLocation() {
@@ -34,8 +34,7 @@ export default function AddLocation() {
 
   const router = useRouter();
 
-  const { mutate, isLoading } = useMutation({
-    mutationKey: "add_location",
+  const { mutate, isPending } = useMutation({
     mutationFn: async (data: AddLocationFormData) => {
       const res = await fetch("/api/location/add", {
         method: "POST",
@@ -178,7 +177,7 @@ export default function AddLocation() {
                 )}
               />
               <div className="flex justify-center">
-                {isLoading ? (
+                {isPending ? (
                   <ButtonLoading className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 " />
                 ) : (
                   <Button className="w-full mt-4" type="submit">

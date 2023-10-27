@@ -1,19 +1,21 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { FLocationContext, ReloadFLocationContext } from "@/app/(site)/layout";
+import { useEffect, useState, useContext } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { LocationContext } from "@/app/(site)/components/FollowedLocation/FollowedLocationProvider";
 import { Button, ButtonLoading } from "@/components/ui/button";
 import { UserMinus, UserPlus } from "lucide-react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   UsersToLocations,
   usersToLocationsSchema,
 } from "@/lib/zodSchema/dbTypes";
+import type { Action } from "@/lib/zodSchema/followLocation";
 
 export default function ButtonFollow({ locationID }: { locationID: string }) {
   const router = useRouter();
-  const reloadLocations = useContext(ReloadFLocationContext);
+  const queryClient = useQueryClient();
   const followed = useGetFollow(locationID);
 
   /* Sessions is used to extract email from the users... */
@@ -24,20 +26,20 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
     },
   });
 
-  const { mutate, isLoading } = useMutation({
-    mutationKey: "followLocation",
-    mutationFn: async () => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (action: Action) => {
       if (session.status === "authenticated") {
         const userId = session.data.user?.id;
-        const data: UsersToLocations = usersToLocationsSchema.parse(
-          { locationId: locationID, userId }
-        );
+        const data: UsersToLocations = usersToLocationsSchema.parse({
+          locationId: locationID,
+          userId,
+        });
         const res = await fetch("/api/location/follow", {
           headers: {
             "Content-Type": "application/json",
           },
           method: "POST",
-          body: JSON.stringify(data),
+          body: JSON.stringify({ ...data, action }),
         });
 
         const message: string = await res.json();
@@ -45,7 +47,7 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
         return { message, status };
       }
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data === undefined) {
         console.log("Null data received");
         alert(
@@ -54,6 +56,7 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
         return;
       }
       if (data.status === 201) {
+        await queryClient.invalidateQueries({ queryKey: ["locations"]});
         console.log(data.message);
         return;
       } else if (data.status === 409) {
@@ -78,18 +81,18 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
   });
 
   /* handleFollow handles the follow event, i.e. it adds the location id to the users location */
-  const handleToggleFollow = () => {
-    mutate();
-    reloadLocations();
+  const handleToggleFollow = (action: Action) => {
+    mutate(action);
+    // locations.load();
   };
 
   return (
     <>
-      {isLoading || session.status !== "authenticated" ? (
+      {isPending || session.status !== "authenticated" ? (
         <ButtonLoading />
       ) : !followed ? (
         <Button
-          onClick={handleToggleFollow}
+          onClick={() => handleToggleFollow("follow")}
           className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300"
         >
           Follow
@@ -97,7 +100,7 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
         </Button>
       ) : (
         <Button
-          onClick={handleToggleFollow}
+          onClick={() => handleToggleFollow("unfollow")}
           className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all ease-in-out uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300"
         >
           Unfollow
@@ -109,19 +112,25 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
 }
 
 function useGetFollow(locationID: string): boolean {
-  const locations = useContext(FLocationContext);
+  const locationContext = useContext(LocationContext);
   const [followed, setFollowed] = useState<boolean>(false);
 
   useEffect(() => {
-    for (let i = 0; i < locations.length; i++) {
-      if (locations[i]._id === locationID) {
+    if (locationContext.locations.length === 0) {
+      setFollowed(false);
+      return;
+    }
+
+    for (let i = 0; i < locationContext.locations.length; i++) {
+      if (locationContext.locations[i].locationId === locationID) {
         setFollowed(true);
         break;
       } else {
         setFollowed(false);
       }
     }
-  }, [locations]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locationContext.locations]);
 
   return followed;
 }
