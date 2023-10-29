@@ -9,6 +9,7 @@ import {
   ReturnLocation,
   ReturnUser,
   insertLocationSchema,
+  ReturnFollowedLocation,
 } from "@/lib/zodSchema/dbTypes";
 
 export const countUserByEmail = async (email: string) => {
@@ -226,7 +227,7 @@ export const followLocation = async (data: UsersToLocations) => {
 
 export const getFollowedLocations = async (
   userId: string
-): Promise<Array<UsersToLocations & { address: string }>> => {
+): Promise<Array<ReturnFollowedLocation>> => {
   try {
     const getFollowedLocations = db
       .select({

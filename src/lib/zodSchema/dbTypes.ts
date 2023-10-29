@@ -1,6 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { users, locations, posts, usersToLocations } from "@/lib/db/schema";
 import { z } from "zod";
+import { Prettify } from "../prettify";
 
 export const selectUserSchema = createSelectSchema(users);
 export const insertUserSchema = createInsertSchema(users);
@@ -16,3 +17,4 @@ export const insertPostSchema = createInsertSchema(posts);
 
 export const usersToLocationsSchema = createInsertSchema(usersToLocations);
 export type UsersToLocations = z.infer<typeof usersToLocationsSchema>;
+export type ReturnFollowedLocation = Prettify<UsersToLocations & { address: string }>;

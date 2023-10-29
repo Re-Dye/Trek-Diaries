@@ -7,13 +7,11 @@ import {
 } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import type { UsersToLocations } from "@/lib/zodSchema/dbTypes";
-import type { Prettify } from "@/lib/prettify";
+import type { ReturnFollowedLocation } from "@/lib/zodSchema/dbTypes";
 
-type Location = Prettify<UsersToLocations & { address: string }>;
 type ContextType = {
-  locations: Array<Location>;
-  setLocations: React.Dispatch<React.SetStateAction<Location[]>>;
+  locations: Array<ReturnFollowedLocation>;
+  setLocations: React.Dispatch<React.SetStateAction<ReturnFollowedLocation[]>>;
   status: "error" | "success" | "pending";
 };
 
@@ -28,7 +26,7 @@ export default function FollowedLocationProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [locations, setLocations] = useState<Array<Location>>([]);
+  const [locations, setLocations] = useState<Array<ReturnFollowedLocation>>([]);
   const session = useSession();
   // const mounted = useRef(false);
   const { data, error, status,  } = useQuery({
@@ -48,7 +46,6 @@ export default function FollowedLocationProvider({
 
       const message: string = await res.json();
       const status = res.status;
-      console.log(message, status)
       return { message, status };
       // }
     },
@@ -63,9 +60,7 @@ export default function FollowedLocationProvider({
         return;
       }
       if (data.status === 200) {
-        console.log("setting locations");
         setLocations(JSON.parse(data.message));
-        console.log(data.message);
         return;
       } else if (data.status === 400) {
         console.log(data.message);
@@ -80,6 +75,7 @@ export default function FollowedLocationProvider({
       console.log(error);
       alert("Error occured while following location. Please try again later.");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, data])
 
   const contextValue: ContextType = useMemo(

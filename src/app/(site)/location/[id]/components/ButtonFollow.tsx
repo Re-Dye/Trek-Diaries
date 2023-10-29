@@ -1,6 +1,5 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState, useContext } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { LocationContext } from "@/app/(site)/components/FollowedLocation/FollowedLocationProvider";
@@ -14,17 +13,12 @@ import {
 import type { Action } from "@/lib/zodSchema/followLocation";
 
 export default function ButtonFollow({ locationID }: { locationID: string }) {
-  const locationContext = useContext(LocationContext);
-  const router = useRouter();
   const queryClient = useQueryClient();
   const followed = useGetFollow(locationID);
 
   /* Sessions is used to extract email from the users... */
   const session = useSession({
     required: true,
-    onUnauthenticated() {
-      router.push("/login");
-    },
   });
 
   const { mutate, isPending } = useMutation({

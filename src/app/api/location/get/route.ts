@@ -1,4 +1,5 @@
 import { getFollowedLocations } from "@/lib/db/actions";
+import { ReturnFollowedLocation } from "@/lib/zodSchema/dbTypes";
 import type { ServerRuntime } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const locations = await getFollowedLocations(userId);
+    const locations: Array<ReturnFollowedLocation> = await getFollowedLocations(userId);
 
     return NextResponse.json(JSON.stringify(locations), { status: 200 });
   } catch (error) {
