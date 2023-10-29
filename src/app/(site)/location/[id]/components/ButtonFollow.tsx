@@ -57,8 +57,8 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
         return;
       }
       if (data.status === 201) {
-        // await queryClient.invalidateQueries({ queryKey: ["locations"]});
-        locationContext.load();
+        console.log("Location followed successfully, refetching locations")
+        await queryClient.refetchQueries({ queryKey: ["locations"]});
         console.log(data.message);
         return;
       } else if (data.status === 409) {
