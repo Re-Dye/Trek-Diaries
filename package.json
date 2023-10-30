@@ -12,6 +12,7 @@
     "migrations:drop": "drizzle-kit drop --config=drizzle.config.ts"
   },
   "dependencies": {
+    "@algolia/autocomplete-js": "^1.12.0",
     "@auth/drizzle-adapter": "^0.3.4",
     "@hookform/resolvers": "^3.3.2",
     "@neondatabase/serverless": "^0.6.0",
@@ -47,8 +48,6 @@
     "eslint-config-next": "13.5.6",
     "lucide": "^0.288.0",
     "lucide-react": "^0.288.0",
-    "mongodb": "^6.1.0",
-    "mongoose": "^7.6.3",
     "next": "^13.5.6",
     "next-auth": "^4.24.3",
     "next-themes": "^0.2.1",
@@ -63,7 +62,8 @@
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.11.0",
     "react-infinite-scroll-component": "^6.1.0",
-    "react-instantsearch": "^7.2.0",
+    "react-instantsearch": "^7.2.1",
+    "react-instantsearch-hooks": "^6.47.3",
     "react-select": "^5.7.7",
     "sharp": "^0.32.6",
     "tailwind-merge": "^1.14.0",

@@ -28,13 +28,11 @@ export default function FollowedLocationProvider({
 }) {
   const [locations, setLocations] = useState<Array<ReturnFollowedLocation>>([]);
   const session = useSession();
-  // const mounted = useRef(false);
   const { data, error, status,  } = useQuery({
     queryKey: ["locations"],
     queryFn: async () => {
       // if (session.status === "authenticated") {
       const userId = session.data?.user?.id;
-      console.log(userId)
 
       const res = await fetch(`/api/location/get?userId=${userId}`, {
         cache: "no-store",
