@@ -1,16 +1,15 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useEffect, useState, useContext } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { LocationContext } from "@/app/(site)/components/FollowedLocation/FollowedLocationProvider";
+import { useEffect, useState } from "react";
 import { Button, ButtonLoading } from "@/components/ui/button";
 import { UserMinus, UserPlus } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   UsersToLocations,
   usersToLocationsSchema,
 } from "@/lib/zodSchema/dbTypes";
 import type { Action } from "@/lib/zodSchema/followLocation";
+import { useLocationStore } from "@/lib/zustand/location";
 
 export default function ButtonFollow({ locationID }: { locationID: string }) {
   const queryClient = useQueryClient();
@@ -108,17 +107,18 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
 }
 
 function useGetFollow(locationID: string): boolean {
-  const locationContext = useContext(LocationContext);
+  // const locationContext = useContext(LocationContext);
+  const locations = useLocationStore((state) => state.locations);
   const [followed, setFollowed] = useState<boolean>(false);
 
   useEffect(() => {
-    if (locationContext.locations.length === 0) {
+    if (locations.length === 0) {
       setFollowed(false);
       return;
     }
 
-    for (let i = 0; i < locationContext.locations.length; i++) {
-      if (locationContext.locations[i].locationId === locationID) {
+    for (let i = 0; i < locations.length; i++) {
+      if (locations[i].locationId === locationID) {
         setFollowed(true);
         break;
       } else {
@@ -126,7 +126,7 @@ function useGetFollow(locationID: string): boolean {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locationContext.locations]);
+  }, [locations]);
 
   return followed;
 }
