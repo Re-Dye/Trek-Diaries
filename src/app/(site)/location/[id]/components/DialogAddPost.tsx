@@ -1,30 +1,41 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import RatingDropdown from "./RatingDropdown";
 import { ImagePlus } from "lucide-react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddPostFormData, addPostFormSchema } from "@/lib/zodSchema/addPost";
-import axios from "axios";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 type Props = {
   locationID: string;
   open: boolean;
   handleOpen: (open: boolean) => void;
-}
+};
 
 const DialogAddPost: FC<Props> = (props) => {
   const router = useRouter();
@@ -32,176 +43,235 @@ const DialogAddPost: FC<Props> = (props) => {
   const userId = session?.data?.user?.email;
   const form = useForm<AddPostFormData>({
     resolver: zodResolver(addPostFormSchema),
-  }); 
-  
-  const [Description, setDescription] = useState("");
-  const [TrailCondition, setTrialCondition] = useState<null | number>(0);
-  const [Weather, setWeather] = useState<null | number>(0);
-  const [Accessibility, setAccessibility] = useState<null | number>(0);
-  const [imageSrc, setImageSrc] = useState<string>();
-  const [uploadData, setUploadData] = useState();
-  const [image_URL, setImageUrl] = useState("");
-  const handleTrailConditon = (rating: number | null) => {
-    console.log("TrailCondition:", rating);
-    setTrialCondition(rating);
-  };
+  });
+  // const handleImage = (
+  //   changeEvent: React.ChangeEvent<HTMLInputElement>
+  // ): void => {
+  //   const reader = new FileReader();
+  //   reader.onload = function (onLoadEvent: ProgressEvent<FileReader>): void {
+  //     setImageSrc(onLoadEvent.target!.result as string);
+  //     setUploadData(undefined);
+  //   };
+  //   reader.readAsDataURL(changeEvent.target.files![0]);
+  // };
 
-  const handleWeather = (rating: number | null) => {
-    console.log("Weather:", rating);
-    setWeather(rating);
-  };
+  // async function handleSubmit(
+  //   event: React.FormEvent<HTMLFormElement>
+  // ): Promise<void> {
+  //   event.preventDefault();
 
-  const handleAccessiblity = (rating: number | null) => {
-    console.log("Accessibility: ", rating);
-    setAccessibility(rating);
-  };
+  //   const form = event.currentTarget;
+  //   const fileInput = Array.from(form.elements).find((element: Element) => {
+  //     return (element as HTMLInputElement).name === "file";
+  //   }) as HTMLInputElement;
 
-  const handleImage = (
-    changeEvent: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const reader = new FileReader();
-    reader.onload = function (onLoadEvent: ProgressEvent<FileReader>): void {
-      setImageSrc(onLoadEvent.target!.result as string);
-      setUploadData(undefined);
-    };
-    reader.readAsDataURL(changeEvent.target.files![0]);
-  };
+  //   const formData = new FormData();
+  //   for (const file of Array.from(fileInput.files!)) {
+  //     formData.append("file", file);
+  //   }
 
-  async function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> {
-    event.preventDefault();
+  //   formData.append("upload_preset", "Trek-Diaries");
 
-    const form = event.currentTarget;
-    const fileInput = Array.from(form.elements).find((element: Element) => {
-      return (element as HTMLInputElement).name === "file";
-    }) as HTMLInputElement;
-
-    const formData = new FormData();
-    for (const file of Array.from(fileInput.files!)) {
-      formData.append("file", file);
-    }
-
-    formData.append("upload_preset", "Trek-Diaries");
-
-    const data: { secure_url: string } = await fetch(
-      "https://api.cloudinary.com/v1_1/dkid8h6ss/image/upload",
-      {
-        method: "POST",
-        body: formData,
-        cache: "no-store",
-      }
-    ).then((r) => r.json());
-    console.log(data.secure_url);
-    setImageUrl(data.secure_url);
-  }
+  //   const data: { secure_url: string } = await fetch(
+  //     "https://api.cloudinary.com/v1_1/dkid8h6ss/image/upload",
+  //     {
+  //       method: "POST",
+  //       body: formData,
+  //       cache: "no-store",
+  //     }
+  //   ).then((r) => r.json());
+  //   console.log(data.secure_url);
+  //   setImageUrl(data.secure_url);
+  // }
 
   /* handleCreatePost triggers an event which passes data to the add_post api */
-  const handleCreatePost = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    try {
-      //checking for Image from cloudinary......
-      console.log(`checking URL from cloudinary....: ${image_URL}`);
-      console.log(`checking user Mail....: ${userId}`);
+  // const handleCreatePost = async (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   try {
+  //     //checking for Image from cloudinary......
+  //     console.log(`checking URL from cloudinary....: ${image_URL}`);
+  //     console.log(`checking user Mail....: ${userId}`);
 
-      // setting overall Rating....
-      const finalRating: number =
-        ((Weather ?? 0) + (Accessibility ?? 0) + (TrailCondition ?? 0)) / 3;
-      const overallScore: number = Math.round(finalRating * 100) / 100;
+  //     // setting overall Rating....
+  //     const finalRating: number =
+  //       ((Weather ?? 0) + (Accessibility ?? 0) + (TrailCondition ?? 0)) / 3;
+  //     const overallScore: number = Math.round(finalRating * 100) / 100;
 
-      console.log(
-        Weather,
-        Accessibility,
-        TrailCondition,
-        finalRating,
-        overallScore
-      );
+  //     console.log(
+  //       Weather,
+  //       Accessibility,
+  //       TrailCondition,
+  //       finalRating,
+  //       overallScore
+  //     );
 
-      // calling restful API addpost
-      const { data } = await axios.post("/api/add_post", {
-        Description,
-        locationID: props.locationID,
-        image_URL,
-        userId,
-        TrailCondition,
-        Weather,
-        Accessibility,
-        overallScore,
-      });
-      if (data) {
-        console.log("Data has been sent successfully...");
-        router.push(`/location/${props.locationID}`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  //     // calling restful API addpost
+  //     const { data } = await axios.post("/api/add_post", {
+  //       Description,
+  //       locationID: props.locationID,
+  //       image_URL,
+  //       userId,
+  //       TrailCondition,
+  //       Weather,
+  //       Accessibility,
+  //       overallScore,
+  //     });
+  //     if (data) {
+  //       console.log("Data has been sent successfully...");
+  //       router.push(`/location/${props.locationID}`);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const onAddPost: SubmitHandler<AddPostFormData> = async (data) => {
+    console.log(data);
   };
 
   return (
     <Dialog onOpenChange={props.handleOpen} open={props.open}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add Post</DialogTitle>
-            </DialogHeader>
-            <form
-          onSubmit={handleSubmit}
-          className="flex gap-4 justify-center items-center"
-        >
-          <div>
-            <Input
-              className="h-8"
-              type="file"
-              name="file"
-              onChange={handleImage}
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Add Post</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onAddPost)}>
+            <div className="flex space-x-3 my-3">
+              {form.formState.errors.image && (
+                <p className="text-red-600 font-medium">
+                  {form.formState.errors.image.message}
+                </p>
+              )}
+              <Label>Select picture to upload</Label>
+
+              <Input
+                // {...field}
+                className="h-8"
+                type="file"
+                accept=".jpeg, .png, .jpg, .webp"
+                onChange={(event) => {
+                  console.log(event.target.files);
+                  if (event.target.files) {
+                    form.setValue("image", event.target.files[0]);
+                  }
+                }}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      name="text"
+                      placeholder="Description of the post (required...)"
+                      className="shadow-md border-2 my-5"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="flex-row space-y-2">
-            <Button type="submit" className="gap-2 hover:bg-slate-500">
-              {" "}
-              Add Image <ImagePlus className="w-5 h-5" />
+
+            <FormField
+              control={form.control}
+              name="trial_condition"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Trial Condition</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a rating" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1">★ (Poor)</SelectItem>
+                        <SelectItem value="2">★★ (Average)</SelectItem>
+                        <SelectItem value="3">★★★ (Good)</SelectItem>
+                        <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
+                        <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="weather"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Weather</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a rating" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1">★ (Poor)</SelectItem>
+                        <SelectItem value="2">★★ (Average)</SelectItem>
+                        <SelectItem value="3">★★★ (Good)</SelectItem>
+                        <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
+                        <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="accessibility"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Accessibility</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a rating" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1">★ (Poor)</SelectItem>
+                        <SelectItem value="2">★★ (Average)</SelectItem>
+                        <SelectItem value="3">★★★ (Good)</SelectItem>
+                        <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
+                        <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <Button className=" hover:bg-slate-500 w-44" type="submit">
+              Create Post
             </Button>
-          </div>
-        </form>
-        <form className="flex-row justify-center items-center space-y-6">
-          <Textarea
-            name="text"
-            id="description"
-            placeholder="Description of the post (required...)"
-            className="shadow-md border-2"
-            value={Description}
-            onChange={(e) => setDescription(e.target.value)} // setting value of Description
-          />
-          <div className="flex justify-between">
-            <div className="space-y-1">
-              <h3 className="text-sm">Trial Condition</h3>
-              <RatingDropdown onRatingSelect={handleTrailConditon} />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-sm">Weather</h3>
-              <RatingDropdown onRatingSelect={handleWeather} />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-sm">Accessibility</h3>
-              <RatingDropdown onRatingSelect={handleAccessiblity} />
-            </div>
-          </div>
-          <Button
-            className=" hover:bg-slate-500 w-44"
-            onClick={(e) => handleCreatePost(e)}
-          >
-            Create Post
-          </Button>
-        </form>
-            <DialogFooter className="sm:justify-start">
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">
-                  Close
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-  )
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
 };
 
 export default DialogAddPost;

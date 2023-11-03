@@ -4,6 +4,6 @@ export const CONSTANTS = {
   MAX_PASSWORD_LENGTH: 30,
   MIN_DESCRIPTION_WORDS: 30,
   MAX_DESCRIPTION_WORDS: 150,
-  MAX_IMAGE_SIZE: 500000,
+  MAX_IMAGE_SIZE: 5*1024*1024,
   ACCEPTED_IMAGE_TYPES: ["image/jpeg", "image/jpg", "image/png", "image/webp"],
 };
