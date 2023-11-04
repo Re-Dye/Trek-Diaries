@@ -27,11 +27,6 @@ export const addPostFormSchema = z.object({
       (file) => CONSTANTS.ACCEPTED_IMAGE_TYPES.includes(file.type),
       "Only .jpg, .jpeg, .png and .webp formats are supported."
     ),
-    // .refine((file) => file?.size <= CONSTANTS.MAX_IMAGE_SIZE, `Max image size is 5MB.`)
-    // .refine(
-    //   (file) => CONSTANTS.ACCEPTED_IMAGE_TYPES.includes(file?.type),
-    //   "Only .jpg, .jpeg, .png and .webp formats are supported."
-    // ).optional(),
 });
 
 export type AddPostFormData = z.infer<typeof addPostFormSchema>;

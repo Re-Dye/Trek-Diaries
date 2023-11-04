@@ -28,22 +28,32 @@ export const users = pgTable(
   })
 );
 
-export const locations = pgTable(
-  "locations",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    address: text("address").notNull().unique(),
-    registered_time: timestamp("registered_time", { mode: "string" }).defaultNow().notNull(),
-    description: text("description").notNull(),
-  }
-);
+export const locations = pgTable("locations", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  address: text("address").notNull().unique(),
+  registered_time: timestamp("registered_time", { mode: "string" })
+    .defaultNow()
+    .notNull(),
+  description: text("description").notNull(),
+});
 
 export const posts = pgTable("posts", {
   id: uuid("id").defaultRandom().primaryKey(),
-  registered_time: timestamp("registered_time", { mode: "string" }).defaultNow().notNull(),
+  registered_time: timestamp("registered_time", { mode: "string" })
+    .defaultNow()
+    .notNull(),
   description: text("description").notNull(),
+  trail_condition: integer("trail_condition").notNull(),
+  weather: integer("weather").notNull(),
+  accessibility: integer("accessibility").notNull(),
   picture_url: text("picture_url").notNull(),
   likes_count: integer("likes_count").notNull(),
+  location_id: uuid("location_id").references(() => locations.id, {
+    onDelete: "cascade",
+  }),
+  owner_id: text("owner_id").references(() => users.id, {
+    onDelete: "cascade",
+  }),
 });
 
 export const comments = pgTable(
@@ -56,7 +66,9 @@ export const comments = pgTable(
       onDelete: "cascade",
     }),
     content: text("content").notNull(),
-    registered_time: timestamp("registered_time", { mode: "string" }).defaultNow().notNull(),
+    registered_time: timestamp("registered_time", { mode: "string" })
+      .defaultNow()
+      .notNull(),
   },
   (comments) => ({
     pk: primaryKey(comments.user_id, comments.post_id),
@@ -66,13 +78,26 @@ export const comments = pgTable(
 export const usersToLocations = pgTable(
   "users_to_locations",
   {
-    userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    locationId: uuid("location_id").notNull().references(() => locations.id, {
-      onDelete: "cascade",
-    }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    locationId: uuid("location_id")
+      .notNull()
+      .references(() => locations.id, {
+        onDelete: "cascade",
+      }),
   },
   (usersToLocations) => ({
     pk: primaryKey(usersToLocations.userId, usersToLocations.locationId),
     userIdIdx: index("user_id_idx").on(usersToLocations.userId),
   })
 );
+
+export const usersLikePosts = pgTable("users_like_posts", {
+  user_id: text("user_id").references(() => users.id, {
+    onDelete: "cascade",
+  }),
+  post_id: uuid("post_id").references(() => posts.id, {
+    onDelete: "cascade",
+  }),
+});
