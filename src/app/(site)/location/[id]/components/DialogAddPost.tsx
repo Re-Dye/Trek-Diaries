@@ -1,15 +1,15 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ImagePlus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Image from "next/image";
 
-import { FC } from "react";
+import { ChangeEvent, ChangeEventHandler, FC, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -44,16 +44,7 @@ const DialogAddPost: FC<Props> = (props) => {
   const form = useForm<AddPostFormData>({
     resolver: zodResolver(addPostFormSchema),
   });
-  // const handleImage = (
-  //   changeEvent: React.ChangeEvent<HTMLInputElement>
-  // ): void => {
-  //   const reader = new FileReader();
-  //   reader.onload = function (onLoadEvent: ProgressEvent<FileReader>): void {
-  //     setImageSrc(onLoadEvent.target!.result as string);
-  //     setUploadData(undefined);
-  //   };
-  //   reader.readAsDataURL(changeEvent.target.files![0]);
-  // };
+  const [previewImageURL, setPreviewImageURL] = useState<string | null>(null);
 
   // async function handleSubmit(
   //   event: React.FormEvent<HTMLFormElement>
@@ -124,6 +115,12 @@ const DialogAddPost: FC<Props> = (props) => {
   //     console.log(error);
   //   }
   // };
+  const handleImage: ChangeEventHandler<HTMLInputElement> = (event) => {
+    if (event.target.files) {
+      form.setValue("image", event.target.files[0]);
+      setPreviewImageURL(URL.createObjectURL(event.target.files[0]));
+    }
+  };
 
   const onAddPost: SubmitHandler<AddPostFormData> = async (data) => {
     console.log(data);
@@ -150,13 +147,18 @@ const DialogAddPost: FC<Props> = (props) => {
                 className="h-8"
                 type="file"
                 accept=".jpeg, .png, .jpg, .webp"
-                onChange={(event) => {
-                  console.log(event.target.files);
-                  if (event.target.files) {
-                    form.setValue("image", event.target.files[0]);
-                  }
-                }}
+                onChange={handleImage}
               />
+              {previewImageURL && (
+                <>
+                  <Image
+                    src={previewImageURL}
+                    alt="preview"
+                    width={300}
+                    height={300}
+                  />
+                </>
+              )}
             </div>
 
             <FormField
