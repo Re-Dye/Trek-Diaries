@@ -47,7 +47,7 @@ export const posts = pgTable("posts", {
   weather: integer("weather").notNull(),
   accessibility: integer("accessibility").notNull(),
   picture_url: text("picture_url").notNull(),
-  likes_count: integer("likes_count").notNull(),
+  likes_count: integer("likes_count").notNull().default(0),
   location_id: uuid("location_id").references(() => locations.id, {
     onDelete: "cascade",
   }),

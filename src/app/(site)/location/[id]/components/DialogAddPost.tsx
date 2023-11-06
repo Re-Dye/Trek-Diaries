@@ -9,12 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 
-import { ChangeEvent, ChangeEventHandler, FC, useState } from "react";
-import { useRouter } from "next/navigation";
+import { ChangeEventHandler, FC, useState } from "react";
 import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AddPostFormData, addPostFormSchema } from "@/lib/zodSchema/addPost";
+import { AddPostFormData, AddPostRequestData, addPostFormSchema } from "@/lib/zodSchema/addPost";
 import {
   Form,
   FormControl,
@@ -30,6 +29,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { useMutation } from "@tanstack/react-query";
+import { getCloudinaryApiKey, getCloudinaryName } from "@/lib/secrets";
+import { signImage, signature, Signature } from "@/lib/zodSchema/signImage";
+import { InsertPost } from "@/lib/zodSchema/dbTypes";
 
 type Props = {
   locationID: string;
@@ -38,83 +41,104 @@ type Props = {
 };
 
 const DialogAddPost: FC<Props> = (props) => {
-  const router = useRouter();
   const session = useSession({ required: true });
   const userId = session?.data?.user?.email;
   const form = useForm<AddPostFormData>({
     resolver: zodResolver(addPostFormSchema),
   });
+
   const [previewImageURL, setPreviewImageURL] = useState<string | null>(null);
+  const { mutate } = useMutation({
+    mutationFn: async (data: AddPostFormData) => {
+      let sign: string = "";
+      let timestamp: number = 0;
+      let imageUrl: string = "";
 
-  // async function handleSubmit(
-  //   event: React.FormEvent<HTMLFormElement>
-  // ): Promise<void> {
-  //   event.preventDefault();
+      /* check if user is logged in */
+      if (!session.data) {
+        alert(`You must be logged in to add a post.`);
+        return;
+      }
 
-  //   const form = event.currentTarget;
-  //   const fileInput = Array.from(form.elements).find((element: Element) => {
-  //     return (element as HTMLInputElement).name === "file";
-  //   }) as HTMLInputElement;
+      /* get signature of image to upload */
+      try {
+        const req = signImage.parse({
+          size: data.image.size,
+          type: data.image.type,
+        })
+        const res = await fetch("/api/sign_image", {
+          cache: "no-store",
+          method: "POST",
+          body: JSON.stringify(req),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const message: string =  await res.json();
+        const status: number = res.status;
 
-  //   const formData = new FormData();
-  //   for (const file of Array.from(fileInput.files!)) {
-  //     formData.append("file", file);
-  //   }
+        if (status === 201) {
+          const temp: Signature = signature.parse(JSON.parse(message));
+          sign = temp.signature;
+          timestamp = temp.timestamp;
+        } else if (status === 400) {
+          alert(`Invalid Request. Please try again later with proper information.`);
+          return;
+        } else {
+          alert(`Error occured while signing image. Please try again later.`);
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+        alert(`Error occured while signing image. Please try again later.`);
+        return;
+      }
 
-  //   formData.append("upload_preset", "Trek-Diaries");
+      /* upload image to cloudinary */
+      // try {
+      //   const cloudinaryName = getCloudinaryName();
+      //   const cloudinaryApiKey = getCloudinaryApiKey();
+      //   const res = await fetch(
+      //     `https://api.cloudinary.com/v1_1/${cloudinaryName}/image/upload?api_key=${cloudinaryApiKey}&signature=${signature}&timestamp=${timestamp}`,
+      //     {
+      //       cache: "no-store",
+      //       method: "POST",
+      //       body: data.image,
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //     }
+      //   );
+      //   const { secure_url } = await res.json();
+      //   imageUrl = secure_url;
+      //   console.log(imageUrl);
+      // } catch (error) {
+      //   console.log(error);
+      //   alert(`Error occured while uploading image. Please try again later.`);
+      //   return;
+      // }
 
-  //   const data: { secure_url: string } = await fetch(
-  //     "https://api.cloudinary.com/v1_1/dkid8h6ss/image/upload",
-  //     {
-  //       method: "POST",
-  //       body: formData,
-  //       cache: "no-store",
-  //     }
-  //   ).then((r) => r.json());
-  //   console.log(data.secure_url);
-  //   setImageUrl(data.secure_url);
-  // }
+      // const req: AddPostRequestData = {
+      //   description: data.description,
+      //   accessibility: +data.accessibility,
+      //   image_url: imageUrl,
+      //   location_id: props.locationID,
+      //   trail_condition: +data.trail_condition,
+      //   weather: +data.weather,
+      //   owner_id: session.data.user.id,
+      // }
 
-  /* handleCreatePost triggers an event which passes data to the add_post api */
-  // const handleCreatePost = async (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  //   try {
-  //     //checking for Image from cloudinary......
-  //     console.log(`checking URL from cloudinary....: ${image_URL}`);
-  //     console.log(`checking user Mail....: ${userId}`);
+      // const res = await fetch("/api/location/post", {
+      //   cache: "no-store",
+      //   method: "POST",
+      //   body: JSON.stringify(req),
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+    },
+  });
 
-  //     // setting overall Rating....
-  //     const finalRating: number =
-  //       ((Weather ?? 0) + (Accessibility ?? 0) + (TrailCondition ?? 0)) / 3;
-  //     const overallScore: number = Math.round(finalRating * 100) / 100;
-
-  //     console.log(
-  //       Weather,
-  //       Accessibility,
-  //       TrailCondition,
-  //       finalRating,
-  //       overallScore
-  //     );
-
-  //     // calling restful API addpost
-  //     const { data } = await axios.post("/api/add_post", {
-  //       Description,
-  //       locationID: props.locationID,
-  //       image_URL,
-  //       userId,
-  //       TrailCondition,
-  //       Weather,
-  //       Accessibility,
-  //       overallScore,
-  //     });
-  //     if (data) {
-  //       console.log("Data has been sent successfully...");
-  //       router.push(`/location/${props.locationID}`);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const handleImage: ChangeEventHandler<HTMLInputElement> = (event) => {
     if (event.target.files) {
       form.setValue("image", event.target.files[0]);
@@ -122,9 +146,7 @@ const DialogAddPost: FC<Props> = (props) => {
     }
   };
 
-  const onAddPost: SubmitHandler<AddPostFormData> = async (data) => {
-    console.log(data);
-  };
+  const onAddPost: SubmitHandler<AddPostFormData> = (data) => mutate(data);
 
   return (
     <Dialog onOpenChange={props.handleOpen} open={props.open}>
@@ -181,7 +203,7 @@ const DialogAddPost: FC<Props> = (props) => {
 
             <FormField
               control={form.control}
-              name="trial_condition"
+              name="trail_condition"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Trial Condition</FormLabel>

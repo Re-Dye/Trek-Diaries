@@ -18,3 +18,6 @@ export const insertPostSchema = createInsertSchema(posts);
 export const usersToLocationsSchema = createInsertSchema(usersToLocations);
 export type UsersToLocations = z.infer<typeof usersToLocationsSchema>;
 export type ReturnFollowedLocation = Prettify<UsersToLocations & { address: string }>;
+
+export const postSchema = createInsertSchema(posts);
+export type InsertPost = z.infer<typeof postSchema>;
