@@ -13,7 +13,11 @@ import { ChangeEventHandler, FC, useState } from "react";
 import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AddPostFormData, AddPostRequestData, addPostFormSchema } from "@/lib/zodSchema/addPost";
+import {
+  AddPostFormData,
+  AddPostRequestData,
+  addPostFormSchema,
+} from "@/lib/zodSchema/addPost";
 import {
   Form,
   FormControl,
@@ -65,7 +69,7 @@ const DialogAddPost: FC<Props> = (props) => {
         const req = signImage.parse({
           size: data.image.size,
           type: data.image.type,
-        })
+        });
         const res = await fetch("/api/sign_image", {
           cache: "no-store",
           method: "POST",
@@ -74,7 +78,7 @@ const DialogAddPost: FC<Props> = (props) => {
             "Content-Type": "application/json",
           },
         });
-        const message: string =  await res.json();
+        const message: string = await res.json();
         const status: number = res.status;
 
         if (status === 201) {
@@ -82,7 +86,9 @@ const DialogAddPost: FC<Props> = (props) => {
           sign = temp.signature;
           timestamp = temp.timestamp;
         } else if (status === 400) {
-          alert(`Invalid Request. Please try again later with proper information.`);
+          alert(
+            `Invalid Request. Please try again later with proper information.`
+          );
           return;
         } else {
           alert(`Error occured while signing image. Please try again later.`);
@@ -152,35 +158,39 @@ const DialogAddPost: FC<Props> = (props) => {
     <Dialog onOpenChange={props.handleOpen} open={props.open}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Post</DialogTitle>
+          <DialogTitle className="text-2xl m-auto flex justify-center align-center tracking-wider ">ADD POST</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onAddPost)}>
-            <div className="flex space-x-3 my-3">
+            <div className="flex-row space-x-3 items-center justify-center">
               {form.formState.errors.image && (
                 <p className="text-red-600 font-medium">
                   {form.formState.errors.image.message}
                 </p>
               )}
-              <Label>Select picture to upload</Label>
+              <div>
+                <Label>Select picture to upload</Label>
 
-              <Input
-                // {...field}
-                className="h-8"
-                type="file"
-                accept=".jpeg, .png, .jpg, .webp"
-                onChange={handleImage}
-              />
-              {previewImageURL && (
-                <>
-                  <Image
-                    src={previewImageURL}
-                    alt="preview"
-                    width={300}
-                    height={300}
-                  />
-                </>
-              )}
+                <Input
+                  // {...field}
+                  className="h-8"
+                  type="file"
+                  accept=".jpeg, .png, .jpg, .webp"
+                  onChange={handleImage}
+                />
+              </div>
+              <div className="m-3">
+                {previewImageURL && (
+                  <>
+                    <Image
+                      src={previewImageURL}
+                      alt="preview"
+                      width={300}
+                      height={300}
+                    />
+                  </>
+                )}
+              </div>
             </div>
 
             <FormField
@@ -287,10 +297,11 @@ const DialogAddPost: FC<Props> = (props) => {
                 </FormItem>
               )}
             />
-
-            <Button className=" hover:bg-slate-500 w-44" type="submit">
+            <div className="m-4">
+            <Button className=" hover:bg-slate-500 w-44 m-auto flex align-center justify-center" type="submit">
               Create Post
             </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>
