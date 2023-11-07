@@ -84,12 +84,12 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/2 h-full flex items-center mx-4 sm:mx-8 md:mx-16 lg:mx-20 xl:mx-24">
-      <div className="flex absolute top-6 right-8 sm:top-7 sm:right-10 md:top-9 md:right-20 lg:top-12 lg:right-24 xl:top-14 xl:right-28">
+    <div className="sm:w-64 md:w-72 lg:w-80">
+      <div className="flex absolute top-12 right-8 sm:top-8 sm:right-12 md:right-20 lg:right-24 xl:top-14 xl:right-28">
         <ModeToggle />
       </div>
       <div className="w-full p-4 sm:p-2 justify-center">
-        <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-5xl xl:text-6xl font-bold text-blue-500 ">
+        <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-3xl xl:text-4xl font-bold text-blue-500 ">
           Sign Up
         </h2>
 
@@ -239,7 +239,7 @@ export default function SignUpForm() {
               ) : (
                 <Button
                   variant="outline"
-                  className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 "
+                  className=" btn mt-3 px-3 py-2 h-8 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 xl:h-10 "
                   type="submit"
                 >
                   Sign Up

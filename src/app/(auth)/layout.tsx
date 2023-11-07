@@ -7,8 +7,8 @@ export default async function Layout({ children }: { children: React.ReactNode }
     return (
     <>
       <main>
-        <div className="h-screen flex flex-row sm:flex-row md:flex-row lg:flex-row xl:flex-row ">
-          <div className="relative w-full sm:h-full md:h-full lg:h-full xl:h-full  border-0 shadow-black shadow-xl rounded-r-3xl">
+        <div className="h-screen flex">
+          <div className="relative w-3/4 sm:w-full border-0 shadow-black shadow-xl rounded-r-3xl">
             <Image
               className="object-cover w-full h-full"
               loading="lazy"
@@ -19,7 +19,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
               fill
             />
           </div>
+          <div className="flex w-full md:w-3/4 lg:w-1/2 justify-center items-center">
           { children }
+          </div>
         </div>
       </main>
     </>
