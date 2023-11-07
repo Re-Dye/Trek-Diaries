@@ -1,74 +1,132 @@
-"use client"
+"use client";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react"
-import { FLocationContext, ReloadFLocationContext } from "@/app/(site)/layout";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { Button, ButtonLoading } from "@/components/ui/button";
 import { UserMinus, UserPlus } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  UsersToLocations,
+  usersToLocationsSchema,
+} from "@/lib/zodSchema/dbTypes";
+import type { Action } from "@/lib/zodSchema/followLocation";
+import { useLocationStore } from "@/lib/zustand/location";
 
-export default function ButtonFollow({ locationID }: { locationID: string}) {
-    const router = useRouter();
-    const reloadLocations = useContext(ReloadFLocationContext)
-    const followed = useGetFollow(locationID)
+export default function ButtonFollow({ locationID }: { locationID: string }) {
+  const queryClient = useQueryClient();
+  const followed = useGetFollow(locationID);
 
-    /* Sessions is used to extract email from the users... */
-    const session = useSession({
-        required: true,
-        onUnauthenticated() {
-        router.push("/login");
-        },
-    });
+  /* Sessions is used to extract email from the users... */
+  const session = useSession({
+    required: true,
+  });
 
-    /* handleFollow handles the follow event, i.e. it adds the location id to the users location */
-    const handleToggleFollow = async () => {
-        const email: any = session.data?.user?.email;
-        const encodedEmail: any = encodeURI(email);
-        const encodedLocation: any = encodeURI(locationID);
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (action: Action) => {
+      if (session.status === "authenticated") {
+        const userId = session.data.user?.id;
+        const data: UsersToLocations = usersToLocationsSchema.parse({
+          locationId: locationID,
+          userId,
+        });
+        const res = await fetch("/api/location/follow", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({ ...data, action }),
+        });
 
-        try {
-            const res: Response = await fetch(
-                `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/followLocation?locationId=${encodedLocation}&email=${encodedEmail}`,
-                {
-                method: "POST",
-                cache: "no-store",
-                }
-            )
+        const message: string = await res.json();
+        const status = res.status;
+        return { message, status };
+      }
+    },
+    onSuccess: async (data) => {
+      if (data === undefined) {
+        console.log("Null data received");
+        alert(
+          "Error occured while following location. Please try again later."
+        );
+        return;
+      }
+      if (data.status === 201) {
+        console.log("Location followed successfully, refetching locations")
+        await queryClient.refetchQueries({ queryKey: ["locations"]});
+        console.log(data.message);
+        return;
+      } else if (data.status === 409) {
+        console.log(data.message);
+        alert("You are already following this location");
+      } else if (data.status === 400) {
+        console.log(data.message);
+        alert(
+          "Invalid Request. Please try again later with proper information."
+        );
+      } else {
+        console.log(data.message);
+        alert(
+          "Error occured while following location. Please try again later."
+        );
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+      alert(error);
+    },
+  });
 
-            reloadLocations()
-        } catch (error) {
-        console.log(error);
-        }
-    };
+  /* handleFollow handles the follow event, i.e. it adds the location id to the users location */
+  const handleToggleFollow = (action: Action) => {
+    mutate(action);
+    // locations.load();
+  };
 
-    return(
-        <>
-            {(!followed)?
-                <Button onClick={handleToggleFollow} className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300" >
-                    Follow<UserPlus className="w-5 h-5"/>
-                </Button>
-            :
-                <Button onClick={ handleToggleFollow } className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all ease-in-out uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300">
-                    Unfollow<UserMinus className="w-5 h-5"/>
-                </Button>
-            }
-        </>
-    )
+  return (
+    <>
+      {isPending || session.status !== "authenticated" ? (
+        <ButtonLoading />
+      ) : !followed ? (
+        <Button
+          onClick={() => handleToggleFollow("follow")}
+          className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300"
+        >
+          Follow
+          <UserPlus className="w-5 h-5" />
+        </Button>
+      ) : (
+        <Button
+          onClick={() => handleToggleFollow("unfollow")}
+          className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all ease-in-out uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300"
+        >
+          Unfollow
+          <UserMinus className="w-5 h-5" />
+        </Button>
+      )}
+    </>
+  );
 }
 
 function useGetFollow(locationID: string): boolean {
-    const locations = useContext(FLocationContext)
-    const [followed, setFollowed] = useState<boolean>(false)
+  // const locationContext = useContext(LocationContext);
+  const locations = useLocationStore((state) => state.locations);
+  const [followed, setFollowed] = useState<boolean>(false);
 
-    useEffect(() => {
-        for (let i = 0; i < locations.length; i++) {
-            if(locations[i]._id === locationID) {
-                setFollowed(true)
-                break
-            }else{
-                setFollowed(false)
-            }
-        }
-    }, [locations])
+  useEffect(() => {
+    if (locations.length === 0) {
+      setFollowed(false);
+      return;
+    }
 
-    return followed
+    for (let i = 0; i < locations.length; i++) {
+      if (locations[i].locationId === locationID) {
+        setFollowed(true);
+        break;
+      } else {
+        setFollowed(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locations]);
+
+  return followed;
 }

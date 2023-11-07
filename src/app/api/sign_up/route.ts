@@ -11,12 +11,12 @@ export async function POST(req: NextRequest) {
     const baseUrl: string = getBaseUrl();
 
     /* check if request sent is valid */
-    const { email, password, name, dob } = signupSchema.parse(
+    const data = signupSchema.parse(
       await req.json()
     );
 
     /* count users with same email */
-    const count: number = await countUserByEmail(email);
+    const count: number = await countUserByEmail(data.email);
     
     /* if email already exists */
     if (count > 0) {
@@ -34,10 +34,10 @@ export async function POST(req: NextRequest) {
     const token: string = crypto.randomBytes(32).toString("hex");
 
     /* insert user in cache for validation */
-    await cacheUser({ uuid, email, password, name, dob, token });
+    await cacheUser({ uuid, email: data.email, password: data.password, name: data.name, dob: data.dob, token });
 
     const url: string = `${baseUrl}/users/${uuid}/verify/${token}`;
-    await sendEmail({ email, subject: "Verification Mail", link: url });
+    await sendEmail({ email: data.email, subject: "Verification Mail", link: url });
 
     return NextResponse.json("User Created", { status: 201 });
   } catch (error) {

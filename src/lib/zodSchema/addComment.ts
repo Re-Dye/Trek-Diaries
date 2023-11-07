@@ -1,5 +1,4 @@
-import * as z from "zod";
-import { CONSTANTS } from "../constants";
+import { z } from "zod";
 
 export const addCommentFormSchema = z
 .object({

@@ -47,9 +47,11 @@ export default function Comment({ postId }: { postId: string }) {
   return (
     <div className="flex-row items-center rounded-2xl p-3 shadow-md space-y-4 w-full ">
       <Form {...form}>
-        <form 
+        {/* <form 
           className=" w-full flex gap-2 justify-center"
-          onSubmit={form.handleSubmit(handleComment)}>
+          onSubmit={form.handleSubmit(handleComment)}> */}
+            <form 
+          className=" w-full flex gap-2 justify-center">
         <FormField
                 control={form.control}
                 name="desc"

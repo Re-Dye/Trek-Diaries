@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
 import Link from "next/link";
-import Image from "next/image";
 
 import {
   signupFormSchema,
@@ -12,9 +10,8 @@ import {
 } from "@/lib/zodSchema/signup";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
-import bcrypt from "bcryptjs";
 
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { ModeToggle } from "@/app/(site)/components/DarkMode/Darkmode";
 import {
@@ -35,8 +32,7 @@ export default function SignUpForm() {
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const { mutate, isLoading } = useMutation({
-    mutationKey: "signUp",
+  const { mutate, isPending } = useMutation({
     mutationFn: async (data: SignupData) => {
       const res = await fetch("/api/sign_up", {
         cache: "no-store",
@@ -71,6 +67,7 @@ export default function SignUpForm() {
   });
 
   const onSignUp: SubmitHandler<SignupFormData> = async (data) => {
+    const bcrypt = (await import("bcryptjs")).default;
     const salt = await bcrypt.genSalt(10);
     const res: SignupData = {
       name: `${data.firstName} ${data.lastName}`,
@@ -237,7 +234,7 @@ export default function SignUpForm() {
             </div>
 
             <div>
-              {isLoading ? (
+              {isPending ? (
                 <ButtonLoading className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 " />
               ) : (
                 <Button

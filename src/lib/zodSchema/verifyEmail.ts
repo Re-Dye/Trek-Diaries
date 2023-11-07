@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 export const verifyEmailSchema = z.object({
   id: z.string().length(36),

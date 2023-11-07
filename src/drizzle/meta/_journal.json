@@ -57,6 +57,20 @@
       "when": 1697544288975,
       "tag": "0007_superb_jane_foster",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1697809725309,
+      "tag": "0008_secret_stone_men",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1699085171641,
+      "tag": "0009_silly_pride",
+      "breakpoints": true
     }
   ]
 }
