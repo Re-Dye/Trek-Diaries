@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLoading } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
@@ -34,7 +34,11 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
-import { getCloudinaryApiKey, getCloudinaryFolderName, getCloudinaryName } from "@/lib/secrets";
+import {
+  getCloudinaryApiKey,
+  getCloudinaryFolderName,
+  getCloudinaryName,
+} from "@/lib/secrets";
 import { signImage, signature, Signature } from "@/lib/zodSchema/signImage";
 import { InsertPost } from "@/lib/zodSchema/dbTypes";
 
@@ -52,7 +56,7 @@ const DialogAddPost: FC<Props> = (props) => {
   });
 
   const [previewImageURL, setPreviewImageURL] = useState<string | null>(null);
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (data: AddPostFormData) => {
       let sign: string = "";
       let timestamp: number = 0;
@@ -115,7 +119,7 @@ const DialogAddPost: FC<Props> = (props) => {
           {
             cache: "no-store",
             method: "POST",
-            body: formData
+            body: formData,
           }
         );
         const { secure_url } = await res.json();
@@ -127,24 +131,50 @@ const DialogAddPost: FC<Props> = (props) => {
         return;
       }
 
-    //   const req: AddPostRequestData = {
-    //     description: data.description,
-    //     accessibility: +data.accessibility,
-    //     image_url: imageUrl,
-    //     location_id: props.locationID,
-    //     trail_condition: +data.trail_condition,
-    //     weather: +data.weather,
-    //     owner_id: session.data.user.id,
-    //   }
+      const req: AddPostRequestData = {
+        description: data.description,
+        accessibility: +data.accessibility,
+        image_url: imageUrl,
+        location_id: props.locationID,
+        trail_condition: +data.trail_condition,
+        weather: +data.weather,
+        owner_id: session.data.user.id,
+      };
 
-    //   const res = await fetch("/api/location/post", {
-    //     cache: "no-store",
-    //     method: "POST",
-    //     body: JSON.stringify(req),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
+      const res = await fetch("/api/location/post", {
+        cache: "no-store",
+        method: "POST",
+        body: JSON.stringify(req),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const message: string = await res.json();
+      const status: number = res.status;
+      return { message, status };
+    },
+    onSuccess: (data) => {
+      if (data === undefined) {
+        alert(`Error occured while adding post. Please try again later.`);
+        return;
+      }
+
+      if (data.status === 201) {
+        alert(`Post added successfully.`);
+        props.handleOpen(false);
+        form.reset();
+      } else if (data.status === 400) {
+        alert(
+          `Invalid Request. Please try again later with proper information.`
+        );
+      } else {
+        alert(`Error occured while adding post. Please try again later.`);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+      alert(`Error occured while adding post. Please try again later.`);
     },
   });
 
@@ -158,10 +188,12 @@ const DialogAddPost: FC<Props> = (props) => {
   const onAddPost: SubmitHandler<AddPostFormData> = (data) => mutate(data);
 
   return (
-    <Dialog onOpenChange={props.handleOpen} open={props.open} >
+    <Dialog onOpenChange={props.handleOpen} open={props.open}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl m-auto flex justify-center align-center tracking-wider ">ADD POST</DialogTitle>
+          <DialogTitle className="text-2xl m-auto flex justify-center align-center tracking-wider ">
+            ADD POST
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onAddPost)}>
@@ -301,9 +333,16 @@ const DialogAddPost: FC<Props> = (props) => {
               )}
             />
             <div className="m-4">
-            <Button className=" hover:bg-slate-500 w-44 m-auto flex align-center justify-center" type="submit">
-              Create Post
-            </Button>
+              {isPending ? (
+                <ButtonLoading className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 " />
+              ) : (
+                <Button
+                  className=" hover:bg-slate-500 w-44 m-auto flex align-center justify-center"
+                  type="submit"
+                >
+                  Create Post
+                </Button>
+              )}
             </div>
           </form>
         </Form>

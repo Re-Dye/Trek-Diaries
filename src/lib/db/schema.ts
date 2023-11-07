@@ -48,10 +48,10 @@ export const posts = pgTable("posts", {
   accessibility: integer("accessibility").notNull(),
   picture_url: text("picture_url").notNull(),
   likes_count: integer("likes_count").notNull().default(0),
-  location_id: uuid("location_id").references(() => locations.id, {
+  location_id: uuid("location_id").notNull().references(() => locations.id, {
     onDelete: "cascade",
   }),
-  owner_id: text("owner_id").references(() => users.id, {
+  owner_id: text("owner_id").notNull().references(() => users.id, {
     onDelete: "cascade",
   }),
 });

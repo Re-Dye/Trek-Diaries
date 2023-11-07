@@ -1,5 +1,5 @@
 import { db } from "@/lib/db/db";
-import { users, locations, usersToLocations } from "@/lib/db/schema";
+import { users, locations, usersToLocations, posts } from "@/lib/db/schema";
 import { eq, sql, and } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
@@ -10,6 +10,7 @@ import {
   ReturnUser,
   insertLocationSchema,
   ReturnFollowedLocation,
+  InsertPost,
 } from "@/lib/zodSchema/dbTypes";
 
 export const countUserByEmail = async (email: string) => {
@@ -265,5 +266,35 @@ export const unfollowLocation = async (data: UsersToLocations) => {
   } catch (error) {
     console.error("Error in unfollowing location", error);
     throw new Error("Error in unfollowing location: " + error);
+  }
+}
+
+export const addPost = async (data: InsertPost) => {
+  try {
+    const { accessibility, description, picture_url, trail_condition, weather, location_id, owner_id } = data;
+    const addPost = db
+      .insert(posts)
+      .values({
+        accessibility: sql.placeholder("accessibility"),
+        description: sql.placeholder("description"),
+        picture_url: sql.placeholder("picture_url"),
+        trail_condition: sql.placeholder("trail_condition"),
+        weather: sql.placeholder("weather"),
+        location_id: sql.placeholder("location_id"),
+        owner_id: sql.placeholder("owner_id"),
+      })
+      .prepare("add_post");
+    await addPost.execute({ 
+      accessibility, 
+      description, 
+      picture_url, 
+      trail_condition, 
+      weather, 
+      location_id, 
+      owner_id
+     });
+  } catch (error) {
+    console.error("Error in adding post", error);
+    throw new Error("Error in adding post: " + error);
   }
 }
