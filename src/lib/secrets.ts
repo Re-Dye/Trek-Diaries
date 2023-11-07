@@ -119,3 +119,15 @@ export const getCloudinaryApiSecret = (): string => {
 
   return secret;
 };
+
+export const getCloudinaryFolderName = (): string => {
+  const secret = process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER_NAME;
+
+  if (!secret || secret.length === 0) {
+    throw new Error(
+      "The environment variable NEXT_PUBLIC_CLOUDINARY_FOLDER_NAME is not set."
+    );
+  }
+
+  return secret;
+};

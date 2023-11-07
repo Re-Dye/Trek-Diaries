@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
-import { getCloudinaryApiKey, getCloudinaryName } from "@/lib/secrets";
+import { getCloudinaryApiKey, getCloudinaryFolderName, getCloudinaryName } from "@/lib/secrets";
 import { signImage, signature, Signature } from "@/lib/zodSchema/signImage";
 import { InsertPost } from "@/lib/zodSchema/dbTypes";
 
@@ -101,47 +101,50 @@ const DialogAddPost: FC<Props> = (props) => {
       }
 
       /* upload image to cloudinary */
-      // try {
-      //   const cloudinaryName = getCloudinaryName();
-      //   const cloudinaryApiKey = getCloudinaryApiKey();
-      //   const res = await fetch(
-      //     `https://api.cloudinary.com/v1_1/${cloudinaryName}/image/upload?api_key=${cloudinaryApiKey}&signature=${signature}&timestamp=${timestamp}`,
-      //     {
-      //       cache: "no-store",
-      //       method: "POST",
-      //       body: data.image,
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //     }
-      //   );
-      //   const { secure_url } = await res.json();
-      //   imageUrl = secure_url;
-      //   console.log(imageUrl);
-      // } catch (error) {
-      //   console.log(error);
-      //   alert(`Error occured while uploading image. Please try again later.`);
-      //   return;
-      // }
+      try {
+        const cloudinaryName = getCloudinaryName();
+        const cloudinaryApiKey = getCloudinaryApiKey();
+        const formData = new FormData();
+        formData.append("file", data.image);
+        formData.append("signature", sign);
+        formData.append("timestamp", timestamp.toString());
+        formData.append("api_key", cloudinaryApiKey);
+        formData.append("folder", getCloudinaryFolderName());
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudinaryName}/image/upload`,
+          {
+            cache: "no-store",
+            method: "POST",
+            body: formData
+          }
+        );
+        const { secure_url } = await res.json();
+        imageUrl = secure_url;
+        console.log(imageUrl);
+      } catch (error) {
+        console.log(error);
+        alert(`Error occured while uploading image. Please try again later.`);
+        return;
+      }
 
-      // const req: AddPostRequestData = {
-      //   description: data.description,
-      //   accessibility: +data.accessibility,
-      //   image_url: imageUrl,
-      //   location_id: props.locationID,
-      //   trail_condition: +data.trail_condition,
-      //   weather: +data.weather,
-      //   owner_id: session.data.user.id,
-      // }
+    //   const req: AddPostRequestData = {
+    //     description: data.description,
+    //     accessibility: +data.accessibility,
+    //     image_url: imageUrl,
+    //     location_id: props.locationID,
+    //     trail_condition: +data.trail_condition,
+    //     weather: +data.weather,
+    //     owner_id: session.data.user.id,
+    //   }
 
-      // const res = await fetch("/api/location/post", {
-      //   cache: "no-store",
-      //   method: "POST",
-      //   body: JSON.stringify(req),
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
+    //   const res = await fetch("/api/location/post", {
+    //     cache: "no-store",
+    //     method: "POST",
+    //     body: JSON.stringify(req),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
     },
   });
 
@@ -155,7 +158,7 @@ const DialogAddPost: FC<Props> = (props) => {
   const onAddPost: SubmitHandler<AddPostFormData> = (data) => mutate(data);
 
   return (
-    <Dialog onOpenChange={props.handleOpen} open={props.open}>
+    <Dialog onOpenChange={props.handleOpen} open={props.open} >
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl m-auto flex justify-center align-center tracking-wider ">ADD POST</DialogTitle>

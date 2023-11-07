@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
-import { getCloudinaryApiSecret } from "@/lib/secrets";
+import { getCloudinaryApiSecret, getCloudinaryFolderName } from "@/lib/secrets";
 import { Signature, signImage } from "@/lib/zodSchema/signImage";
 import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
   try {
     signImage.parse(await req.json());
-    const timestamp: number = new Date().getTime();
+    const timestamp: number = Math.round((new Date()).getTime() / 1000);
     const apiSecret: string = getCloudinaryApiSecret();
     const signature: string = cloudinary.utils.api_sign_request(
       {
         timestamp,
-        upload_preset: "nextjs",
+        folder: getCloudinaryFolderName(),
       },
       apiSecret
     );
