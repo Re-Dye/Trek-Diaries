@@ -12,8 +12,6 @@
     "migrations:drop": "drizzle-kit drop --config=drizzle.config.ts"
   },
   "dependencies": {
-    "@algolia/autocomplete-js": "^1.11.1",
-    "@algolia/autocomplete-theme-classic": "^1.11.1",
     "@auth/drizzle-adapter": "^0.3.4",
     "@hookform/resolvers": "^3.3.2",
     "@neondatabase/serverless": "^0.6.0",
