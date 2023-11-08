@@ -1,9 +1,8 @@
 "use client";
 import LoadingPost from "@/app/(site)/components/LoadingPost/LoadingPost";
 import ViewPost from "../../../components/viewPost/viewPost";
-import { useRef, useState, useEffect } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { ReturnPost, returnPostSchema } from "@/lib/zodSchema/dbTypes";
+import { useEffect } from "react";
+import { ReturnPost } from "@/lib/zodSchema/dbTypes";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 
