@@ -40,7 +40,6 @@ import {
   getCloudinaryName,
 } from "@/lib/secrets";
 import { signImage, signature, Signature } from "@/lib/zodSchema/signImage";
-import { InsertPost } from "@/lib/zodSchema/dbTypes";
 
 type Props = {
   locationID: string;
@@ -50,7 +49,6 @@ type Props = {
 
 const DialogAddPost: FC<Props> = (props) => {
   const session = useSession({ required: true });
-  const userId = session?.data?.user?.email;
   const form = useForm<AddPostFormData>({
     resolver: zodResolver(addPostFormSchema),
   });

@@ -5,8 +5,7 @@ import { useEffect } from "react";
 import { ReturnPost } from "@/lib/zodSchema/dbTypes";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-
-const POSTS_PER_SCROLL = 7;
+import { CONSTANTS } from "@/lib/constants";
 
 interface Response {
   posts: Array<ReturnPost>;
@@ -20,7 +19,7 @@ export default function Posts({ locationId }: { locationId: string }) {
     queryFn: async ({ pageParam }: { pageParam: string }) => {
       try {
         const res = await fetch(
-          `/api/location/post?type=paginated&locationId=${locationId}&last=${pageParam}&limit=${POSTS_PER_SCROLL}`,
+          `/api/location/post?type=paginated&locationId=${locationId}&last=${pageParam}&limit=${CONSTANTS.POSTS_PER_SCROLL}`,
           {
             cache: "no-store",
             method: "GET",

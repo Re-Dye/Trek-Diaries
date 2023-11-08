@@ -84,6 +84,18 @@ export const getAlgoliaApiKey = (): string => {
   return secret;
 };
 
+export const getAlgoliaIndexName = (): string => {
+  const secret = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME;
+
+  if (!secret || secret.length === 0) {
+    throw new Error(
+      "The environment variable NEXT_PUBLIC_ALGOLIA_INDEX_NAME is not set."
+    );
+  }
+
+  return secret;
+};
+
 export const getCloudinaryName = (): string => {
   const secret = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 

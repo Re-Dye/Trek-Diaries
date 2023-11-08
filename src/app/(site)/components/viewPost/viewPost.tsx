@@ -39,12 +39,7 @@ export default function ViewPost({
   const [Likes, setLike] = useState(likes);
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
-  const session = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/login");
-    },
-  });
+  const session = useSession();
 
   const email: any = session.data?.user?.email;
   // const handleColor = () => {
@@ -59,6 +54,7 @@ export default function ViewPost({
   const handleComment = () => {
     router.push(`/post/${id}`);
   };
+  
   const handleLike = async () => {
     const encodedEmail = encodeURI(email);
     const eoncodedPostId = encodeURI(id);

@@ -31,4 +31,3 @@ export type ReturnPost = Prettify<
     owner_name: string;
   }
 >;
-export const returnPostSchema = z.ZodSchema<ReturnPost>;

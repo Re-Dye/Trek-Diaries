@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 import Loading from "./loading";
 import ResultLocation from "./components/location/ResultLocation";
-import { getAlgoliaApiKey, getAlgoliaAppId } from "@/lib/secrets";
+import { getAlgoliaApiKey, getAlgoliaAppId, getAlgoliaIndexName } from "@/lib/secrets";
 import { useQuery } from "@tanstack/react-query";
 
 
@@ -23,8 +23,9 @@ export default function SearchPage() {
       const appId = getAlgoliaAppId();
       const apiKey = getAlgoliaApiKey();
       const searchClient = algoliasearch(appId, apiKey);
+      const indexName = getAlgoliaIndexName();
 
-      const index = searchClient.initIndex("locations");
+      const index = searchClient.initIndex(indexName);
       const res = await index.search(searchQuery as string);
       setLocations(res.hits);
       return res;
