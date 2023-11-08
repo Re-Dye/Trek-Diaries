@@ -2,6 +2,9 @@ import { addPost, getPost, getPosts } from "@/lib/db/actions";
 import { addPostRequestSchema } from "@/lib/zodSchema/addPost";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
+import type { ServerRuntime } from "next";
+
+export const runtime: ServerRuntime = "edge";
 
 export async function POST(req: NextRequest) {
   try {
