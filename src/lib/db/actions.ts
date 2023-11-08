@@ -339,7 +339,11 @@ export const getPost = async (postId: string): Promise<ReturnPost> => {
   }
 };
 
-export const getPosts = async (locationId: string, limit: number, last: string|null): Promise<{posts: Array<ReturnPost>, next: string}> => {
+export const getPosts = async (
+  locationId: string,
+  limit: number,
+  last: string | null
+): Promise<{ posts: Array<ReturnPost>; next: string | undefined }> => {
   try {
     const getPosts = db
       .select({
@@ -358,14 +362,29 @@ export const getPosts = async (locationId: string, limit: number, last: string|n
         owner_name: users.name,
       })
       .from(posts)
-      .where(and(eq(posts.location_id, sql.placeholder("locationId")), gt(posts.id, sql.placeholder("last"))))
+      .where(
+        and(
+          eq(posts.location_id, sql.placeholder("locationId")),
+          gt(posts.id, sql.placeholder("last"))
+        )
+      )
       .limit(sql.placeholder("limit"))
       .orderBy(desc(posts.registered_time), asc(posts.id))
       .innerJoin(locations, eq(posts.location_id, locations.id))
       .innerJoin(users, eq(posts.owner_id, users.id))
       .prepare("get_posts");
-    const res = await getPosts.execute({ locationId, limit, last });
-    return { posts: res, next: res[res.length - 1].id };
+
+    /* get one more post for next turn */
+    const res = await getPosts.execute({ locationId, limit: limit + 1, last });
+
+    /* if there is a next page */
+    if (res.length === limit + 1) {
+      const next: string = res[res.length - 1].id;
+      res.pop();
+      return { posts: res, next };
+    } else {
+      return { posts: res, next: undefined };
+    }
   } catch (error) {
     console.error("Error in getting posts", error);
     throw new Error("Error in getting posts: " + error);

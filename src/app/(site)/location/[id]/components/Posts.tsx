@@ -1,131 +1,103 @@
-'use client'
+"use client";
 import LoadingPost from "@/app/(site)/components/LoadingPost/LoadingPost";
-import ViewPost from "../../../components/viewPost/viewPost"
+import ViewPost from "../../../components/viewPost/viewPost";
 import { useRef, useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { ReturnPost } from "@/lib/zodSchema/dbTypes";
+import { ReturnPost, returnPostSchema } from "@/lib/zodSchema/dbTypes";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 
 const POSTS_PER_SCROLL = 7;
 
-async function fetchLocationPosts(
-    locationId: string,
-    page: number,
-    searchTime: Date
-  ) {
-    const encodedLocation: any = encodeURI(locationId);
-    const encodedPage: string = encodeURI(page.toString());
-    const encodedSearchTime: any = encodeURI(searchTime.toISOString());
-    const res: any = await fetch(
-      `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/getLocationPosts?locationId=${encodedLocation}&page=${encodedPage}&searchTime=${encodedSearchTime}`,
-      { cache: "no-store" }
-    );
-    return res.json();
-  }
-
-export default function Posts({ locationId }:{ locationId: string }) {
-    const [posts, fetchPosts, hasMore, didMount] = useFetchPosts(locationId);
-
-    return(
-        <div className="PostBody">
-            {didMount && <>
-                    {(posts.length) &&
-                        <InfiniteScroll
-                            dataLength={ posts.length } //This is important field to render the next data
-                            next={ fetchPosts as any }
-                            hasMore={ hasMore }
-                            loader={<LoadingPost/>}
-                            endMessage={
-                              <p style={{ textAlign: 'center' }}>
-                              <b>Yay! You have seen it all</b>
-                              </p>
-                            }
-                        >
-                            {
-                                posts.map((post) => (
-                                    <ViewPost
-                                        key={ post.id }
-                                        id={ post.id }
-                                        location={ {id: post.location_id, address: post.location_address} }
-                                        description={ post.description }
-                                        likes = {post.likes_count}
-                                        imageURL = {post.picture_url}
-                                        owner = {{ id: post.owner_id, name: post.owner_name}}
-                                        rating = { post.rating || 0 }
-                                    />
-                                ))
-                            }
-                        </InfiniteScroll>
-                    }
-                    {!(posts.length) && 
-                    <h1>Not Found!</h1>}
-                </>
-            }
-            {!didMount} 
-        </div>
-    )
-    
+interface Response {
+  posts: Array<ReturnPost>;
+  next: string;
 }
 
-function useFetchPosts( locationId: string ):[
-    posts: Array<ReturnPost>,
-    fetchPost: Function,
-    hasMore: boolean,
-    didMount: boolean
-  ] {
-    const page = useRef<number>(0);
-    const searchTime = useRef<Date>(new Date());
-    const [posts, setPosts] = useState<Array<ReturnPost>>([]);
-    const [hasMore, setHasMore] = useState<boolean>(true);
-    const didMount = useRef<boolean>(false);
-  
-    const fetchPosts = async () => {
-      console.log("Fetch called");
+export default function Posts({ locationId }: { locationId: string }) {
+  const { ref, inView } = useInView()
+  const { data, status, fetchNextPage } = useInfiniteQuery({
+    queryKey: ["posts"],
+    queryFn: async ({ pageParam }: { pageParam: string }) => {
       try {
-        /* fetch more posts */
-        const fetchedPosts: Array<any> = await fetchLocationPosts(
-          locationId as string,
-          page.current,
-          searchTime.current
-        );
-
-        /* add the locations to the existing locations */
-        setPosts((posts) => [...posts, ...fetchedPosts]);
-  
-        /* update page and has more */
-        page.current = page.current + 1;
-        setHasMore(!(fetchedPosts.length < POSTS_PER_SCROLL))
-      } catch (error) {
-        console.error(error); 
-        alert(error);
-      }
-    }
-
-      /* fetch data on the render */
-      useEffect(() => {
-        if (!didMount.current) {
-            try{
-                const fetchPost = async() => {
-                    /* fetch more posts */
-                    const fetchedPosts: Array<any> = await fetchLocationPosts(locationId as string, page.current, searchTime.current)
-
-                    console.log(fetchedPosts);
-                    /* add the locations to the existing locations */
-                    setPosts(fetchedPosts);
-        
-                    /* update page and has more */
-                    page.current = 1
-                    setHasMore(!(fetchedPosts.length < POSTS_PER_SCROLL))
-                    didMount.current = true;
-                }
-                fetchPost()
-            }catch(error){
-                alert(error)
-                console.error(error)
-            }
+        const res = await fetch(
+          `/api/location/post?type=paginated&locationId=${locationId}&last=${pageParam}&limit=${POSTS_PER_SCROLL}`,
+          {
+            cache: "no-store",
+            method: "GET",
           }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [])
-    return  [posts, fetchPosts, hasMore, didMount.current];
-    };
-  
-  
+        );
+        const status = res.status;
+        if (status === 200) {
+          const data: Response = JSON.parse(await res.json());
+          console.log(data);
+          return data;
+        } else if (status === 400) {
+          alert("Invalid Request. Please try again with valid parameters");
+          return;
+        } else {
+          alert("Something went wrong. Please try again later");
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+        alert(error);
+        return;
+      }
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage === undefined) {
+        return null;
+      } else {
+        return lastPage.next;
+      }
+    },
+    initialPageParam: "00000000-0000-0000-0000-000000000000",
+  });
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+      console.log("fetching");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView]);
+
+  return (
+    <div className="PostBody">
+      {status === "pending" ? (
+        <LoadingPost />
+      ) : status === "error" ? (
+        <h1>Something went wrong. Please try again later</h1>
+      ) : (
+        status === "success" &&
+        data.pages.map((page, i) => {
+          if (page === undefined) {
+            return <h1 key={i}>Not Found!</h1>;
+          } else {
+            return page.posts.map((post, i) => (
+              <ViewPost
+                key={i}
+                id={post.id}
+                location={{
+                  id: post.location_id,
+                  address: post.location_address,
+                }}
+                description={post.description}
+                likes={post.likes_count}
+                imageURL={post.picture_url}
+                owner={{
+                  id: post.owner_id,
+                  name: post.owner_name,
+                }}
+                rating={post.rating || 0}
+              />
+            ));
+          }
+        })
+      )}
+
+      <div ref={ref}></div>
+    </div>
+  );
+}
