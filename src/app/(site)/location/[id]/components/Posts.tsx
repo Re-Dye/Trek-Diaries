@@ -29,7 +29,6 @@ export default function Posts({ locationId }: { locationId: string }) {
         const status = res.status;
         if (status === 200) {
           const data: Response = JSON.parse(await res.json());
-          console.log(data);
           return data;
         } else if (status === 400) {
           alert("Invalid Request. Please try again with valid parameters");
@@ -57,7 +56,6 @@ export default function Posts({ locationId }: { locationId: string }) {
   useEffect(() => {
     if (inView) {
       fetchNextPage();
-      console.log("fetching");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);

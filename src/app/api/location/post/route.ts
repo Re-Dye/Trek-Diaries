@@ -39,7 +39,6 @@ export async function GET(req: NextRequest) {
 
     /* if type is single */
     if (type === "single") {
-      console.log("singel request")
       if (!postId) {
         return new Response("Invalid Request", { status: 400 });
       } else {
@@ -51,7 +50,6 @@ export async function GET(req: NextRequest) {
 
     /* if type is paginated and locationId is not given */
     if (type === "paginated") {
-      console.log("paginated request")
       if (!locationId || !_limit) {
         return new Response("Invalid Request", { status: 400 });
       } else {
