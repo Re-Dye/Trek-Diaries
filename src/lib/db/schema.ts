@@ -10,6 +10,7 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { CONSTANTS } from "../constants";
+import { sql } from "drizzle-orm";
 
 export const users = pgTable(
   "users",
@@ -37,24 +38,35 @@ export const locations = pgTable("locations", {
   description: text("description").notNull(),
 });
 
-export const posts = pgTable("posts", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  registered_time: timestamp("registered_time", { mode: "string" })
-    .defaultNow()
-    .notNull(),
-  description: text("description").notNull(),
-  trail_condition: integer("trail_condition").notNull(),
-  weather: integer("weather").notNull(),
-  accessibility: integer("accessibility").notNull(),
-  picture_url: text("picture_url").notNull(),
-  likes_count: integer("likes_count").notNull().default(0),
-  location_id: uuid("location_id").notNull().references(() => locations.id, {
-    onDelete: "cascade",
-  }),
-  owner_id: text("owner_id").notNull().references(() => users.id, {
-    onDelete: "cascade",
-  }),
-});
+export const posts = pgTable(
+  "posts",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    registered_time: timestamp("registered_time", { mode: "string" })
+      .defaultNow()
+      .notNull(),
+    description: text("description").notNull(),
+    trail_condition: integer("trail_condition").notNull(),
+    weather: integer("weather").notNull(),
+    accessibility: integer("accessibility").notNull(),
+    picture_url: text("picture_url").notNull(),
+    likes_count: integer("likes_count").notNull().default(0),
+    location_id: uuid("location_id")
+      .notNull()
+      .references(() => locations.id, {
+        onDelete: "cascade",
+      }),
+    owner_id: text("owner_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (posts) => ({
+    locationIdIdx: index("location_id_idx").on(posts.location_id),
+    ownerIdIdx: index("owner_id_idx").on(posts.owner_id),
+  })
+);
 
 export const comments = pgTable(
   "comments",

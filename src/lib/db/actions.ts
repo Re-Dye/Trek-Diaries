@@ -1,6 +1,6 @@
 import { db } from "@/lib/db/db";
 import { users, locations, usersToLocations, posts } from "@/lib/db/schema";
-import { eq, sql, and } from "drizzle-orm";
+import { eq, sql, and, desc, asc, gt } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
 import {
@@ -11,6 +11,7 @@ import {
   insertLocationSchema,
   ReturnFollowedLocation,
   InsertPost,
+  ReturnPost,
 } from "@/lib/zodSchema/dbTypes";
 
 export const countUserByEmail = async (email: string) => {
@@ -267,11 +268,19 @@ export const unfollowLocation = async (data: UsersToLocations) => {
     console.error("Error in unfollowing location", error);
     throw new Error("Error in unfollowing location: " + error);
   }
-}
+};
 
 export const addPost = async (data: InsertPost) => {
   try {
-    const { accessibility, description, picture_url, trail_condition, weather, location_id, owner_id } = data;
+    const {
+      accessibility,
+      description,
+      picture_url,
+      trail_condition,
+      weather,
+      location_id,
+      owner_id,
+    } = data;
     const addPost = db
       .insert(posts)
       .values({
@@ -284,17 +293,81 @@ export const addPost = async (data: InsertPost) => {
         owner_id: sql.placeholder("owner_id"),
       })
       .prepare("add_post");
-    await addPost.execute({ 
-      accessibility, 
-      description, 
-      picture_url, 
-      trail_condition, 
-      weather, 
-      location_id, 
-      owner_id
-     });
+    await addPost.execute({
+      accessibility,
+      description,
+      picture_url,
+      trail_condition,
+      weather,
+      location_id,
+      owner_id,
+    });
   } catch (error) {
     console.error("Error in adding post", error);
     throw new Error("Error in adding post: " + error);
   }
-}
+};
+
+export const getPost = async (postId: string): Promise<ReturnPost> => {
+  try {
+    const getPost = db
+      .select({
+        id: posts.id,
+        registered_time: posts.registered_time,
+        description: posts.description,
+        trail_condition: posts.trail_condition,
+        weather: posts.weather,
+        accessibility: posts.accessibility,
+        rating: sql<number>`(${posts.accessibility} + ${posts.trail_condition} + ${posts.weather}) / 3`,
+        picture_url: posts.picture_url,
+        likes_count: posts.likes_count,
+        location_id: posts.location_id,
+        owner_id: posts.owner_id,
+        location_address: locations.address,
+        owner_name: users.name,
+      })
+      .from(posts)
+      .where(eq(posts.id, sql.placeholder("postId")))
+      .innerJoin(locations, eq(posts.location_id, locations.id))
+      .innerJoin(users, eq(posts.owner_id, users.id))
+      .prepare("get_post");
+    const res = await getPost.execute({ postId });
+    return res[0];
+  } catch (error) {
+    console.error("Error in getting post", error);
+    throw new Error("Error in getting post: " + error);
+  }
+};
+
+export const getPosts = async (locationId: string, limit: number, last: string|null): Promise<{posts: Array<ReturnPost>, next: string}> => {
+  try {
+    const getPosts = db
+      .select({
+        id: posts.id,
+        registered_time: posts.registered_time,
+        description: posts.description,
+        trail_condition: posts.trail_condition,
+        weather: posts.weather,
+        accessibility: posts.accessibility,
+        rating: sql<number>`(${posts.accessibility} + ${posts.trail_condition} + ${posts.weather}) / 3`,
+        picture_url: posts.picture_url,
+        likes_count: posts.likes_count,
+        location_id: posts.location_id,
+        owner_id: posts.owner_id,
+        location_address: locations.address,
+        owner_name: users.name,
+      })
+      .from(posts)
+      .where(and(eq(posts.location_id, sql.placeholder("locationId")), gt(posts.id, sql.placeholder("last"))))
+      .limit(sql.placeholder("limit"))
+      .orderBy(desc(posts.registered_time), asc(posts.id))
+      .innerJoin(locations, eq(posts.location_id, locations.id))
+      .innerJoin(users, eq(posts.owner_id, users.id))
+      .prepare("get_posts");
+    const res = await getPosts.execute({ locationId, limit, last });
+    return { posts: res, next: res[res.length - 1].id };
+  } catch (error) {
+    console.error("Error in getting posts", error);
+    throw new Error("Error in getting posts: " + error);
+  }
+};

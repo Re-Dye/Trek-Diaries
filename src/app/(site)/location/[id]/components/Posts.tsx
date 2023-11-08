@@ -3,21 +3,7 @@ import LoadingPost from "@/app/(site)/components/LoadingPost/LoadingPost";
 import ViewPost from "../../../components/viewPost/viewPost"
 import { useRef, useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-
-
-interface Post {
-    _id: string;
-    address: string;
-    description: string;
-    imageURL: string;
-    likes: number;
-    location: any;
-    pictureURL: string;
-    owner: any;
-    rating: {
-      overallScore: number;
-    }
-  }
+import { ReturnPost } from "@/lib/zodSchema/dbTypes";
 
 const POSTS_PER_SCROLL = 7;
 
@@ -57,14 +43,14 @@ export default function Posts({ locationId }:{ locationId: string }) {
                             {
                                 posts.map((post) => (
                                     <ViewPost
-                                        key={ post._id }
-                                        id={ post._id }
-                                        location={ post.location }
+                                        key={ post.id }
+                                        id={ post.id }
+                                        location={ {id: post.location_id, address: post.location_address} }
                                         description={ post.description }
-                                        likes = {post.likes}
-                                        imageURL = {post.pictureURL}
-                                        owner = {post.owner}
-                                        rating = { post.rating?.overallScore || 0 }
+                                        likes = {post.likes_count}
+                                        imageURL = {post.picture_url}
+                                        owner = {{ id: post.owner_id, name: post.owner_name}}
+                                        rating = { post.rating || 0 }
                                     />
                                 ))
                             }
@@ -81,16 +67,16 @@ export default function Posts({ locationId }:{ locationId: string }) {
 }
 
 function useFetchPosts( locationId: string ):[
-    posts: Array<Post>,
+    posts: Array<ReturnPost>,
     fetchPost: Function,
     hasMore: boolean,
     didMount: boolean
   ] {
     const page = useRef<number>(0);
     const searchTime = useRef<Date>(new Date());
-    const [posts, setPosts] = useState<Array<Post>>([]);
+    const [posts, setPosts] = useState<Array<ReturnPost>>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
-    const [didMount, setDidMount] = useState<boolean>(false);
+    const didMount = useRef<boolean>(false);
   
     const fetchPosts = async () => {
       console.log("Fetch called");
@@ -116,7 +102,7 @@ function useFetchPosts( locationId: string ):[
 
       /* fetch data on the render */
       useEffect(() => {
-        if (!didMount) {
+        if (!didMount.current) {
             try{
                 const fetchPost = async() => {
                     /* fetch more posts */
@@ -129,7 +115,7 @@ function useFetchPosts( locationId: string ):[
                     /* update page and has more */
                     page.current = 1
                     setHasMore(!(fetchedPosts.length < POSTS_PER_SCROLL))
-                    setDidMount(true)
+                    didMount.current = true;
                 }
                 fetchPost()
             }catch(error){
@@ -137,8 +123,9 @@ function useFetchPosts( locationId: string ):[
                 console.error(error)
             }
           }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [])
-    return  [posts, fetchPosts, hasMore, didMount];
+    return  [posts, fetchPosts, hasMore, didMount.current];
     };
   
   

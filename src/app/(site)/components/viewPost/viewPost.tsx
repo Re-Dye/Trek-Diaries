@@ -7,8 +7,15 @@ import { LocateFixed, MessageSquare, ThumbsUp, UserCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface Owner {
+  id: string;
   name: string;
 }
+
+interface Location {
+  id: string;
+  address: string;
+}
+
 
 //{id, location, description, likes, imageURL, owner}
 export default function ViewPost({
@@ -21,7 +28,7 @@ export default function ViewPost({
   rating,
 }: {
   id: string;
-  location: any;
+  location: Location;
   description: string;
   likes: number;
   imageURL: string;

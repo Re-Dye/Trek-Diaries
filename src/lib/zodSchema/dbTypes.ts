@@ -17,7 +17,18 @@ export const insertPostSchema = createInsertSchema(posts);
 
 export const usersToLocationsSchema = createInsertSchema(usersToLocations);
 export type UsersToLocations = z.infer<typeof usersToLocationsSchema>;
-export type ReturnFollowedLocation = Prettify<UsersToLocations & { address: string }>;
+export type ReturnFollowedLocation = Prettify<
+  UsersToLocations & { address: string }
+>;
 
 export const postSchema = createInsertSchema(posts);
 export type InsertPost = z.infer<typeof postSchema>;
+export const selectPostSchema = createSelectSchema(posts);
+export type ReturnPost = Prettify<
+  z.infer<typeof selectPostSchema> & {
+    rating: number;
+    location_address: string;
+    owner_name: string;
+  }
+>;
+export const returnPostSchema = z.ZodType<ReturnPost>;

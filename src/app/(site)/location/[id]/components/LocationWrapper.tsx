@@ -26,7 +26,7 @@ const LocationWrapper: FC<Props> = (props) => {
           <ButtonFollow locationID={props.location.id} />
         </div>
       </div>
-      <div>{/* <Posts locationId={params.id} /> */}</div>
+      <div><Posts locationId={props.location.id} /></div>
     </div>
   );
 };
