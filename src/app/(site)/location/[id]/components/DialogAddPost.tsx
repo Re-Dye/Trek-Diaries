@@ -187,163 +187,175 @@ const DialogAddPost: FC<Props> = (props) => {
 
   return (
     <Dialog onOpenChange={props.handleOpen} open={props.open}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-2xl m-auto flex justify-center align-center tracking-wider ">
             ADD POST
           </DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onAddPost)}>
-            <div className="flex-row space-x-3 items-center justify-center">
-              {form.formState.errors.image && (
-                <p className="text-red-600 font-medium">
-                  {form.formState.errors.image.message}
-                </p>
-              )}
-              <div>
-                <Label>Select picture to upload</Label>
+        <div className="flex ">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onAddPost)}>
+              <div className="flex-row space-x-3 items-center justify-center">
+                {form.formState.errors.image && (
+                  <p className="text-red-600 font-medium">
+                    {form.formState.errors.image.message}
+                  </p>
+                )}
+                <div>
+                  <Label>Select picture to upload</Label>
 
-                <Input
-                  // {...field}
-                  className="h-8"
-                  type="file"
-                  accept=".jpeg, .png, .jpg, .webp"
-                  onChange={handleImage}
-                />
+                  <Input
+                    // {...field}
+                    className="h-8"
+                    type="file"
+                    accept=".jpeg, .png, .jpg, .webp"
+                    onChange={handleImage}
+                  />
+                </div>
               </div>
-              <div className="m-3 max-w-80 max-h-80 overflow-scroll">
-                {previewImageURL && (
-                  <>
-                    <Image
-                      src={previewImageURL}
-                      alt="preview"
-                      width={300}
-                      height={300}
-                    />
-                  </>
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        name="text"
+                        placeholder="Description of the post (required...)"
+                        className="shadow-md border-2 my-5"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="trail_condition"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Trial Condition</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a rating" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="1">★ (Poor)</SelectItem>
+                          <SelectItem value="2">★★ (Average)</SelectItem>
+                          <SelectItem value="3">★★★ (Good)</SelectItem>
+                          <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
+                          <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="weather"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Weather</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a rating" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="1">★ (Poor)</SelectItem>
+                          <SelectItem value="2">★★ (Average)</SelectItem>
+                          <SelectItem value="3">★★★ (Good)</SelectItem>
+                          <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
+                          <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="accessibility"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Accessibility</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a rating" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="1">★ (Poor)</SelectItem>
+                          <SelectItem value="2">★★ (Average)</SelectItem>
+                          <SelectItem value="3">★★★ (Good)</SelectItem>
+                          <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
+                          <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="m-4">
+                {isPending ? (
+                  <ButtonLoading className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 " />
+                ) : (
+                  <Button
+                    className=" hover:bg-slate-500 w-44 m-auto flex align-center justify-center"
+                    type="submit"
+                  >
+                    Create Post
+                  </Button>
                 )}
               </div>
-            </div>
+            </form>
+          </Form>
 
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      {...field}
-                      name="text"
-                      placeholder="Description of the post (required...)"
-                      className="shadow-md border-2 my-5"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="trail_condition"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Trial Condition</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a rating" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="1">★ (Poor)</SelectItem>
-                        <SelectItem value="2">★★ (Average)</SelectItem>
-                        <SelectItem value="3">★★★ (Good)</SelectItem>
-                        <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
-                        <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="weather"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Weather</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a rating" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="1">★ (Poor)</SelectItem>
-                        <SelectItem value="2">★★ (Average)</SelectItem>
-                        <SelectItem value="3">★★★ (Good)</SelectItem>
-                        <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
-                        <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="accessibility"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Accessibility</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a rating" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="1">★ (Poor)</SelectItem>
-                        <SelectItem value="2">★★ (Average)</SelectItem>
-                        <SelectItem value="3">★★★ (Good)</SelectItem>
-                        <SelectItem value="4">★★★★ (Outstanding)</SelectItem>
-                        <SelectItem value="5">★★★★★ (Excellent)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <div className="m-4">
-              {isPending ? (
-                <ButtonLoading className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 " />
-              ) : (
-                <Button
-                  className=" hover:bg-slate-500 w-44 m-auto flex align-center justify-center"
-                  type="submit"
-                >
-                  Create Post
-                </Button>
-              )}
-            </div>
-          </form>
-        </Form>
+          <div className="m-4 w-60 h-fit border-2 border-sky-500 ">
+            {previewImageURL === null && (
+              <>
+                <div className="flex justify-center items-center h-60">
+                  <p className="text-gray-500 text-xl">No image selected</p>
+                </div>
+              </>
+            )}
+            {previewImageURL && (
+              <>
+                <Image
+                  src={previewImageURL}
+                  width={240}
+                  height={240}
+                  alt="preview"
+                  // layout="fill"
+                  objectFit="cover"
+                />
+              </>
+            )}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
