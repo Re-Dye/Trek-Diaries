@@ -212,7 +212,7 @@ const DialogAddPost: FC<Props> = (props) => {
                   onChange={handleImage}
                 />
               </div>
-              <div className="m-3">
+              <div className="m-3 max-w-80 max-h-80 overflow-scroll">
                 {previewImageURL && (
                   <>
                     <Image
