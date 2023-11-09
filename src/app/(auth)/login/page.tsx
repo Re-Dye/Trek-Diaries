@@ -1,8 +1,10 @@
 import { Metadata } from "next";
 import Login from "./components/LoginForm";
 
+export const revalidate = false;
+
 export const metadata: Metadata = {
-  title: 'Login | TrekDiaries',
+  title: 'Login',
   description: 'Login page of TrekDiaries',
 }
 

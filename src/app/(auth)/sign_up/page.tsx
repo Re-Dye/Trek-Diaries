@@ -2,7 +2,7 @@ import SignUpForm from "./components/SignUpForm"
 import type { Metadata } from "next";
 
 export const metadata:Metadata = {
-  title: "Sign Up | TrekDiaries",
+  title: "Sign Up",
   description: "Sign up page of TrekDiaries"
 }
 

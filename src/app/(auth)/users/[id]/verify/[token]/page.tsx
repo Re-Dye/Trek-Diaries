@@ -13,7 +13,7 @@ import {
 import ButtonVerify from "./components/button";
 
 export const metadata: Metadata = {
-  title: "TrekDiaries | Verify Email",
+  title: "Verify Email",
   description: "Verify your email address",
 }
 

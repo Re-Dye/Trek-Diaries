@@ -21,17 +21,13 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          console.log("Connecting to database...");
           const { email, password } = loginSchema.parse(credentials); // validating the credentials
-
-          console.log(`Entered email:${email}\npassword: ${password}`);
 
           /* check on database here */
           const result = await findUser(email);
 
           if (!result) {
             //if the email is unregistered...
-            console.log("There is no user registered under this email....");
             return null;
           }
 
@@ -39,11 +35,9 @@ export const authOptions: NextAuthOptions = {
 
           if (!isMatch) {
             // if password is incorrect
-            console.log(`Password Incorrect....`);
             return null;
           }
 
-          console.log(`returning user details: ${result}`);
           return {
             id: result.id,
             name: result.name,
