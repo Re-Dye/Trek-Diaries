@@ -1,11 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import forgetStyles from "../reset-password/page.module.css";
-import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
+import { toast, useToast } from "@/components/ui/use-toast";
 
 export default function ResetPassword() {
+  const {toast} = useToast()
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,8 +19,11 @@ export default function ResetPassword() {
       });
 
       console.log(data);
-      alert(`Verification email sent to: ${email}`);
-
+      toast({
+        className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        title: "Verification Email Sent",
+        description: (`Verification email sent to: ${email}`)
+      })
       setEmail("");
     } catch (error) {
       console.log(error);

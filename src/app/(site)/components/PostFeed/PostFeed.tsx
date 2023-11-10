@@ -6,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { CONSTANTS } from "@/lib/constants";
 import { ReturnPost } from "@/lib/zodSchema/dbTypes";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Response {
   posts: Array<ReturnPost>;
@@ -13,6 +14,7 @@ interface Response {
 }
 
 export default function PostFeed({ userId }: { userId: string }) {
+  const {toast} = useToast()
   const { ref, inView } = useInView()
   const { data, status, fetchNextPage } = useInfiniteQuery({
     queryKey: ["posts", location],
@@ -30,10 +32,18 @@ export default function PostFeed({ userId }: { userId: string }) {
           const data: Response = JSON.parse(await res.json());
           return data;
         } else if (status === 400) {
-          alert("Invalid Request. Please try again with valid parameters");
+          toast({
+            className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+            title: "Invalid Request",
+            description: "Please try again with valid parameters",
+          })
           return;
         } else {
-          alert("Something went wrong. Please try again later");
+          toast({
+            variant: "destructive",
+            className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+            description: "Something went wrong. Please try again later",
+          })
           return;
         }
       } catch (error) {

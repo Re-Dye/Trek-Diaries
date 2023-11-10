@@ -5,8 +5,11 @@ import Flocation from "./Flocation";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocationStore } from "@/lib/zustand/location";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Fbar() {
+  const {toast} = useToast()
+
   const session = useSession();
   const locations = useLocationStore((state) => state.locations);
   const setLocations = useLocationStore((state) => state.setLocations);
@@ -36,7 +39,11 @@ export default function Fbar() {
     if (status === "success") {
       if (data === undefined) {
         console.log("Null data received");
-        alert("Error occured while following location. Please try again later.");
+        toast({
+          variant: "destructive",
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Error occured while following location. Please try again later.",
+        })
         return;
       }
       if (data.status === 200) {
@@ -44,16 +51,28 @@ export default function Fbar() {
         return;
       } else if (data.status === 400) {
         console.log(data.message);
-        alert("Invalid Request. Please try again later with proper information.");
+        toast({
+          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Invalid Request",
+          description: "Please try again later with proper information."
+        })
       } else {
         console.log(data.message);
-        alert("Error occured while following location. Please try again later.");
+        toast({
+          variant: "destructive",
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Error occured while following location. Please try again later.",
+        })
       }
     }
 
     if (status === "error") {
       console.log(error);
-      alert("Error occured while following location. Please try again later.");
+      toast({
+        variant: "destructive",
+        className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        description: "Error occured while following location. Please try again later.",
+      })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, data])

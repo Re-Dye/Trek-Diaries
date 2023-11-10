@@ -6,6 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { ReactQueryProvider } from "@/components/ui/react-query-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 interface IProps {
   children: ReactNode;
@@ -22,6 +23,7 @@ export default function RootLayout({ children, session }: IProps) {
             <SessionProvider session={session}>{children}</SessionProvider>
           </ThemeProvider>
         </ReactQueryProvider>
+        <Toaster />
       </body>
     </html>
   );

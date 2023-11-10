@@ -26,8 +26,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Info } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { ReturnLocation, selectLocationSchema } from "@/lib/zodSchema/dbTypes";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 export default function AddLocation() {
+  
+  const {toast} = useToast()
   const form = useForm<AddLocationFormData>({
     resolver: zodResolver(AddLocationFormSchema),
   });
@@ -54,22 +58,37 @@ export default function AddLocation() {
     onSuccess: (data) => {
       if (data.status === 201) {
         const location: ReturnLocation = selectLocationSchema.parse(JSON.parse(data.message));
-        alert(`Location added successfully. Might take some time to appear in search.`);
+        toast({
+          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Location Added",
+          description: "Location added successfully. Might take some time to appear in search."
+        })
         router.push(`/location/${location.id}`);
         return;
       }
 
       if (data.status === 409) {
-        alert(`Location already exists.`);
+        toast({
+          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Location already exists."
+        })
         return;
       }
 
       if (data.status === 400) {
-        alert(`Invalid Request. Please try again later with proper information.`);
+        toast({
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Invalid Request",
+          description: "Please try again later with proper information."
+        })
         return;
       }
-
-      alert(`Error occured while adding location. Please try again later.`);
+      toast({
+        variant: "destructive",
+        className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        description: "Error occured while adding location. Please try again later.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     },
   });
 
