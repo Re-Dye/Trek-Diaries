@@ -11,7 +11,6 @@ const AddLocation = () => {
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(true);
   const onOpenChange = (open: boolean) => setOpen(open);
-  console.log(open);
   return (
     <>
       <Button onClick={handleClick} variant="default" className="w-1/4 h-10">
