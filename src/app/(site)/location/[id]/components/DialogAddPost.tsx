@@ -33,7 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getCloudinaryApiKey,
   getCloudinaryFolderName,
@@ -52,6 +52,7 @@ const DialogAddPost: FC<Props> = (props) => {
   const form = useForm<AddPostFormData>({
     resolver: zodResolver(addPostFormSchema),
   });
+  const client = useQueryClient();
 
   const [previewImageURL, setPreviewImageURL] = useState<string | null>(null);
   const { mutate, isPending } = useMutation({
@@ -160,6 +161,7 @@ const DialogAddPost: FC<Props> = (props) => {
 
       if (data.status === 201) {
         alert(`Post added successfully.`);
+        client.invalidateQueries({ queryKey: ["posts", props.locationID] });
         props.handleOpen(false);
         form.reset();
       } else if (data.status === 400) {

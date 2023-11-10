@@ -16,11 +16,11 @@ interface Location {
   address: string;
 }
 
-
 //{id, location, description, likes, imageURL, owner}
 export default function ViewPost({
   id,
   location,
+  registered_time,
   description,
   likes,
   imageURL,
@@ -29,6 +29,7 @@ export default function ViewPost({
 }: {
   id: string;
   location: Location;
+  registered_time: string;
   description: string;
   likes: number;
   imageURL: string;
@@ -54,7 +55,7 @@ export default function ViewPost({
   const handleComment = () => {
     router.push(`/post/${id}`);
   };
-  
+
   const handleLike = async () => {
     const encodedEmail = encodeURI(email);
     const eoncodedPostId = encodeURI(id);
@@ -78,11 +79,31 @@ export default function ViewPost({
     }
   };
 
+  const handleRegisteredTime = (time: string) => {
+    const postDate = new Date(time);
+    const now = new Date();
+  
+    const diffInSeconds = Math.abs((now.getTime() - postDate.getTime() + (now.getTimezoneOffset() * 60000)) / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+  
+    if (diffInDays > 0) {
+      return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+    } else if (diffInHours > 0) {
+      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    } else if (diffInMinutes > 0) {
+      return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+    } else {
+      return 'Just now';
+    }
+  };
+
   return (
     <Card className="flex items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md">
       <div className="flex-row space-y-4">
         <div className="text-sm flex gap-2">
-          <LocateFixed className="w-4 h-4 text-red-500"/>
+          <LocateFixed className="w-4 h-4 text-red-500" />
           <h3>{location.address}</h3>
         </div>
         <div className="relative w-64 h-72">
@@ -97,19 +118,19 @@ export default function ViewPost({
       <div className="flex-row space-y-6">
         <div className="text-lg flex justify-start gap-32">
           <div className="flex gap-2">
-          <UserCircle className="mt-1"/>
-          <h3>{owner?.name}</h3>
+            <UserCircle className="mt-1" />
+            <h3>{owner?.name}</h3>
           </div>
           <div>
-            <h5>12h</h5>
+            <h5>{handleRegisteredTime(registered_time)}</h5>
           </div>
         </div>
         <div className="box-border p-1 overflow-y-scroll">
           <p className="text-sm">{description}</p>
         </div>
         <div className="flex gap-2 text-md justify-end">
-          <h5>Rating:  </h5>
-          <Star stars={rating}/>
+          <h5>Rating: </h5>
+          <Star stars={rating} />
         </div>
         <div className="flex gap-8 justify-start">
           <button
@@ -119,14 +140,11 @@ export default function ViewPost({
             }}
           >
             <div className="text-xl">{Likes}</div>
-            <ThumbsUp className="w-6 h-6 hover:text-blue-600"/>
+            <ThumbsUp className="w-6 h-6 hover:text-blue-600" />
           </button>
 
-          <button
-            className="cursor-pointer"
-            onClick={handleComment}
-          >
-            <MessageSquare className="w-6 h-6 hover:text-blue-600"/>
+          <button className="cursor-pointer" onClick={handleComment}>
+            <MessageSquare className="w-6 h-6 hover:text-blue-600" />
           </button>
         </div>
       </div>

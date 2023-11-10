@@ -15,7 +15,7 @@ interface Response {
 export default function Posts({ locationId }: { locationId: string }) {
   const { ref, inView } = useInView()
   const { data, status, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts", locationId],
     queryFn: async ({ pageParam }: { pageParam: string }) => {
       try {
         const res = await fetch(
@@ -70,11 +70,14 @@ export default function Posts({ locationId }: { locationId: string }) {
         data.pages.map((page, i) => {
           if (page === undefined) {
             return <h1 key={i}>Not Found!</h1>;
-          } else {
+          } else if (page.posts.length === 0 && i === 0) {
+            return <h1 key={i}>No Posts Found!</h1>;
+          } {
             return page.posts.map((post, i) => (
               <ViewPost
                 key={i}
                 id={post.id}
+                registered_time={ post.registered_time }
                 location={{
                   id: post.location_id,
                   address: post.location_address,
