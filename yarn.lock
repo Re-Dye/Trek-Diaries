@@ -1254,9 +1254,9 @@
     eslint-visitor-keys "^3.4.1"
 
 "@upstash/redis@^1.23.4":
-  version "1.25.0"
-  resolved "https://registry.yarnpkg.com/@upstash/redis/-/redis-1.25.0.tgz#d99a55f82e7ef3d4314f10e2da6af5e64cda471b"
-  integrity sha512-CEGLUN98G2UGe19mnX4WOFWBprMmAbAEFWfV0D157jaGLnxpbRqaMgKcfnq2AQ8GmETJ6I+Hz2D/eer9GfrY/g==
+  version "1.25.1"
+  resolved "https://registry.yarnpkg.com/@upstash/redis/-/redis-1.25.1.tgz#361656a326b40d5816640ae4335a8b1bbbb0d238"
+  integrity sha512-ACj0GhJ4qrQyBshwFgPod6XufVEfKX2wcaihsEvSdLYnY+m+pa13kGt1RXm/yTHKf4TQi/Dy2A8z/y6WUEOmlg==
   dependencies:
     crypto-js "^4.2.0"
 
