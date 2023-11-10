@@ -368,8 +368,8 @@ export const getPosts = async (
           gt(posts.id, sql.placeholder("last"))
         )
       )
-      .limit(sql.placeholder("limit"))
       .orderBy(desc(posts.registered_time), asc(posts.id))
+      .limit(sql.placeholder("limit"))
       .innerJoin(locations, eq(posts.location_id, locations.id))
       .innerJoin(users, eq(posts.owner_id, users.id))
       .prepare("get_posts");
@@ -388,5 +388,75 @@ export const getPosts = async (
   } catch (error) {
     console.error("Error in getting posts", error);
     throw new Error("Error in getting posts: " + error);
+  }
+};
+
+export const getFeed = async (
+  userId: string,
+  limit: number,
+  last: string | null
+): Promise<{ posts: Array<ReturnPost>; next: string | undefined }> => {
+  try {
+    const sq = db
+      .select({
+        id: posts.id,
+        registered_time: posts.registered_time,
+        description: posts.description,
+        trail_condition: posts.trail_condition,
+        weather: posts.weather,
+        accessibility: posts.accessibility,
+        picture_url: posts.picture_url,
+        likes_count: posts.likes_count,
+        location_id: posts.location_id,
+        owner_id: posts.owner_id,
+      })
+      .from(usersToLocations)
+      .where(eq(usersToLocations.userId, sql.placeholder("userId")))
+      .innerJoin(posts, eq(usersToLocations.locationId, posts.location_id))
+      .as("sq");
+    const getFeed = db
+      .select({
+        id: sq.id,
+        registered_time: sq.registered_time,
+        description: sq.description,
+        trail_condition: sq.trail_condition,
+        weather: sq.weather,
+        accessibility: sq.accessibility,
+        rating: sql<number>`(${sq.accessibility} + ${sq.trail_condition} + ${sq.weather}) / 3`,
+        picture_url: sq.picture_url,
+        likes_count: sq.likes_count,
+        location_id: sq.location_id,
+        owner_id: sq.owner_id,
+        location_address: locations.address,
+        owner_name: users.name,
+      })
+      .from(sq)
+      .where(
+        and(
+          eq(sq.location_id, sql.placeholder("userId")),
+          gt(sq.id, sql.placeholder("last"))
+        )
+      )
+      .orderBy(desc(sq.registered_time), asc(sq.id))
+      .limit(sql.placeholder("limit"))
+      .innerJoin(locations, eq(sq.location_id, locations.id))
+      .innerJoin(users, eq(sq.owner_id, users.id))
+      .prepare("get_feed");
+
+    /* get one more post for next turn */
+    const res = await getFeed.execute({ userId, limit: limit + 1, last });
+    console.log(res)
+
+    /* if there is a next page */
+    if (res.length === limit + 1) {
+      const next: string = res[res.length - 1].id;
+      res.pop();
+      return { posts: res, next };
+    } else {
+      return { posts: res, next: undefined };
+    }
+  } catch (error) {
+    console.error("Error in getting feed", error);
+    throw new Error("Error in getting feed: " + error);
   }
 };

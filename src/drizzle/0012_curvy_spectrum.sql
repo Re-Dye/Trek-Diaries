@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS "location_id_idx" ON "users_to_locations" ("location_id");

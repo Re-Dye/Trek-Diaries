@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
   try {
     /* if type is paginated and locationId is not given */
-    if (!locationId || !_limit) {
+    if (!locationId || !_limit || !last) {
       return new Response("Invalid Request", { status: 400 });
     } else {
       const limit = +_limit;

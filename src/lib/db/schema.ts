@@ -102,6 +102,7 @@ export const usersToLocations = pgTable(
   (usersToLocations) => ({
     pk: primaryKey(usersToLocations.userId, usersToLocations.locationId),
     userIdIdx: index("user_id_idx").on(usersToLocations.userId),
+    locationIdIdx: index("location_id_idx").on(usersToLocations.locationId),
   })
 );
 
