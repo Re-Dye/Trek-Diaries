@@ -1,5 +1,8 @@
 import { getFeed } from "@/lib/db/actions";
+import { ServerRuntime } from "next";
 import { NextRequest, NextResponse } from "next/server";
+
+export const runtime: ServerRuntime = "edge";
 
 export async function GET(req: NextRequest) {
   try {
