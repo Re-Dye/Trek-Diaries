@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 
-const PopoverAddLocation = dynamic(() => import("./PopoverAddLocation"), {
+const PopoverAddLocation = dynamic(() => import("./DialogAddLocation"), {
   ssr: false,
 });
 
