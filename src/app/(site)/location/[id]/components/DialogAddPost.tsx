@@ -40,6 +40,7 @@ import {
   getCloudinaryName,
 } from "@/lib/secrets";
 import { signImage, signature, Signature } from "@/lib/zodSchema/signImage";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   locationID: string;
@@ -48,6 +49,7 @@ type Props = {
 };
 
 const DialogAddPost: FC<Props> = (props) => {
+  const {toast} = useToast()
   const session = useSession({ required: true });
   const form = useForm<AddPostFormData>({
     resolver: zodResolver(addPostFormSchema),
@@ -63,7 +65,10 @@ const DialogAddPost: FC<Props> = (props) => {
 
       /* check if user is logged in */
       if (!session.data) {
-        alert(`You must be logged in to add a post.`);
+        toast({
+          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: (`You must be logged in to add a post.`)
+        })
         return;
       }
 
@@ -89,17 +94,27 @@ const DialogAddPost: FC<Props> = (props) => {
           sign = temp.signature;
           timestamp = temp.timestamp;
         } else if (status === 400) {
-          alert(
-            `Invalid Request. Please try again later with proper information.`
-          );
+          toast({
+            className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+            title: "Invalid Request",
+            description: "Please try again later with proper information."
+          })
           return;
         } else {
-          alert(`Error occured while signing image. Please try again later.`);
+          toast({
+            variant: "destructive",
+            className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+            description: "Error occured while signing image. Please try again later.",
+          })
           return;
         }
       } catch (error) {
         console.log(error);
-        alert(`Error occured while signing image. Please try again later.`);
+        toast({
+          variant: "destructive",
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Error occured while signing image. Please try again later.",
+        })
         return;
       }
 
@@ -126,7 +141,11 @@ const DialogAddPost: FC<Props> = (props) => {
         console.log(imageUrl);
       } catch (error) {
         console.log(error);
-        alert(`Error occured while uploading image. Please try again later.`);
+        toast({
+          variant: "destructive",
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Error occured while uploading image. Please try again later.",
+        })
         return;
       }
 
@@ -155,26 +174,43 @@ const DialogAddPost: FC<Props> = (props) => {
     },
     onSuccess: (data) => {
       if (data === undefined) {
-        alert(`Error occured while adding post. Please try again later.`);
+        toast({
+          variant: "destructive",
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Error occured while adding post. Please try again later.",
+        })
         return;
       }
 
       if (data.status === 201) {
-        alert(`Post added successfully.`);
+        toast({
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Post added successfully.",
+        })
         client.invalidateQueries({ queryKey: ["posts", props.locationID] });
         props.handleOpen(false);
         form.reset();
       } else if (data.status === 400) {
-        alert(
-          `Invalid Request. Please try again later with proper information.`
-        );
+        toast({
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Invalid Request",
+          description: "Please try again later with proper information."
+        })
       } else {
-        alert(`Error occured while adding post. Please try again later.`);
+        toast({
+          variant: "destructive",
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Error occured while adding post. Please try again later.",
+        })
       }
     },
     onError: (error) => {
       console.log(error);
-      alert(`Error occured while adding post. Please try again later.`);
+      toast({
+        variant: "destructive",
+        className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        description: "Error occured while adding post. Please try again later.",
+      })
     },
   });
 

@@ -10,8 +10,11 @@ import {
 } from "@/lib/zodSchema/dbTypes";
 import type { Action } from "@/lib/zodSchema/followLocation";
 import { useLocationStore } from "@/lib/zustand/location";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 export default function ButtonFollow({ locationID }: { locationID: string }) {
+  const {toast} = useToast()
   const queryClient = useQueryClient();
   const followed = useGetFollow(locationID);
 
@@ -44,9 +47,10 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
     onSuccess: async (data) => {
       if (data === undefined) {
         console.log("Null data received");
-        alert(
-          "Error occured while following location. Please try again later."
-        );
+        toast({
+          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Error occured while following location. Please try again later."
+        })
         return;
       }
       if (data.status === 201) {
@@ -56,17 +60,26 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
         return;
       } else if (data.status === 409) {
         console.log(data.message);
-        alert("You are already following this location");
+        toast({
+          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Already Followed",
+          description: "You are already following this location"
+        })
       } else if (data.status === 400) {
         console.log(data.message);
-        alert(
-          "Invalid Request. Please try again later with proper information."
-        );
+        toast({
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Invalid Request",
+          description: "Please try again later with proper information."
+        })
       } else {
         console.log(data.message);
-        alert(
-          "Error occured while following location. Please try again later."
-        );
+        toast({
+          variant: "destructive",
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description: "Error occured while following location. Please try again later.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
       }
     },
     onError: (error) => {

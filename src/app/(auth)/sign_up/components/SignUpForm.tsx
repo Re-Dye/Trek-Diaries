@@ -25,8 +25,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button, ButtonLoading } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 export default function SignUpForm() {
+
+  const {toast} = useToast()
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupFormSchema),
   });
@@ -49,20 +53,42 @@ export default function SignUpForm() {
     onSuccess: (data) => {
       console.log(data);
       if (data.status === 201) {
-        alert(`Verification email sent to: ${form.getValues().email}`);
+        toast({
+          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Verification Email Sent",
+          description: (`Verification email sent to: ${form.getValues().email}`)
+        })
       } else if (data.status === 409) {
-        alert(`User with email ${form.getValues().email} already exists.`);
+        toast({
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Email Already Exists",
+          description: (`User with email ${form.getValues().email} already exists.`)
+        })
       } else if (data.status === 400) {
-        alert(
-          `Invalid Request. Please try again later with proper information.`
-        );
+        toast({
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Invalid Request",
+          description: "Please try again later with proper information."
+        })
       } else {
-        alert(`Error occured while signing up. Please try again later.`);
+        toast({
+          variant: "destructive",
+          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Error During SignUp",
+          description: "Error occured while signing up. Please try again later.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
       }
     },
     onError: (error) => {
       console.log(error);
-      alert("Error occured while signing up. Please try again later.");
+      toast({
+        variant: "destructive",
+        className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        title: "Error During SignUp",
+        description: "Error occured while signing up. Please try again later.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     },
   });
 
@@ -98,8 +124,6 @@ export default function SignUpForm() {
             className=" w-full space-y-1 justify-center items-center"
             onSubmit={form.handleSubmit(onSignUp)}
           >
-            {/* {form.formState.errors && (
-                <h3 className="text-red-600 font-medium">{error}</h3>)} */}
 
             <FormField
               control={form.control}

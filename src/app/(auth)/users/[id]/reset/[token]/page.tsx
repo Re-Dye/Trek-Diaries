@@ -4,11 +4,13 @@ import { BsPersonFillLock } from "react-icons/bs";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 const ERR_MSG_PASSWORD_NOT_MATCH = "Passwords do not match.";
 const ERR_MSG_PASSWORD_LENGTH = "Length of password should be at least 8";
 
 export default function Reset() {
+  const {toast} = useToast()
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword, confirmPassword, setConfirmPassword] =
     useConfirmPassword("", setError);
@@ -27,7 +29,11 @@ export default function Reset() {
       });
 
       if (data) {
-        alert(`Password has been changed successfully. Thank you!`);
+        toast({
+          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          title: "Password Changed",
+          description: (`Password has been changed successfully. Thank you!`)
+        })
         router.push("/login");
       }
     } catch (error) {
