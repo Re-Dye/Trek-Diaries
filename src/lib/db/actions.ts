@@ -432,10 +432,7 @@ export const getFeed = async (
       })
       .from(sq)
       .where(
-        and(
-          eq(sq.location_id, sql.placeholder("userId")),
-          gt(sq.id, sql.placeholder("last"))
-        )
+        gt(sq.id, sql.placeholder("last"))
       )
       .orderBy(desc(sq.registered_time), asc(sq.id))
       .limit(sql.placeholder("limit"))
@@ -445,7 +442,6 @@ export const getFeed = async (
 
     /* get one more post for next turn */
     const res = await getFeed.execute({ userId, limit: limit + 1, last });
-    console.log(res)
 
     /* if there is a next page */
     if (res.length === limit + 1) {
