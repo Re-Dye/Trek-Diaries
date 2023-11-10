@@ -1,23 +1,25 @@
 import React from "react";
 import Post from "./component/postLayout";
 import { notFound } from "next/navigation";
+import { ReturnPost } from "@/lib/zodSchema/dbTypes";
+import { getPost } from "@/lib/db/actions";
 
-async function fetchPostData(id: string) {
-  const res: Response = await fetch(
-    `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/getaPost?postId=${id}`,
-    { cache: "no-store" }
-  );
-  if (!res.ok) return undefined
-  return res.json();
+async function fetchPostData(id: string): Promise<ReturnPost | null> {
+  try {
+    const res: ReturnPost = await getPost(id);
+    return res;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const postID: string = params.id;
-  const data = await fetchPostData(postID);
-  console.log("hello", data);
+  const post = await fetchPostData(postID);
 
-  if (!data) {
-    notFound()
+  if (!post) {
+    notFound();
   }
 
   return (
@@ -25,13 +27,18 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       <div className="w-1/4 bg-custom_gray mt-2 border"></div>
       <div className="mt-2 bg-custom_gray border w-2/4 box-border">
         <Post
-          address={data.location.address}
-          name={data.owner.name}
-          likes={data.likes}
-          registeredTime={data.registeredTime}
-          description={data.description}
-          pictureURL={data.pictureURL}
-          rating = {data.rating}
+          address={post.location_address}
+          name={post.owner_name}
+          likes={post.likes_count}
+          registeredTime={post.registered_time}
+          description={post.description}
+          pictureURL={post.picture_url}
+          rating={{
+            Accessibility: post.accessibility,
+            TrailCondition: post.trail_condition,
+            Weather: post.weather,
+            overallScore: post.rating,
+          }}
           postID={params.id}
         />
       </div>

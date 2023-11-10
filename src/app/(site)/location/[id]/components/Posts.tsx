@@ -19,7 +19,7 @@ export default function Posts({ locationId }: { locationId: string }) {
     queryFn: async ({ pageParam }: { pageParam: string }) => {
       try {
         const res = await fetch(
-          `/api/location/post?type=paginated&locationId=${locationId}&last=${pageParam}&limit=${CONSTANTS.POSTS_PER_SCROLL}`,
+          `/api/location/post?locationId=${locationId}&last=${pageParam}&limit=${CONSTANTS.POSTS_PER_SCROLL}`,
           {
             cache: "no-store",
             method: "GET",

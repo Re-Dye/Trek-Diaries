@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import Star from "./star";
 import FinalRating from "./finalRating";
 import { ThumbsUp, UserCircle } from "lucide-react";
+import handleRegisteredTime from "@/lib/utilities/handleRegisteredTime";
 
 export default function Post({
   address,
@@ -21,7 +22,7 @@ export default function Post({
   address: string;
   name: string;
   likes: number;
-  registeredTime: Date;
+  registeredTime: string;
   description: string;
   pictureURL: string;
   postID: string;
@@ -32,24 +33,6 @@ export default function Post({
     overallScore: number;
   };
 }) {
-  const storedDate = new Date(registeredTime);
-  const now = new Date();
-  const diff = now.getTime() - storedDate.getTime();
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  let formattedDiff;
-  if (days >= 1) {
-    formattedDiff = days + "d ago";
-  } else if (hours >= 1) {
-    formattedDiff = hours + "h ago";
-  } else if (minutes >= 1) {
-    formattedDiff = minutes + "m ago";
-  } else {
-    formattedDiff = seconds + "s ago";
-  }
-
   const [Likes, setLike] = useState(likes);
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
@@ -88,7 +71,7 @@ export default function Post({
             <UserCircle className="mt-1 w-6 h-6" />
             <h3 className="text-2xl">{name}</h3>
           </div>
-          <h5 className="ml-8 opacity-50 mt-1">{formattedDiff}</h5>
+          <h5 className="ml-8 opacity-50 mt-1">{handleRegisteredTime(registeredTime)}</h5>
         </div>
         <div className="relative w-full h-60">
           <Image
