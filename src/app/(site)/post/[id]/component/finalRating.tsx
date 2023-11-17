@@ -12,7 +12,7 @@ const FinalRating = ({ stars }: { stars: number }) => {
     return "hsl(" + c + ", 100%, 50%)";
   };
   return (
-    <div className="flex w-14 h-14">
+    <div className="flex w-16 h-16">
     <CircularProgressbar
       value={score}
       text={`${stars}`}
@@ -33,7 +33,7 @@ const FinalRating = ({ stars }: { stars: number }) => {
         text: {
           textAlign: "center",
           fill: "#aa6c39",
-          fontSize: "18px",
+          fontSize: "32px",
         },
       }}
       strokeWidth={10}

@@ -14,7 +14,7 @@ export default function Home() {
   });
 
   return (
-    <div className="flex justify-between min-h-screen">
+    <div className="flex justify-between min-h-screen mt-14 dark:bg-black bg-slate-100">
       <div className="w-1/4 bg-custom_gray mt-2 border"></div>
       <div className="mt-2 bg-custom_gray border w-2/4 box-border">
         {session.status === "authenticated" ? (

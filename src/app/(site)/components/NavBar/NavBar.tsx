@@ -41,8 +41,8 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="w-full pr-8 pl-8 bg-custom_gray">
-      <div className="flex justify-between p-2 items-center">
+    <nav className="w-full bg-slate-200 pr-8 pl-8 dark:bg-black fixed z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
         <div
           className="flex cursor-pointer "
           onClick={() => {

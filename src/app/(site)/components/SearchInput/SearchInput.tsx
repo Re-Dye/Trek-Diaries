@@ -32,7 +32,7 @@ export default function SearchInput() {
       className="flex justify-center items-center w-96 gap-2"
     >
       <Input
-        className="text-center shadow-md"
+        className="text-center shadow-md border border-gray-800 dark:border-gray-500 rounded-lg"
         placeholder="Search Location"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}

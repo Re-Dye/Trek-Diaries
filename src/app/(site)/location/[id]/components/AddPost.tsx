@@ -25,7 +25,7 @@ export default function AddPost({ locationID }: { locationID: string }) {
         <Button 
           variant="outline" 
           onClick={handleClick} 
-          className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300"
+          className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300 dark:hover:bg-gray-800"
           >Add Post<PlusCircle className="w-5 h-5"/></Button>
         { isOpen && (
           <DialogAddPost open={isOpen} locationID={locationID} handleOpen={handleOpen} />

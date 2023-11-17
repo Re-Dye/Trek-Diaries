@@ -101,7 +101,7 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
       ) : !followed ? (
         <Button
           onClick={() => handleToggleFollow("follow")}
-          className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300"
+          className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300 dark:hover:bg-gray-800"
         >
           Follow
           <UserPlus className="w-5 h-5" />
@@ -109,7 +109,7 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
       ) : (
         <Button
           onClick={() => handleToggleFollow("unfollow")}
-          className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all ease-in-out uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300"
+          className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all ease-in-out uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300 dark:hover:bg-gray-800"
         >
           Unfollow
           <UserMinus className="w-5 h-5" />
