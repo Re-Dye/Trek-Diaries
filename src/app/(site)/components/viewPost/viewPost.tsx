@@ -1,11 +1,14 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { getSession, useSession } from "next-auth/react";
+import { useRef, useState } from "react";
 import Star from "../../post/[id]/component/star";
-import { LocateFixed, MessageSquare, ThumbsUp, UserCircle } from "lucide-react";
+import { LocateFixed, MessageSquare, ThumbsUp, User, UserCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import handleRegisteredTime from "@/lib/utilities/handleRegisteredTime";
+import { LikePost } from "@/lib/zodSchema/likePost";
+import { toast } from "@/components/ui/use-toast";
+import { useMutation } from "@tanstack/react-query";
 
 interface Owner {
   id: string;
@@ -16,6 +19,8 @@ interface Location {
   id: string;
   address: string;
 }
+
+type Action = "like" | "dislike";
 
 //{id, location, description, likes, imageURL, owner}
 export default function ViewPost({
@@ -42,8 +47,6 @@ export default function ViewPost({
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
   const session = useSession();
-
-  const email: any = session.data?.user?.email;
   // const handleColor = () => {
   //   if (isLiked) {
   //     setColor("blue");
@@ -57,30 +60,120 @@ export default function ViewPost({
     router.push(`/post/${id}`);
   };
 
-  const handleLike = async () => {
-    const encodedEmail = encodeURI(email);
-    const eoncodedPostId = encodeURI(id);
-    try {
-      const res: Response = await fetch(
-        `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/likePost?postId=${eoncodedPostId}&email=${encodedEmail}`,
-        {
-          method: "POST",
-          cache: "no-store",
-        }
-      );
-      if (isLiked) {
-        setLike(likes);
-      } else {
-        setLike(likes + 1);
-      }
-      // setLike(isLiked ? likes : likes + 1); // Toggle between increment and decrement based on isLiked state
-      setIsLiked(!isLiked); // Toggle the isLiked state
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const actionRef = useRef<Action>("like");
 
   
+  const { isPending, mutate } = useMutation({
+    mutationFn: async () => {
+      if (session.status === "authenticated") {
+        const data: LikePost = {
+          postId: id,
+          userId: session.data.user?.id,
+        };
+  
+        try {
+          if (isLiked) {
+            actionRef.current = "dislike";
+            setLike((likes) => likes - 1);
+          } else {
+            actionRef.current = "like";
+            setLike((likes) => likes + 1);
+          }
+
+          const res: Response = await fetch(
+            `/api/post/${actionRef.current}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
+          const message = await res.json();
+          const status = res.status;
+          return { message, status };
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: "Please login to like a post.",
+          className:
+            "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        });
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+    onSuccess: (data) => {
+      if (data === undefined) {
+        return;
+      }
+      
+      if (data.status === 201) {
+        const _data:{likes: number} = JSON.parse(data.message);
+        setLike(_data.likes);
+        setIsLiked(() => {
+          if (actionRef.current === "like") {
+            return true;
+          } else {
+            return false;
+          }
+        });
+        return;
+      }
+
+      if (actionRef.current == "dislike") {
+        setLike((likes) => likes + 1);
+        setIsLiked(true);
+      } else {
+        setLike((likes) => likes - 1);
+        setIsLiked(false);
+      }
+
+      if (data.status === 409) {
+        toast({
+          title: "Error",
+          description: "Post already liked.",
+          className:
+            "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        });
+        return;
+      }
+      
+      if (data.status === 404) {
+        toast({
+          title: "Error",
+          description: "Post not found. The post has been deleted or does not exist.",
+          className:
+            "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          });
+          return;
+      }
+
+      if (data.status === 400) {
+        toast({
+          title: "Error",
+          description: "Invalid request. Please try again later with valid data.",
+          className:
+            "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        });
+        return;
+      }
+
+      toast({
+        title: "Error",
+        description: "Error occured while liking post. Please try again later.",
+        className:
+        "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+      });
+    }
+  });
+
+  const handleLike = () => mutate();
 
   return (
     <Card className="flex items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md">
@@ -124,7 +217,7 @@ export default function ViewPost({
             }}
           >
             <div className="text-xl">{Likes}</div>
-            <ThumbsUp className="w-6 h-6 hover:text-blue-600" />
+            <ThumbsUp className={`w-6 h-6 hover:text-blue-600 ${isLiked? 'text-blue-600': 'text-gray-500'}`} />
           </button>
 
           <button className="cursor-pointer" onClick={handleRouting}>

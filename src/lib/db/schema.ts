@@ -113,4 +113,7 @@ export const usersLikePosts = pgTable("users_like_posts", {
   post_id: uuid("post_id").references(() => posts.id, {
     onDelete: "cascade",
   }),
-});
+}, 
+(usersLikePosts) => ({
+  pk: primaryKey(usersLikePosts.user_id, usersLikePosts.post_id),
+}));

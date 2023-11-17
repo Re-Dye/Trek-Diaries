@@ -1,5 +1,12 @@
+import "server-only";
 import { db } from "@/lib/db/db";
-import { users, locations, usersToLocations, posts } from "@/lib/db/schema";
+import {
+  users,
+  locations,
+  usersToLocations,
+  posts,
+  usersLikePosts,
+} from "@/lib/db/schema";
 import { eq, sql, and, desc, asc, gt } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
 import { cacheUserSchema, CachedUser } from "../zodSchema/cachedUser";
@@ -13,6 +20,10 @@ import {
   InsertPost,
   ReturnPost,
 } from "@/lib/zodSchema/dbTypes";
+import { LikePost } from "../zodSchema/likePost";
+import { Pool } from "@neondatabase/serverless";
+import { getDbUrl } from "../secrets";
+import { drizzle } from "drizzle-orm/neon-serverless";
 
 export const countUserByEmail = async (email: string) => {
   try {
@@ -431,9 +442,7 @@ export const getFeed = async (
         owner_name: users.name,
       })
       .from(sq)
-      .where(
-        gt(sq.id, sql.placeholder("last"))
-      )
+      .where(gt(sq.id, sql.placeholder("last")))
       .orderBy(desc(sq.registered_time), asc(sq.id))
       .limit(sql.placeholder("limit"))
       .innerJoin(locations, eq(sq.location_id, locations.id))
@@ -454,5 +463,106 @@ export const getFeed = async (
   } catch (error) {
     console.error("Error in getting feed", error);
     throw new Error("Error in getting feed: " + error);
+  }
+};
+
+export const postExists = async (postId: string) => {
+  try {
+    const postExists = db
+      .select({ count: sql<number>`count(*)` })
+      .from(posts)
+      .where(eq(posts.id, sql.placeholder("postId")))
+      .prepare("post_exists");
+    const res = await postExists.execute({ postId });
+    const count: number = res[0].count;
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error in checking if post exists", error);
+    throw new Error("Error in checking if post exists: " + error);
+  }
+};
+
+export const isPostLiked = async (data: LikePost): Promise<boolean> => {
+  try {
+    const isPostLiked = db
+      .select({ count: sql<number>`count(*)` })
+      .from(usersLikePosts)
+      .where(and(eq(usersLikePosts.user_id, sql.placeholder("userId")), eq(usersLikePosts.post_id, sql.placeholder("postId"))))
+      .prepare("is_post_liked");
+    const res = await isPostLiked.execute({ userId: data.userId, postId: data.postId });
+    const count: number = res[0].count;
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error in checking if post is liked", error);
+    throw new Error("Error in checking if post is liked: " + error);
+  }
+}
+
+export const likePost = async (data: LikePost): Promise<number> => {
+  try {
+    const pool = new Pool({ connectionString: getDbUrl() });
+    const db = drizzle(pool);
+    const likePost = db.transaction(async (trx) => {
+      const addToLikeTable = await trx
+        .insert(usersLikePosts)
+        .values({
+          // user_id: sql.placeholder("userId"),
+          // post_id: sql.placeholder("postId"),
+          user_id: data.userId,
+          post_id: data.postId,
+        })
+        .execute();
+      //   .prepare("like_post");
+      // await addToLikeTable.execute({
+      //   userId: data.userId,
+      //   postId: data.postId,
+      // });
+      // const incrementLikeCount = trx
+      const res: {likes: number}[] = await trx
+        .update(posts)
+        .set({
+          likes_count: sql<number>`likes_count + 1`,
+        })
+        .where(eq(posts.id, data.postId))
+        // .where(eq(posts.id, sql.placeholder("postId")))
+        .returning({likes: posts.likes_count})
+        // .prepare("increment_like_count");
+        .execute();
+      // const res: {likes: number}[] = await incrementLikeCount.execute({ postId: data.postId });
+      return res[0].likes;
+    });
+    return await likePost;
+  } catch (error) {
+    console.error("Error in liking post", error);
+    throw new Error("Error in liking post: " + error);
+  }
+};
+
+export const dislikePost = async (data: LikePost) => {
+  try {
+    const dislikePost = db
+      .delete(usersLikePosts)
+      .where(
+        and(
+          eq(usersLikePosts.user_id, sql.placeholder("userId")),
+          eq(usersLikePosts.post_id, sql.placeholder("postId"))
+        )
+      )
+      .prepare("dislike_post");
+    await dislikePost.execute({
+      userId: data.userId,
+      postId: data.postId,
+    });
+  } catch (error) {
+    console.error("Error in disliking post", error);
+    throw new Error("Error in disliking post: " + error);
   }
 };
