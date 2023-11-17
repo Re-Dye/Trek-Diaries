@@ -507,62 +507,62 @@ export const isPostLiked = async (data: LikePost): Promise<boolean> => {
 }
 
 export const likePost = async (data: LikePost): Promise<number> => {
+  const pool = new Pool({ connectionString: getDbUrl() });
   try {
-    const pool = new Pool({ connectionString: getDbUrl() });
     const db = drizzle(pool);
     const likePost = db.transaction(async (trx) => {
-      const addToLikeTable = await trx
+      await trx
         .insert(usersLikePosts)
         .values({
-          // user_id: sql.placeholder("userId"),
-          // post_id: sql.placeholder("postId"),
           user_id: data.userId,
           post_id: data.postId,
         })
         .execute();
-      //   .prepare("like_post");
-      // await addToLikeTable.execute({
-      //   userId: data.userId,
-      //   postId: data.postId,
-      // });
-      // const incrementLikeCount = trx
       const res: {likes: number}[] = await trx
         .update(posts)
         .set({
-          likes_count: sql<number>`likes_count + 1`,
+          likes_count: sql<number>`${posts.likes_count} + 1`,
         })
         .where(eq(posts.id, data.postId))
-        // .where(eq(posts.id, sql.placeholder("postId")))
         .returning({likes: posts.likes_count})
-        // .prepare("increment_like_count");
         .execute();
-      // const res: {likes: number}[] = await incrementLikeCount.execute({ postId: data.postId });
       return res[0].likes;
     });
-    return await likePost;
+    const likes = await likePost;
+    pool.end();
+    return likes
   } catch (error) {
     console.error("Error in liking post", error);
+    pool.end();
     throw new Error("Error in liking post: " + error);
   }
 };
 
 export const dislikePost = async (data: LikePost) => {
+  const pool = new Pool({ connectionString: getDbUrl() });
   try {
-    const dislikePost = db
-      .delete(usersLikePosts)
-      .where(
-        and(
-          eq(usersLikePosts.user_id, sql.placeholder("userId")),
-          eq(usersLikePosts.post_id, sql.placeholder("postId"))
-        )
-      )
-      .prepare("dislike_post");
-    await dislikePost.execute({
-      userId: data.userId,
-      postId: data.postId,
+    const db = drizzle(pool);
+    const dislikePost = db.transaction(async (trx) => {
+      await trx
+        .delete(usersLikePosts)
+        .where(and(eq(usersLikePosts.user_id, data.userId), eq(usersLikePosts.post_id, data.postId)))
+        .execute();
+      const res: {likes: number}[] = await trx
+        .update(posts)
+        .set({
+          likes_count: sql<number>`${posts.likes_count} - 1`,
+        })
+        .where(eq(posts.id, data.postId))
+        .returning({likes: posts.likes_count})
+        .execute();
+      return res[0].likes;
     });
+    const likes = await dislikePost;
+    pool.end();
+    return likes;
   } catch (error) {
-    console.error("Error in disliking post", error);
-    throw new Error("Error in disliking post: " + error);
+    console.error("Error in liking post", error);
+    pool.end();
+    throw new Error("Error in liking post: " + error);
   }
 };

@@ -75,10 +75,13 @@ export default function ViewPost({
           if (isLiked) {
             actionRef.current = "dislike";
             setLike((likes) => likes - 1);
+            setIsLiked(false);
           } else {
             actionRef.current = "like";
             setLike((likes) => likes + 1);
+            setIsLiked(true);
           }
+          console.log(actionRef.current, isLiked)
 
           const res: Response = await fetch(
             `/api/post/${actionRef.current}`,
@@ -107,6 +110,13 @@ export default function ViewPost({
     },
     onError: (error) => {
       console.log(error);
+      if (actionRef.current == "dislike") {
+        setLike((likes) => likes + 1);
+        setIsLiked(true);
+      } else {
+        setLike((likes) => likes - 1);
+        setIsLiked(false);
+      }
     },
     onSuccess: (data) => {
       if (data === undefined) {
@@ -116,13 +126,7 @@ export default function ViewPost({
       if (data.status === 201) {
         const _data:{likes: number} = JSON.parse(data.message);
         setLike(_data.likes);
-        setIsLiked(() => {
-          if (actionRef.current === "like") {
-            return true;
-          } else {
-            return false;
-          }
-        });
+        setIsLiked(() => actionRef.current === "like" ? true : false)
         return;
       }
 
@@ -137,7 +141,7 @@ export default function ViewPost({
       if (data.status === 409) {
         toast({
           title: "Error",
-          description: "Post already liked.",
+          description: `Post already ${actionRef.current}d.`,
           className:
             "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
         });
@@ -166,14 +170,25 @@ export default function ViewPost({
 
       toast({
         title: "Error",
-        description: "Error occured while liking post. Please try again later.",
+        description: "Error occured. Please try again later.",
         className:
         "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
       });
     }
   });
 
-  const handleLike = () => mutate();
+  const handleLike = () => {
+    if (isPending) {
+      toast({
+        title: "Error",
+        description: "Previous request is still pending. Please wait for it to complete.",
+        className:
+          "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+      });
+    } else {
+      mutate();
+    }
+  };
 
   return (
     <Card className="flex items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md">

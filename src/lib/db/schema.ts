@@ -10,7 +10,6 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { CONSTANTS } from "../constants";
-import { sql } from "drizzle-orm";
 
 export const users = pgTable(
   "users",

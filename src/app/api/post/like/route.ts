@@ -9,7 +9,6 @@ export const runtime: ServerRuntime = "edge";
 export async function POST(req: NextRequest) {
   try {
     const data: LikePost = likePostSchema.parse(await req.json());
-
     
     if (!(await postExists(data.postId))) {
       return NextResponse.json("Post does not exist", { status: 404 });
