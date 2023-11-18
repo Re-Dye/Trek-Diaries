@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import forgetStyles from "../reset-password/page.module.css";
 import Link from "next/link";
 import axios from "axios";
-import { toast, useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function ResetPassword() {
   const {toast} = useToast()

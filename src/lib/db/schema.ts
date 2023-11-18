@@ -10,7 +10,6 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { CONSTANTS } from "../constants";
-import { sql } from "drizzle-orm";
 
 export const users = pgTable(
   "users",
@@ -113,4 +112,7 @@ export const usersLikePosts = pgTable("users_like_posts", {
   post_id: uuid("post_id").references(() => posts.id, {
     onDelete: "cascade",
   }),
-});
+}, 
+(usersLikePosts) => ({
+  pk: primaryKey(usersLikePosts.user_id, usersLikePosts.post_id),
+}));

@@ -1902,7 +1902,7 @@ dreamopt@~0.8.0:
   dependencies:
     wordwrap ">=0.0.2"
 
-drizzle-kit@^0.19.13:
+drizzle-kit@0.19.13:
   version "0.19.13"
   resolved "https://registry.yarnpkg.com/drizzle-kit/-/drizzle-kit-0.19.13.tgz#f459be8233e8f893aad48fe803abb644e71dbc61"
   integrity sha512-Rba5VW1O2JfJlwVBeZ8Zwt2E2us5oZ08PQBDiVSGlug53TOc8hzXjblZFuF+dnll9/RQEHrkzBmJFgqTvn5Rxg==
@@ -1920,7 +1920,7 @@ drizzle-kit@^0.19.13:
     minimatch "^7.4.3"
     zod "^3.20.2"
 
-drizzle-orm@^0.28.6:
+drizzle-orm@0.28.6:
   version "0.28.6"
   resolved "https://registry.yarnpkg.com/drizzle-orm/-/drizzle-orm-0.28.6.tgz#9c28ace432e826e3c21ea923530df0d1e76810be"
   integrity sha512-yBe+F9htrlYER7uXgDJUQsTHFoIrI5yMm5A0bg0GiZ/kY5jNXTWoEy4KQtg35cE27sw1VbgzoMWHAgCckUUUww==
@@ -3903,6 +3903,11 @@ semver@^7.3.5, semver@^7.5.4:
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
   dependencies:
     lru-cache "^6.0.0"
+
+server-only@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/server-only/-/server-only-0.0.1.tgz#0f366bb6afb618c37c9255a314535dc412cd1c9e"
+  integrity sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==
 
 set-function-length@^1.1.1:
   version "1.1.1"
