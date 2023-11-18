@@ -28,3 +28,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json("Internal server error", { status: 500 });
   }
 } 
+
+export async function GET(req: NextRequest) { 
+  try {
+    const searchParams = req.nextUrl.searchParams;
+    const userId: string | null = searchParams.get("userId");
+    const postId: string | null = searchParams.get("postId");
+    
+    if (!userId || !postId) {
+      return new Response("Invalid Request", { status: 400 });
+    }
+
+    const data: LikePost = { userId, postId };
+    const isLiked: boolean = await isPostLiked(data);
+    return NextResponse.json(JSON.stringify({ isLiked }), { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json("Internal Server Error", { status: 500 });
+  }
+}

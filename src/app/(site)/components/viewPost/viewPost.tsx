@@ -1,14 +1,15 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRef, useState } from "react";
 import Star from "../../post/[id]/component/star";
-import { LocateFixed, MessageSquare, ThumbsUp, User, UserCircle } from "lucide-react";
+import { LocateFixed, MessageSquare, ThumbsUp, UserCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import handleRegisteredTime from "@/lib/utilities/handleRegisteredTime";
 import { LikePost } from "@/lib/zodSchema/likePost";
 import { toast } from "@/components/ui/use-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 interface Owner {
   id: string;
@@ -22,7 +23,6 @@ interface Location {
 
 type Action = "like" | "dislike";
 
-//{id, location, description, likes, imageURL, owner}
 export default function ViewPost({
   id,
   location,
@@ -42,19 +42,10 @@ export default function ViewPost({
   owner: Owner;
   rating: number;
 }) {
-  const [Color, setColor] = useState("grey");
   const [Likes, setLike] = useState(likes);
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
   const session = useSession();
-  // const handleColor = () => {
-  //   if (isLiked) {
-  //     setColor("blue");
-  //     console.log("Liked")
-  //   } else {
-  //     setColor("grey");
-  //   }
-  // };
 
   const handleRouting = () => {
     router.push(`/post/${id}`);
@@ -62,6 +53,46 @@ export default function ViewPost({
 
   const actionRef = useRef<Action>("like");
 
+  const { status } = useQuery({
+    queryKey: ["isLiked", id],
+    queryFn: async () => {
+      if (session.status === "authenticated") {
+        try {
+          const userId = session.data.user?.id;
+          const res: Response = await fetch(`/api/post/like?userId=${userId}&postId=${id}`, {
+            method: "GET"
+          });
+          const message = await res.json();
+          
+          if (res.status === 200) {
+            const _data: { isLiked: boolean } = JSON.parse(message);
+            setIsLiked(_data.isLiked);
+            return;
+          }
+          
+          if (res.status === 400) {
+            toast({
+              title: "Error",
+              description: "Invalid request. Please try again later with valid data.",
+              className:
+                "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+            });
+            return;
+          }
+
+          toast({
+            title: "Error",
+            description: "Error occured. Please try again later.",
+            className:
+              "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    },
+    enabled: (session.status === "authenticated")
+  })
   
   const { isPending, mutate } = useMutation({
     mutationFn: async () => {
@@ -225,15 +256,15 @@ export default function ViewPost({
           <Star stars={rating} />
         </div>
         <div className="flex gap-8 justify-start">
-          <button
+          { status === "pending"? <ReloadIcon className="w-6 h-6 animate-spin" /> : 
+            <button
             className="flex gap-2 cursor-pointer"
-            onClick={() => {
-              handleLike();
-            }}
-          >
-            <div className="text-xl">{Likes}</div>
-            <ThumbsUp className={`w-6 h-6 hover:text-blue-600 ${isLiked? 'text-blue-600': 'text-gray-500'}`} />
-          </button>
+            onClick={handleLike}
+            >
+              <div className="text-xl">{Likes}</div>
+              <ThumbsUp className={`w-6 h-6 ${isLiked? 'text-blue-600': 'text-gray-500'}`} />
+            </button>
+          }
 
           <button className="cursor-pointer" onClick={handleRouting}>
             <MessageSquare className="w-6 h-6 hover:text-blue-600" />
