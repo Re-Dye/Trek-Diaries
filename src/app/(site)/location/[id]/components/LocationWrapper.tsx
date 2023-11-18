@@ -13,7 +13,7 @@ type Props = {
 const LocationWrapper: FC<Props> = (props) => {
   return (
     <div className="mt-2 bg-custom_gray border w-2/4 box-border space-y-2">
-      <div className="flex-row text-center p-4 m-2 rounded-xl shadow-md border-2 bg-transparent border-teal-600">
+      <div className="flex-row text-center p-4 m-2 rounded-xl shadow-md dark:bg-black bg-slate-100">
         <div className="text-lg space-y-4">
           <div className="flex gap-2 justify-center">
             <LocateFixed className="w-6 h-6 text-red-700" />
@@ -26,7 +26,7 @@ const LocationWrapper: FC<Props> = (props) => {
           <ButtonFollow locationID={props.location.id} />
         </div>
       </div>
-      <div><Posts locationId={props.location.id} /></div>
+      <div className="flex justify-center"><Posts locationId={props.location.id} /></div>
     </div>
   );
 };

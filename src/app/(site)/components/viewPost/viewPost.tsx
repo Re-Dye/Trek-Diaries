@@ -83,7 +83,7 @@ export default function ViewPost({
   
 
   return (
-    <Card className="flex items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md">
+    <Card className="flex justify-evenly items-center rounded-2xl m-2 p-4 gap-10 shadow-md">
       <div className="flex-row space-y-4">
         <div className="text-sm flex gap-2">
           <LocateFixed className="w-4 h-4 text-red-500" />
@@ -99,14 +99,16 @@ export default function ViewPost({
           />
         </div>
       </div>
-      <div className="flex-row space-y-6">
-        <div className="text-lg flex justify-start gap-32">
+      <div className="flex-row space-y-10">
+        <div className="flex">
+          <div className="text-md flex gap-24">
           <div className="flex gap-2">
-            <UserCircle className="mt-1" />
+            <UserCircle />
             <h3>{owner?.name}</h3>
           </div>
-          <div>
+          <div className="text-sm">
             <h5>{handleRegisteredTime(registered_time)}</h5>
+          </div>
           </div>
         </div>
         <div className="box-border p-1 overflow-y-scroll">

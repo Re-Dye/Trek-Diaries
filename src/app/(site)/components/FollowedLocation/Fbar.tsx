@@ -78,7 +78,7 @@ export default function Fbar() {
   }, [status, data])
 
   return (
-    <div className="flex-row absolute text-xl box-border space-y-6 mt-8 left-5 rounded-2xl border p-8 shadow-md">
+    <div className="flex-row absolute text-xl box-border space-y-6 mt-8 left-5 rounded-2xl p-8 shadow-md bg-slate-100 dark:bg-neutral-800">
       <div className="flex gap-2">
         <h2 className="text-2xl">Followed Locations</h2>
         <MapPin className="w-7 h-7 text-red-600" />

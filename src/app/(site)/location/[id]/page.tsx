@@ -28,7 +28,7 @@ export default async function LocationPage({
   }
 
   return (
-    <div className="flex justify-between h-full">
+    <div className="flex justify-between min-h-screen mt-14 dark:bg-black bg-slate-100">
       <div className="w-1/4 bg-custom_gray mt-2 border"></div>
        <LocationWrapper location={data as ReturnLocation} />
       <div className="w-1/5 bg-custom_gray border mt-2"></div>

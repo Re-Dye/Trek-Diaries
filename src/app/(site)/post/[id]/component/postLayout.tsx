@@ -64,18 +64,18 @@ export default function Post({
   };
 
   return (
-    <div className="flex-row items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md">
+    <div className="flex-row items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md dark:bg-black bg-slate-100">
       <div className="flex-row space-y-4">
         <div className="flex-row">
           <div className="flex gap-2">
-            <UserCircle className="mt-1 w-6 h-6" />
-            <h3 className="text-2xl">{name}</h3>
+            <UserCircle className="w-7 h-7" />
+            <h3 className="text-xl">{name}</h3>
           </div>
-          <h5 className="ml-8 opacity-50 mt-1">{handleRegisteredTime(registeredTime)}</h5>
+          <h5 className="ml-9 opacity-50">{handleRegisteredTime(registeredTime)}</h5>
         </div>
         <div className="relative w-full h-60">
           <Image
-            className=" rounded-2xl object-cover"
+            className=" rounded-2xl object-contain"
             alt="Error: Image could not be loaded."
             fill={true}
             src={pictureURL}
@@ -83,10 +83,10 @@ export default function Post({
         </div>
       </div>
       <div className="flex-row space-y-2">
-        <div className="flex p-4 mt-3 gap-4 rounded-xl shadow-md border-2 bg-transparent border-teal-600">
-          <div className="box-border">
+        <div className="flex justify-between p-4 mt-3 gap-4 rounded-xl shadow-md border-2 bg-transparent border-teal-600">
+          <div className="box-border space-y-6">
             <p className="text-sm text-left overflow-y-scroll">{description}</p>
-            <div className="flex gap-3 cursor-pointer mt-4">
+            <div className="flex gap-3 cursor-pointer">
               <div className="text-xl">{Likes}</div>
               <ThumbsUp
                 className="w-6 h-6 hover:text-blue-600"
@@ -94,6 +94,7 @@ export default function Post({
               />
             </div>
           </div>
+          <div className="flex gap-16">
           <div className="flex-row space-y-1">
             <div className="TrialCondition">
               <h4>
@@ -113,6 +114,7 @@ export default function Post({
           </div>
           <div className="flex justify-center items-center">
               <FinalRating stars={rating.overallScore} />
+          </div>
           </div>
         </div>
         <div className="flex justify-center">
