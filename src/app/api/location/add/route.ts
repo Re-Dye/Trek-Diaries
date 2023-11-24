@@ -10,8 +10,6 @@ import {
 import algoliasearch from "algoliasearch";
 import { ReturnLocation } from "@/lib/zodSchema/dbTypes";
 
-export const runtime: ServerRuntime = "edge";
-
 export async function POST(req: NextRequest) {
   try {
     const client = algoliasearch(getAlgoliaAppId(), getAlgoliaAdminKey());
