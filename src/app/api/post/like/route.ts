@@ -4,8 +4,6 @@ import { ServerRuntime } from "next";
 import { isPostLiked, likePost, postExists } from "@/lib/db/actions";
 import { ZodError } from "zod";
 
-export const runtime: ServerRuntime = "edge";
-
 export async function POST(req: NextRequest) {
   try {
     const data: LikePost = likePostSchema.parse(await req.json());
