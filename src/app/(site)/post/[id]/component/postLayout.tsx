@@ -1,16 +1,25 @@
 "use client";
 import Image from "next/image";
-import Comment from "./comment_sec/Comment";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import Star from "./star";
 import FinalRating from "./finalRating";
-import { ThumbsUp, UserCircle } from "lucide-react";
+import { UserCircle } from "lucide-react";
 import handleRegisteredTime from "@/lib/utilities/handleRegisteredTime";
+import { useRouter } from "next/navigation";
+
+import dynamic from "next/dynamic";
+const ButtonLike = dynamic(
+  () => import("@/app/(site)/components/viewPost/ButtonLike"),
+  { ssr: false }
+);
+// const Comment = dynamic(
+//   () => import("./comment_sec/Comment"),
+//   { ssr: false }
+// );
 
 export default function Post({
+  userId,
   address,
+  locationId,
   name,
   likes,
   registeredTime,
@@ -19,9 +28,11 @@ export default function Post({
   postID,
   rating,
 }: {
+  userId: string | undefined;
   address: string;
   name: string;
   likes: number;
+  locationId: string;
   registeredTime: string;
   description: string;
   pictureURL: string;
@@ -33,35 +44,9 @@ export default function Post({
     overallScore: number;
   };
 }) {
-  const [Likes, setLike] = useState(likes);
-  const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
-  const session = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/login");
-    },
-  });
 
-  const email: any = session.data?.user?.email;
-
-  const handleLike = async () => {
-    const encodedEmail = encodeURI(email);
-    const eoncodedPostId = encodeURI(postID);
-    try {
-      const res: Response = await fetch(
-        `https://ap-south-1.aws.data.mongodb-api.com/app/trek-diaries-bmymy/endpoint/likePost?postId=${eoncodedPostId}&email=${encodedEmail}`,
-        {
-          method: "POST",
-          cache: "no-store",
-        }
-      );
-      setLike(isLiked ? likes : likes + 1); // Toggle between increment and decrement based on isLiked state
-      setIsLiked(!isLiked); // Toggle the isLiked state
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const handleRouting = () => router.push(`/location/${locationId}`);
 
   return (
     <div className="flex-row items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md dark:bg-black bg-slate-100">
@@ -71,7 +56,12 @@ export default function Post({
             <UserCircle className="w-7 h-7" />
             <h3 className="text-xl">{name}</h3>
           </div>
-          <h5 className="ml-9 opacity-50">{handleRegisteredTime(registeredTime)}</h5>
+          <h4 className="ml-9 opacity-50 hover:text-blue-500" onClick={handleRouting}>
+            {address}
+          </h4>
+          <h5 className="ml-9 opacity-50">
+            {handleRegisteredTime(registeredTime)}
+          </h5>
         </div>
         <div className="relative w-full h-60">
           <Image
@@ -86,39 +76,37 @@ export default function Post({
         <div className="flex justify-between p-4 mt-3 gap-4 rounded-xl shadow-md border-2 bg-transparent border-teal-600">
           <div className="box-border space-y-6">
             <p className="text-sm text-left overflow-y-scroll">{description}</p>
-            <div className="flex gap-3 cursor-pointer">
-              <div className="text-xl">{Likes}</div>
-              <ThumbsUp
-                className="w-6 h-6 hover:text-blue-600"
-                onClick={handleLike}
-              />
-            </div>
+            {userId && (
+              <div className="flex gap-3 cursor-pointer">
+                <ButtonLike likes={likes} postId={postID} userId={userId} />
+              </div>
+            )}
           </div>
           <div className="flex gap-16">
-          <div className="flex-row space-y-1">
-            <div className="TrialCondition">
-              <h4>
-                TrialCondition: <Star stars={rating.TrailCondition} />
-              </h4>
+            <div className="flex-row space-y-1">
+              <div className="TrialCondition">
+                <h4>
+                  TrialCondition: <Star stars={rating.TrailCondition} />
+                </h4>
+              </div>
+              <div className="Weather">
+                <h4>
+                  Weather: <Star stars={rating.Weather} />
+                </h4>
+              </div>
+              <div className="Accessibility">
+                <h4>
+                  Accessibility: <Star stars={rating.Accessibility} />
+                </h4>
+              </div>
             </div>
-            <div className="Weather">
-              <h4>
-                Weather: <Star stars={rating.Weather} />
-              </h4>
-            </div>
-            <div className="Accessibility">
-              <h4>
-                Accessibility: <Star stars={rating.Accessibility} />
-              </h4>
-            </div>
-          </div>
-          <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center">
               <FinalRating stars={rating.overallScore} />
-          </div>
+            </div>
           </div>
         </div>
         <div className="flex justify-center">
-          <Comment postId={postID} />
+          {/* <Comment postId={postID} /> */}
         </div>
       </div>
     </div>

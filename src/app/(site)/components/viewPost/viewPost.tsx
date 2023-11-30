@@ -4,8 +4,10 @@ import Star from "../../post/[id]/component/star";
 import { LocateFixed, UserCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import handleRegisteredTime from "@/lib/utilities/handleRegisteredTime";
-import ButtonLike from "./ButtonLike";
-import ButtonComment from "./ButtonComment";
+import dynamic from "next/dynamic";
+
+const ButtonLike = dynamic(() => import("./ButtonLike"), { ssr: false });
+const ButtonComment = dynamic(() => import("./ButtonComment"), { ssr: false });
 
 interface Owner {
   id: string;
