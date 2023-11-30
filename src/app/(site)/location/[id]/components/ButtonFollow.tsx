@@ -1,5 +1,4 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Button, ButtonLoading } from "@/components/ui/button";
 import { UserMinus, UserPlus } from "lucide-react";
@@ -13,73 +12,77 @@ import { useLocationStore } from "@/lib/zustand/location";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
-export default function ButtonFollow({ locationID }: { locationID: string }) {
-  const {toast} = useToast()
+export default function ButtonFollow({
+  locationID,
+  userId,
+}: {
+  locationID: string;
+  userId: string;
+}) {
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const followed = useGetFollow(locationID);
 
-  /* Sessions is used to extract email from the users... */
-  const session = useSession({
-    required: true,
-  });
-
   const { mutate, isPending } = useMutation({
     mutationFn: async (action: Action) => {
-      if (session.status === "authenticated") {
-        const userId = session.data.user?.id;
-        const data: UsersToLocations = usersToLocationsSchema.parse({
-          locationId: locationID,
-          userId,
-        });
-        const res = await fetch("/api/location/follow", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({ ...data, action }),
-        });
+      const data: UsersToLocations = usersToLocationsSchema.parse({
+        locationId: locationID,
+        userId,
+      });
+      const res = await fetch("/api/location/follow", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ ...data, action }),
+      });
 
-        const message: string = await res.json();
-        const status = res.status;
-        return { message, status };
-      }
+      const message: string = await res.json();
+      const status = res.status;
+      return { message, status };
     },
     onSuccess: async (data) => {
       if (data === undefined) {
         console.log("Null data received");
         toast({
-          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-          description: "Error occured while following location. Please try again later."
-        })
+          className:
+            "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description:
+            "Error occured while following location. Please try again later.",
+        });
         return;
       }
       if (data.status === 201) {
-        console.log("Location followed successfully, refetching locations")
-        await queryClient.refetchQueries({ queryKey: ["locations"]});
+        console.log("Location followed successfully, refetching locations");
+        await queryClient.refetchQueries({ queryKey: ["locations"] });
         console.log(data.message);
         return;
       } else if (data.status === 409) {
         console.log(data.message);
         toast({
-          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          className:
+            "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
           title: "Already Followed",
-          description: "You are already following this location"
-        })
+          description: "You are already following this location",
+        });
       } else if (data.status === 400) {
         console.log(data.message);
         toast({
-          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          className:
+            "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
           title: "Invalid Request",
-          description: "Please try again later with proper information."
-        })
+          description: "Please try again later with proper information.",
+        });
       } else {
         console.log(data.message);
         toast({
           variant: "destructive",
-          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-          description: "Error occured while following location. Please try again later.",
+          className:
+            "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description:
+            "Error occured while following location. Please try again later.",
           action: <ToastAction altText="Try again">Try again</ToastAction>,
-        })
+        });
       }
     },
     onError: (error) => {
@@ -96,9 +99,7 @@ export default function ButtonFollow({ locationID }: { locationID: string }) {
 
   return (
     <>
-      {isPending || session.status !== "authenticated" ? (
-        <ButtonLoading />
-      ) : !followed ? (
+      {!followed ? (
         <Button
           onClick={() => handleToggleFollow("follow")}
           className="flex gap-2 bg-transparent outline-none cursor-pointer text-md rounded-lg transition-all uppercase border-2 border-solid border-teal-600 text-teal-600 hover:bg-gray-300 dark:hover:bg-gray-800"

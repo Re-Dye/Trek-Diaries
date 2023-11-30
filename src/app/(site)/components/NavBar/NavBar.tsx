@@ -5,7 +5,6 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaHiking } from "react-icons/fa";
 import ProfilePicture from "./components/profilePicture";
-import { useSession } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,22 +17,18 @@ import {
 import { LogOut, UserCircle } from "lucide-react";
 import { ModeToggle } from "../DarkMode/Darkmode";
 
-export default function NavBar() {
+export default function NavBar({ user }: { user: any }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const session = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/login");
-    },
-  });
   const [name, setName] = useState("");
 
   useEffect(() => {
-    if (session.status === "authenticated") {
-      setName((session.data?.user?.name as string).slice(0, 1).toUpperCase());
+    if (user) {
+      setName(user.name.slice(0, 1).toUpperCase());
+    } else {
+      setName("");
     }
-  }, [session]);
+  });
 
   const handleSignOut = async () => {
     const data = await signOut({ redirect: false, callbackUrl: "/login" });
@@ -72,7 +67,7 @@ export default function NavBar() {
                     router.push('/MyProfile');
                   }}>
                   <UserCircle />
-                  <>{(session.data?.user?.name as string)}</>
+                  <>{(user?.name as string)}</>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />

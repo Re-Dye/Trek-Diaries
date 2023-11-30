@@ -1,5 +1,6 @@
 import { User } from "next-auth"
 import { JWT } from "next-auth/jwt"
+import { Prettify } from "@/lib/prettify"
 
 type UserId = string
 
@@ -12,9 +13,9 @@ declare module "next-auth/jwt" {
 
 declare module "next-auth" {
   interface Session {
-    user: User & {
+    user: Prettify<User & {
       id: UserId;
       dob: string;
-    }
+    }>
   }
 }
