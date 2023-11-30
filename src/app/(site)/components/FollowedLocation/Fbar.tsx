@@ -2,22 +2,19 @@
 import { MapPin } from "lucide-react";
 import { useEffect } from "react";
 import Flocation from "./Flocation";
-import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocationStore } from "@/lib/zustand/location";
 import { useToast } from "@/components/ui/use-toast";
 
-export default function Fbar() {
-  const {toast} = useToast()
-
-  const session = useSession();
+export default function Fbar({ user }: { user: any}) {
+  const {toast} = useToast();
   const locations = useLocationStore((state) => state.locations);
   const setLocations = useLocationStore((state) => state.setLocations);
   const { data, error, status,  } = useQuery({
     queryKey: ["locations"],
     queryFn: async () => {
       // if (session.status === "authenticated") {
-      const userId = session.data?.user?.id;
+      const userId = user?.id;
 
       const res = await fetch(`/api/location/get?userId=${userId}`, {
         cache: "no-store",
@@ -32,7 +29,7 @@ export default function Fbar() {
       return { message, status };
       // }
     },
-    enabled: session.status === "authenticated"
+    enabled: (user?.id !== undefined)
   });
 
   useEffect(() => {

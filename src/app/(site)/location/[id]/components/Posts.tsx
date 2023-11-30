@@ -13,7 +13,7 @@ interface Response {
   next: string;
 }
 
-export default function Posts({ locationId }: { locationId: string }) {
+export default function Posts({ locationId, userId }: { locationId: string, userId: string | undefined }) {
   const {toast} = useToast()
   const { ref, inView } = useInView()
   const { data, status, fetchNextPage } = useInfiniteQuery({
@@ -85,6 +85,7 @@ export default function Posts({ locationId }: { locationId: string }) {
           } {
             return page.posts.map((post, i) => (
               <ViewPost
+                userId={userId}
                 key={i}
                 id={post.id}
                 registered_time={ post.registered_time }

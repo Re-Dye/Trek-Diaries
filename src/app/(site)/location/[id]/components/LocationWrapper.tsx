@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { FC } from "react";
 import ButtonFollow from "./ButtonFollow";
 import AddPost from "./AddPost";
@@ -8,6 +8,7 @@ import { ReturnLocation } from "@/lib/zodSchema/dbTypes";
 
 type Props = {
   location: ReturnLocation;
+  userId: string | undefined;
 };
 
 const LocationWrapper: FC<Props> = (props) => {
@@ -22,11 +23,17 @@ const LocationWrapper: FC<Props> = (props) => {
           <p className="text-sm">{props.location.description}</p>
         </div>
         <div className="flex mt-5 justify-center gap-8">
-          <AddPost locationID={props.location.id} />
-          <ButtonFollow locationID={props.location.id} />
+          {props.userId && (
+            <>
+              <AddPost locationID={props.location.id} userId={props.userId}/>
+              <ButtonFollow locationID={props.location.id} userId={props.userId}/>
+            </>
+          )}
         </div>
       </div>
-      <div className="flex justify-center"><Posts locationId={props.location.id} /></div>
+      <div className="flex justify-center">
+        <Posts locationId={props.location.id} userId={props.userId}/>
+      </div>
     </div>
   );
 };

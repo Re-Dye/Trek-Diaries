@@ -3,6 +3,7 @@ import Fbar from "./components/FollowedLocation/Fbar";
 import React from "react";
 // import PlacetoVisit from "./components/PlacetoVisit/PlaceVisit";
 import { Metadata } from "next";
+import { getCurrentUser } from "@/lib/session";
 
 export const metadata: Metadata = {
   title: {
@@ -12,15 +13,17 @@ export const metadata: Metadata = {
   description: "Social media for trekkers and hikers",
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
+
   return (
     <>
       <main>
           <div className="navbar">
-            <NavBar />
+            <NavBar user={user}/>
           </div>
           <div className="fbar">
-            <Fbar />
+            <Fbar user={user}/>
           </div>
           <div className="rbar">{/* <PlacetoVisit /> */}</div>
           {children}

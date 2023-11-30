@@ -3,6 +3,7 @@ import Post from "./component/postLayout";
 import { notFound } from "next/navigation";
 import { ReturnPost } from "@/lib/zodSchema/dbTypes";
 import { getPost } from "@/lib/db/actions";
+import { getCurrentUser } from "@/lib/session";
 
 async function fetchPostData(id: string): Promise<ReturnPost | null> {
   try {
@@ -16,7 +17,7 @@ async function fetchPostData(id: string): Promise<ReturnPost | null> {
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const postID: string = params.id;
-  const post = await fetchPostData(postID);
+  const [post, user] = await Promise.all([fetchPostData(postID), getCurrentUser()]);
 
   if (!post) {
     notFound();
@@ -27,7 +28,9 @@ export default async function PostPage({ params }: { params: { id: string } }) {
       <div className="w-1/4 bg-custom_gray mt-2 border"></div>
       <div className="mt-2 bg-custom_gray border w-2/4 box-border">
         <Post
+          userId={user?.id}
           address={post.location_address}
+          locationId={post.location_id}
           name={post.owner_name}
           likes={post.likes_count}
           registeredTime={post.registered_time}

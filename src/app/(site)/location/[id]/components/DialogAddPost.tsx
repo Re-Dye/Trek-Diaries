@@ -10,7 +10,6 @@ import {
 import Image from "next/image";
 
 import { ChangeEventHandler, FC, useState } from "react";
-import { useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -46,11 +45,11 @@ type Props = {
   locationID: string;
   open: boolean;
   handleOpen: (open: boolean) => void;
+  userId: string;
 };
 
 const DialogAddPost: FC<Props> = (props) => {
-  const {toast} = useToast()
-  const session = useSession({ required: true });
+  const {toast} = useToast();
   const form = useForm<AddPostFormData>({
     resolver: zodResolver(addPostFormSchema),
   });
@@ -62,15 +61,6 @@ const DialogAddPost: FC<Props> = (props) => {
       let sign: string = "";
       let timestamp: number = 0;
       let imageUrl: string = "";
-
-      /* check if user is logged in */
-      if (!session.data) {
-        toast({
-          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-          description: (`You must be logged in to add a post.`)
-        })
-        return;
-      }
 
       /* get signature of image to upload */
       try {
@@ -156,7 +146,7 @@ const DialogAddPost: FC<Props> = (props) => {
         location_id: props.locationID,
         trail_condition: +data.trail_condition,
         weather: +data.weather,
-        owner_id: session.data.user.id,
+        owner_id: props.userId,
       };
 
       const res = await fetch("/api/location/post", {

@@ -17,7 +17,7 @@ export default function PostFeed({ userId }: { userId: string }) {
   const {toast} = useToast()
   const { ref, inView } = useInView()
   const { data, status, fetchNextPage } = useInfiniteQuery({
-    queryKey: ["posts", location],
+    queryKey: ["posts", "feed"],
     queryFn: async ({ pageParam }: { pageParam: string }) => {
       try {
         const res = await fetch(
@@ -85,6 +85,7 @@ export default function PostFeed({ userId }: { userId: string }) {
           } {
             return page.posts.map((post, i) => (
               <ViewPost
+                userId={userId}
                 key={i}
                 id={post.id}
                 registered_time={ post.registered_time }
