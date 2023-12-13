@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LogOut, UserCircle } from "lucide-react";
+import { LifeBuoy, LogOut, UserCircle } from "lucide-react";
 import { ModeToggle } from "../DarkMode/Darkmode";
 
 export default function NavBar({ user }: { user: any }) {
@@ -62,12 +62,19 @@ export default function NavBar({ user }: { user: any }) {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem 
-                  className="flex gap-4" 
+                  className="flex gap-4 cursor-pointer" 
                   onClick={()=>{
                     router.push('/MyProfile');
                   }}>
                   <UserCircle />
                   <>{(user?.name as string)}</>
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  className="flex gap-4 cursor-pointer" 
+                  onClick={()=>{
+                    router.push('/Preferences');
+                  }}>
+                  <LifeBuoy className=" text-red-600"/>Preferences
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
