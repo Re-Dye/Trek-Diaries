@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LifeBuoy, LogOut, UserCircle } from "lucide-react";
+import { LifeBuoy, LogOut, Mountain, UserCircle } from "lucide-react";
 import { ModeToggle } from "../DarkMode/Darkmode";
 
 export default function NavBar({ user }: { user: any }) {
@@ -39,11 +39,11 @@ export default function NavBar({ user }: { user: any }) {
     <nav className="w-full bg-slate-200 pr-8 pl-8 dark:bg-black fixed z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
         <div
-          className="flex cursor-pointer "
+          className="flex cursor-pointer text-green-600 font-bold text-3xl"
           onClick={() => {
             router.push("/");
           }}>
-          <FaHiking className="text-green-500 w-8 h-8" />
+          <FaHiking className="text-green-600 w-8 h-8" />D
         </div>
         <div>
           <SearchInput />

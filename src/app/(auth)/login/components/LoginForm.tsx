@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { FaHiking } from "react-icons/fa";
 import {
   Form,
   FormControl,
@@ -70,13 +71,13 @@ export default function Login() {
   };
 
   return (
-    <div className="relative bg-black rounded-xl p-16 z-10 sm:p-2 sm:w-64 md:w-72 lg:w-80">
+    <div className="relative bg-white dark:bg-black rounded-xl p-16 z-10 sm:p-2 sm:w-64 md:w-72 lg:w-80">
       <div className="flex absolute top-12 right-8 sm:top-3 sm:right-2 xl:right-4">
         <ModeToggle />
       </div>
       <div className="flex-row sm:p-2">
         <h2 className="text-3xl mb-6 sm:max-[text-4xl]: sm:mb-8 md:mb-10 lg:text-3xl xl:text-4xl font-bold text-blue-500 ">
-          Login
+          Login 
         </h2>
         <Form {...form}>
           <form

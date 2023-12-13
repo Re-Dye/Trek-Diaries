@@ -110,7 +110,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="relative bg-black rounded-2xl p-16 sm:p-2 z-10 sm:w-64 md:w-72 lg:w-80">
+    <div className="relative bg-white dark:bg-black rounded-2xl p-16 sm:p-2 z-10 sm:w-64 md:w-72 lg:w-80">
       <div className="flex absolute top-12 right-8 sm:top-3 sm:right-2 xl:right-4">
         <ModeToggle />
       </div>
