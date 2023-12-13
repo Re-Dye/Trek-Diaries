@@ -13,9 +13,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { toast } from "@/components/ui/use-toast"
 import { Focus } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
+import { preferData, preferSchema } from "@/lib/zodSchema/preference"
 
 const FormSchema = z.object({
   type: z.enum(["all", "mentions", "none"], {
@@ -25,20 +37,20 @@ const FormSchema = z.object({
 
 
 export default function Preferences() {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
+    const form = useForm<preferData>({
+        resolver: zodResolver(preferSchema),
       })
     
-      function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-          title: "You submitted the following values:",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-            </pre>
-          ),
-        })
-      }
+    function onSubmit(data: z.infer<typeof FormSchema>) {
+      toast({
+        title: "You submitted the following values:",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        ),
+      })
+    };
     
       return (
         <div className=" space-y-4">
@@ -51,7 +63,7 @@ export default function Preferences() {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="space-y-5 bg-black p-6 rounded-2xl">
+                <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Trekking Expertise</FormLabel>
                   <FormControl>
                     <RadioGroup
@@ -91,37 +103,13 @@ export default function Preferences() {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="space-y-5 bg-black p-6 rounded-2xl">
+                <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Interested Trails </FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="all" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          All new messages
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="mentions" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Direct messages and mentions
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="none" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Nothing</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
+                  <Textarea
+                    placeholder="write what trails you are interested in"
+                    className="resize-none"
+                />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -131,37 +119,13 @@ export default function Preferences() {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="space-y-5 bg-black p-6 rounded-2xl">
+                <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Interested Locations</FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="all" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          All new messages
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="mentions" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Direct messages and mentions
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="none" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Nothing</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
+                  <Textarea
+                    placeholder="write what locations you are interested in"
+                    className="resize-none"
+                />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -171,7 +135,7 @@ export default function Preferences() {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="space-y-5 bg-black p-6 rounded-2xl">
+                <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Preferred Trekking Distance</FormLabel>
                   <FormControl>
                     <RadioGroup
@@ -184,7 +148,7 @@ export default function Preferences() {
                           <RadioGroupItem value="all" />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          All new messages
+                          3 days
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -192,14 +156,14 @@ export default function Preferences() {
                           <RadioGroupItem value="mentions" />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          Direct messages and mentions
+                          4 days
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="none" />
                         </FormControl>
-                        <FormLabel className="font-normal">Nothing</FormLabel>
+                        <FormLabel className="font-normal">5 days</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -211,7 +175,7 @@ export default function Preferences() {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="space-y-5 bg-black p-6 rounded-2xl">
+                <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Preferred Trekking Altitude</FormLabel>
                   <FormControl>
                     <RadioGroup
@@ -224,7 +188,7 @@ export default function Preferences() {
                           <RadioGroupItem value="all" />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          All new messages
+                          3000m
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
@@ -232,14 +196,14 @@ export default function Preferences() {
                           <RadioGroupItem value="mentions" />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          Direct messages and mentions
+                          4000m
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="none" />
                         </FormControl>
-                        <FormLabel className="font-normal">Nothing</FormLabel>
+                        <FormLabel className="font-normal">5000m</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -251,37 +215,31 @@ export default function Preferences() {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="space-y-5 bg-black p-6 rounded-2xl">
+                <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Preferred trekking month</FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="all" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          All new messages
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="mentions" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Direct messages and mentions
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="none" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Nothing</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
+                    <Select>
+                      <SelectTrigger className="w-[300px]">
+                        <SelectValue placeholder="select prefered month" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Months</SelectLabel>
+                          <SelectItem value="jan">January</SelectItem>
+                          <SelectItem value="feb">Februrary</SelectItem>
+                          <SelectItem value="mar">March</SelectItem>
+                          <SelectItem value="apr">April</SelectItem>
+                          <SelectItem value="may">May</SelectItem>
+                          <SelectItem value="jun">June</SelectItem>
+                          <SelectItem value="jly">July</SelectItem>
+                          <SelectItem value="aug">August</SelectItem>
+                          <SelectItem value="sep">September</SelectItem>
+                          <SelectItem value="oct">October</SelectItem>
+                          <SelectItem value="nov">November</SelectItem>
+                          <SelectItem value="dec">December</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -291,37 +249,13 @@ export default function Preferences() {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="space-y-5 bg-black p-6 rounded-2xl">
+                <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Any Other Interests</FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="all" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          All new messages
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="mentions" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Direct messages and mentions
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="none" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Nothing</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
+                  <Textarea
+                    placeholder="write what locations you are interested in"
+                    className="resize-none"
+                />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
