@@ -6,6 +6,7 @@ import {
   usersToLocations,
   posts,
   usersLikePosts,
+  comments,
 } from "@/lib/db/schema";
 import { eq, sql, and, desc, asc, gt } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
@@ -19,6 +20,9 @@ import {
   ReturnFollowedLocation,
   InsertPost,
   ReturnPost,
+  InsertComment,
+  ReturnComment,
+  insertCommentSchema,
 } from "@/lib/zodSchema/dbTypes";
 import { LikePost } from "../zodSchema/likePost";
 import { Pool } from "@neondatabase/serverless";
@@ -152,6 +156,32 @@ export const countLocationByAddress = async (address: string) => {
   } catch (error) {
     console.error("Error in counting locations: ", error);
     throw new Error("Error in counting locations: " + error);
+  }
+};
+
+export const addComment = async (
+  comment: InsertComment
+): Promise<ReturnComment> => {
+  try {
+    // const { post_id, content, user_id } = insertCommentSchema.parse(comments);
+    const addComment = db
+      .insert(comments)
+      .values({
+        user_id: sql.placeholder("user_id"),
+        content: sql.placeholder("content"),
+        post_id: sql.placeholder("post_id"),
+      })
+      .returning()
+      .prepare("add_location");
+    const res = await addComment.execute({
+      post_id: comment.post_id,
+      content: comment.content,
+      user_id: comment.user_id,
+    });
+    return res[0];
+  } catch (error) {
+    console.error("Error in adding comment: ", error);
+    throw new Error("Error in adding comment: " + error);
   }
 };
 
@@ -491,9 +521,17 @@ export const isPostLiked = async (data: LikePost): Promise<boolean> => {
     const isPostLiked = db
       .select({ count: sql<number>`count(*)` })
       .from(usersLikePosts)
-      .where(and(eq(usersLikePosts.user_id, sql.placeholder("userId")), eq(usersLikePosts.post_id, sql.placeholder("postId"))))
+      .where(
+        and(
+          eq(usersLikePosts.user_id, sql.placeholder("userId")),
+          eq(usersLikePosts.post_id, sql.placeholder("postId"))
+        )
+      )
       .prepare("is_post_liked");
-    const res = await isPostLiked.execute({ userId: data.userId, postId: data.postId });
+    const res = await isPostLiked.execute({
+      userId: data.userId,
+      postId: data.postId,
+    });
     const count: number = res[0].count;
     if (count > 0) {
       return true;
@@ -504,7 +542,7 @@ export const isPostLiked = async (data: LikePost): Promise<boolean> => {
     console.error("Error in checking if post is liked", error);
     throw new Error("Error in checking if post is liked: " + error);
   }
-}
+};
 
 export const likePost = async (data: LikePost): Promise<number> => {
   const pool = new Pool({ connectionString: getDbUrl() });
@@ -518,19 +556,19 @@ export const likePost = async (data: LikePost): Promise<number> => {
           post_id: data.postId,
         })
         .execute();
-      const res: {likes: number}[] = await trx
+      const res: { likes: number }[] = await trx
         .update(posts)
         .set({
           likes_count: sql<number>`${posts.likes_count} + 1`,
         })
         .where(eq(posts.id, data.postId))
-        .returning({likes: posts.likes_count})
+        .returning({ likes: posts.likes_count })
         .execute();
       return res[0].likes;
     });
     const likes = await likePost;
     pool.end();
-    return likes
+    return likes;
   } catch (error) {
     console.error("Error in liking post", error);
     pool.end();
@@ -545,15 +583,20 @@ export const dislikePost = async (data: LikePost) => {
     const dislikePost = db.transaction(async (trx) => {
       await trx
         .delete(usersLikePosts)
-        .where(and(eq(usersLikePosts.user_id, data.userId), eq(usersLikePosts.post_id, data.postId)))
+        .where(
+          and(
+            eq(usersLikePosts.user_id, data.userId),
+            eq(usersLikePosts.post_id, data.postId)
+          )
+        )
         .execute();
-      const res: {likes: number}[] = await trx
+      const res: { likes: number }[] = await trx
         .update(posts)
         .set({
           likes_count: sql<number>`${posts.likes_count} - 1`,
         })
         .where(eq(posts.id, data.postId))
-        .returning({likes: posts.likes_count})
+        .returning({ likes: posts.likes_count })
         .execute();
       return res[0].likes;
     });

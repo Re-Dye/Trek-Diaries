@@ -70,10 +70,10 @@ export const posts = pgTable(
 export const comments = pgTable(
   "comments",
   {
-    user_id: text("user_id").references(() => users.id, {
+    user_id: text("user_id").notNull().references(() => users.id, {
       onDelete: "cascade",
     }),
-    post_id: uuid("post_id").references(() => posts.id, {
+    post_id: uuid("post_id").notNull().references(() => posts.id, {
       onDelete: "cascade",
     }),
     content: text("content").notNull(),

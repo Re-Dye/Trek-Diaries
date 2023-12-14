@@ -1,7 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { users, locations, posts, usersToLocations } from "@/lib/db/schema";
-import { z } from "zod";
+import { users, locations, posts, usersToLocations, comments } from "@/lib/db/schema";
+import { TypeOf, z } from "zod";
 import { Prettify } from "../prettify";
+import { type } from "os";
 
 export const selectUserSchema = createSelectSchema(users);
 export const insertUserSchema = createInsertSchema(users);
@@ -31,3 +32,8 @@ export type ReturnPost = Prettify<
     owner_name: string;
   }
 >;
+
+export const selectCommentSchema = createSelectSchema(comments)
+export const insertCommentSchema = createInsertSchema(comments);
+export type InsertComment = z.infer<typeof insertCommentSchema>
+export type ReturnComment = z.infer<typeof selectCommentSchema>

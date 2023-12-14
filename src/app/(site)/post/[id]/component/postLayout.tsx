@@ -11,10 +11,10 @@ const ButtonLike = dynamic(
   () => import("@/app/(site)/components/viewPost/ButtonLike"),
   { ssr: false }
 );
-// const Comment = dynamic(
-//   () => import("./comment_sec/Comment"),
-//   { ssr: false }
-// );
+const Comment = dynamic(
+  () => import("./comment_sec/Comment"),
+  { ssr: false }
+);
 
 export default function Post({
   userId,
@@ -106,7 +106,7 @@ export default function Post({
           </div>
         </div>
         <div className="flex justify-center">
-          {/* <Comment postId={postID} /> */}
+          <Comment postId={postID} userId={userId}/>
         </div>
       </div>
     </div>
