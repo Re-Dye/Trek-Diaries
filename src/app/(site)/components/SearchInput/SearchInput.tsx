@@ -29,7 +29,7 @@ export default function SearchInput() {
   return (
     <form
       onSubmit={handleSearch}
-      className="flex justify-center items-center w-96 gap-2"
+      className="flex justify-center items-center w-48 gap-1 sm:w-72 md:w-96 md:gap-2"
     >
       <Input
         className="text-center shadow-md border border-gray-800 dark:border-gray-500 rounded-lg"
@@ -39,7 +39,7 @@ export default function SearchInput() {
       />
       <button
         type="submit"
-        className="w-7 h-7 hover:text-indigo-400 cursor-pointer "
+        className="flex w-6 h-6 justify-center items-center hover:text-indigo-400 cursor-pointer"
       >
         <Search />
       </button>

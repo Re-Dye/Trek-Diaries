@@ -177,12 +177,12 @@ export default function ButtonLike({ likes, postId, userId }: {likes: number, po
   return (
     <>
       {status === "pending" ? (
-        <ReloadIcon className="w-6 h-6 animate-spin" />
+        <ReloadIcon className="w-4 h-4 sm:w-6 sm:h-6 animate-spin" />
       ) : (
         <button className="flex gap-2 cursor-pointer" onClick={handleLike}>
-          <div className="text-xl">{Likes}</div>
+          <div className="text-[12px] sm:text-xl">{Likes}</div>
           <ThumbsUp
-            className={`w-6 h-6 ${isLiked ? "text-blue-600" : "text-gray-500"}`}
+            className={`w-4 h-4 sm:w-6 sm:h-6 ${isLiked ? "text-blue-600" : "text-gray-500"}`}
           />
         </button>
       )}

@@ -3,8 +3,24 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+import { cn } from "@/lib/utils"
 
 import { Button } from "@/components/ui/button"
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 import {
   Form,
   FormControl,
@@ -28,20 +44,36 @@ import { toast } from "@/components/ui/use-toast"
 import { Focus } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { preferData, preferSchema } from "@/lib/zodSchema/preference"
+import { useState } from "react"
+import { Checkbox } from "@/components/ui/checkbox"
 
-const FormSchema = z.object({
-  type: z.enum(["all", "mentions", "none"], {
-    required_error: "You need to select a notification type.",
-  }),
-})
+const trails = [
+  { label: "Aanbu Kahireni Trail", value: "akt" },
+  { label: "Annapurna Base Camp Heli Trek", value: "abcht" },
+  { label: "Annapurna Base Camp Short Trek", value: "abcst" },
+  { label: "Annapurna Base Camp Trek", value: "abct" },
+] as const
 
+const features = [
+  {id: "village", label: "village"},
+  {id: "forest",label: "forest"},
+  {id: "mountain",label: "mountain"},
+  {id: "snow",label: "snow"},
+  {id: "viewpoint",label: "viewpoint",},
+  {id: "lake",label: "lake"},
+] as const
 
 export default function Preferences() {
+
+    const [open, setOpen] = useState(false)
     const form = useForm<preferData>({
         resolver: zodResolver(preferSchema),
+        defaultValues: {
+          features: ["village", "village"],
+        },
       })
     
-    function onSubmit(data: z.infer<typeof FormSchema>) {
+    function onSubmit(data: z.infer<typeof preferSchema>) {
       toast({
         title: "You submitted the following values:",
         description: (
@@ -64,7 +96,7 @@ export default function Preferences() {
               name="type"
               render={({ field }) => (
                 <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
-                  <FormLabel className="flex justify-start">Trekking Expertise</FormLabel>
+                  <FormLabel className="flex justify-start">Trekking Difficulty</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -73,25 +105,27 @@ export default function Preferences() {
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="all" />
+                          <RadioGroupItem value="easy" />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          Beginner
+                          Easy
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="mentions" />
+                          <RadioGroupItem value="moderate" />
                         </FormControl>
                         <FormLabel className="font-normal">
-                          Average
+                          Moderate
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="none" />
+                          <RadioGroupItem value="challenging" />
                         </FormControl>
-                        <FormLabel className="font-normal">Expertise</FormLabel>
+                        <FormLabel className="font-normal">
+                          Challenging
+                        </FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -101,71 +135,80 @@ export default function Preferences() {
             />
             <FormField
               control={form.control}
-              name="type"
+              name="trail"
               render={({ field }) => (
                 <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Interested Trails </FormLabel>
-                  <FormControl>
-                  <Textarea
-                    placeholder="write what trails you are interested in"
-                    className="resize-none"
-                />
-                  </FormControl>
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            aria-expanded = {open}
+                            role="combobox"
+                            className={cn(
+                              "w-[300px] justify-between flex",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value
+                              ? trails.find(
+                                (trail) => trail.value === field.value
+                              )?.label
+                              : "Select Interested Trail"}
+                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[300px] p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search framework..."
+                            className="h-9"
+                          />
+                          <CommandEmpty>No framework found.</CommandEmpty>
+                          <CommandGroup>
+                            {trails.map((trail) => (
+                              <CommandItem
+                                className=" cursor-pointer"
+                                value={trail.label}
+                                key={trail.value}
+                                onSelect={() => {
+                                  form.setValue("trail", trail.value)
+                                  setOpen(false)
+                                }}
+                              >
+                                {trail.label}
+                                <CheckIcon
+                                  className={cn(
+                                    "ml-auto h-4 w-4",
+                                    trail.value === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
-                  <FormLabel className="flex justify-start">Interested Locations</FormLabel>
-                  <FormControl>
-                  <Textarea
-                    placeholder="write what locations you are interested in"
-                    className="resize-none"
-                />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="type"
+              name="dist"
               render={({ field }) => (
                 <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Preferred Trekking Distance</FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="all" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          3 days
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="mentions" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          4 days
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="none" />
-                        </FormControl>
-                        <FormLabel className="font-normal">5 days</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
+                  <Textarea
+                    placeholder="write your prefered distance(in KM)"
+                    className="resize-none"
+                    {...field}
+                />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,39 +216,16 @@ export default function Preferences() {
             />
             <FormField
               control={form.control}
-              name="type"
+              name="altid"
               render={({ field }) => (
                 <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Preferred Trekking Altitude</FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-col space-y-1"
-                    >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="all" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          3000m
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="mentions" />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          4000m
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value="none" />
-                        </FormControl>
-                        <FormLabel className="font-normal">5000m</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
+                  <Textarea
+                    placeholder="write your prefered altitude(in m)"
+                    className="resize-none"
+                    {...field}
+                />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -213,12 +233,12 @@ export default function Preferences() {
             />
             <FormField
               control={form.control}
-              name="type"
+              name="month"
               render={({ field }) => (
                 <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Preferred trekking month</FormLabel>
                   <FormControl>
-                    <Select>
+                    <Select  onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="w-[300px]">
                         <SelectValue placeholder="select prefered month" />
                       </SelectTrigger>
@@ -231,7 +251,7 @@ export default function Preferences() {
                           <SelectItem value="apr">April</SelectItem>
                           <SelectItem value="may">May</SelectItem>
                           <SelectItem value="jun">June</SelectItem>
-                          <SelectItem value="jly">July</SelectItem>
+                          <SelectItem value="july">July</SelectItem>
                           <SelectItem value="aug">August</SelectItem>
                           <SelectItem value="sep">September</SelectItem>
                           <SelectItem value="oct">October</SelectItem>
@@ -251,12 +271,62 @@ export default function Preferences() {
               render={({ field }) => (
                 <FormItem className="space-y-5 bg-slate-300 dark:bg-black p-6 rounded-2xl">
                   <FormLabel className="flex justify-start">Any Other Interests</FormLabel>
-                  <FormControl>
-                  <Textarea
-                    placeholder="write what locations you are interested in"
-                    className="resize-none"
+                  <Popover >
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="checkbox"
+                          className={cn(
+                            "w-[500px] justify-between flex",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value
+                            ? features.find(
+                              (features) => features.id === features.id
+                            )?.label
+                            : "Select Interested Features like snow, forest, lake etc."}
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[500px] flex h-[100px] flex-wrap p-4 gap-5">
+                    {features.map((item) => (
+                <FormField
+                  key={item.id}
+                  control={form.control}
+                  name="features"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={item.id}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(item.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, item.id])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== item.id
+                                    )
+                                  )
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal">
+                          {item.label}
+                        </FormLabel>
+                      </FormItem>
+                    )
+                  }}
                 />
-                  </FormControl>
+              ))}
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
