@@ -7,4 +7,5 @@ export const CONSTANTS = {
   MAX_IMAGE_SIZE: 5*1024*1024,
   ACCEPTED_IMAGE_TYPES: ["image/jpeg", "image/jpg", "image/png", "image/webp"],
   POSTS_PER_SCROLL: 7,
+  COMMENTS_PER_SCROLL: 7,
 };
