@@ -8,6 +8,8 @@ import {
   date,
   uuid,
   index,
+  pgEnum,
+  json,
 } from "drizzle-orm/pg-core";
 import { CONSTANTS } from "../constants";
 
@@ -71,18 +73,22 @@ export const comments = pgTable(
   "comments",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    user_id: text("user_id").notNull().references(() => users.id, {
-      onDelete: "cascade",
-    }),
-    post_id: uuid("post_id").notNull().references(() => posts.id, {
-      onDelete: "cascade",
-    }),
+    user_id: text("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+    post_id: uuid("post_id")
+      .notNull()
+      .references(() => posts.id, {
+        onDelete: "cascade",
+      }),
     content: text("content").notNull(),
     registered_time: timestamp("registered_time", { mode: "string" })
       .defaultNow()
       .notNull(),
   },
-  (comments) =>({
+  (comments) => ({
     userIdIdx: index("user_id_idx").on(comments.user_id),
     postIdIdx: index("post_id_idx").on(comments.post_id),
   })
@@ -107,14 +113,46 @@ export const usersToLocations = pgTable(
   })
 );
 
-export const usersLikePosts = pgTable("users_like_posts", {
-  user_id: text("user_id").references(() => users.id, {
-    onDelete: "cascade",
-  }),
-  post_id: uuid("post_id").references(() => posts.id, {
-    onDelete: "cascade",
-  }),
-}, 
-(usersLikePosts) => ({
-  pk: primaryKey(usersLikePosts.user_id, usersLikePosts.post_id),
-}));
+export const usersLikePosts = pgTable(
+  "users_like_posts",
+  {
+    user_id: text("user_id").references(() => users.id, {
+      onDelete: "cascade",
+    }),
+    post_id: uuid("post_id").references(() => posts.id, {
+      onDelete: "cascade",
+    }),
+  },
+  (usersLikePosts) => ({
+    pk: primaryKey(usersLikePosts.user_id, usersLikePosts.post_id),
+  })
+);
+
+export const preferenceType = pgEnum("type", ["easy", "moderate", "challenging"]);
+export const month = pgEnum("month", [
+  "jan",
+  "feb",
+  "mar",
+  "apr",
+  "may",
+  "jun",
+  "jul",
+  "aug",
+  "sep",
+  "nov",
+  "dec",
+]);
+
+export const preferences = pgTable("preferences", {
+  user_id: text("user_id")
+    .primaryKey()
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
+  type: preferenceType("type").notNull(),
+  trail: text("trail").notNull(),
+  distance: integer("distance").notNull(),
+  altitude: integer("altitude").notNull(),
+  month: month("month").notNull(),
+  features: text("features").notNull(),
+});

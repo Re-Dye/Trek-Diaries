@@ -7,6 +7,7 @@ import {
   posts,
   usersLikePosts,
   comments,
+  preferences,
 } from "@/lib/db/schema";
 import { eq, sql, and, desc, asc, gt } from "drizzle-orm";
 import { redis } from "@/lib/db/upstash";
@@ -23,6 +24,7 @@ import {
   InsertComment,
   ReturnComment,
   insertCommentSchema,
+  InsertPreference,
 } from "@/lib/zodSchema/dbTypes";
 import { LikePost } from "../zodSchema/likePost";
 import { Pool } from "@neondatabase/serverless";
@@ -652,3 +654,32 @@ export const dislikePost = async (data: LikePost) => {
     throw new Error("Error in liking post: " + error);
   }
 };
+
+export const addPreference = async (data: InsertPreference) => {
+  try {
+    const addPreference = db
+      .insert(preferences)
+      .values({
+        user_id: sql.placeholder("user_id"),
+        altitude: sql.placeholder("altitude"),
+        distance: sql.placeholder("distance"),
+        features: sql.placeholder("features"),
+        month: sql.placeholder("month"),
+        trail: sql.placeholder("trail"),
+        type: sql.placeholder("type"),
+      })
+      .prepare("add_preference");
+    await addPreference.execute({
+      user_id: data.user_id,
+      altitude: data.altitude,
+      distance: data.distance,
+      features: data.features,
+      month: data.month,
+      trail: data.trail,
+      type: data.type,
+    });
+  } catch (error) {
+    console.error("Error in adding preference", error);
+    throw new Error("Error in adding preference: " + error);
+  }
+}

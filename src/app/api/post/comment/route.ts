@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { likePostSchema, LikePost } from "@/lib/zodSchema/likePost";
 import { addCommentFormSchema, addCommentFormData } from "@/lib/zodSchema/addComment";
-import { ServerRuntime } from "next";
-import { dislikePost, isPostLiked, postExists } from "@/lib/db/actions";
 import { addComment, getComments } from "@/lib/db/actions";
 import { ZodError } from "zod";
 

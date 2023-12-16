@@ -72,7 +72,7 @@ export default function NavBar({ user }: { user: any }) {
                 <DropdownMenuItem 
                   className="flex gap-4 cursor-pointer" 
                   onClick={()=>{
-                    router.push('/Preferences');
+                    router.push('/preferences');
                   }}>
                   <LifeBuoy className=" text-teal-600"/>Preferences
                 </DropdownMenuItem>

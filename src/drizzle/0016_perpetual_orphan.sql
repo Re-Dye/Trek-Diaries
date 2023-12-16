@@ -1,0 +1,1 @@
+ALTER TABLE "preferences" ALTER COLUMN "features" SET DATA TYPE text;
