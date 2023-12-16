@@ -1,5 +1,5 @@
 from flask import Flask
-from Recommend import get_recommendation
+from Recommend import get_recommendation_locations, get_recommendation_trails
 from flask import request, jsonify, Response
 # from flask_cors import CORS
 
@@ -20,9 +20,14 @@ app = Flask(__name__)
 #                     "pageNumber": pageNumber
 #                     })
 
-@app.route("/recommendation", methods=['GET'])
-def recommendation():
-    return get_recommendation('annapurna trek')
+@app.route("/trail_recommendation", methods=['GET'])
+def recommendation_trail():
+    return get_recommendation_trails('annapurna trek')
+
+
+@app.route("/locs_recommendation", methods=['GET'])
+def recommendation_locs():
+    return get_recommendation_locations('annapurna trek')
 
 
 if __name__ == '_main_':
