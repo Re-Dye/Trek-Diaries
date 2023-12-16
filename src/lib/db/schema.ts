@@ -70,6 +70,7 @@ export const posts = pgTable(
 export const comments = pgTable(
   "comments",
   {
+    id: uuid("id").defaultRandom().primaryKey(),
     user_id: text("user_id").notNull().references(() => users.id, {
       onDelete: "cascade",
     }),
@@ -81,8 +82,9 @@ export const comments = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (comments) => ({
-    pk: primaryKey(comments.user_id, comments.post_id),
+  (comments) =>({
+    userIdIdx: index("user_id_idx").on(comments.user_id),
+    postIdIdx: index("post_id_idx").on(comments.post_id),
   })
 );
 

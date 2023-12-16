@@ -36,4 +36,8 @@ export type ReturnPost = Prettify<
 export const selectCommentSchema = createSelectSchema(comments)
 export const insertCommentSchema = createInsertSchema(comments);
 export type InsertComment = z.infer<typeof insertCommentSchema>
-export type ReturnComment = z.infer<typeof selectCommentSchema>
+export type ReturnComment = Prettify<
+  z.infer<typeof selectCommentSchema> & {
+    user_name: string;
+  }
+  >

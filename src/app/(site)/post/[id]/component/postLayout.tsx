@@ -5,14 +5,15 @@ import FinalRating from "./finalRating";
 import { UserCircle } from "lucide-react";
 import handleRegisteredTime from "@/lib/utilities/handleRegisteredTime";
 import { useRouter } from "next/navigation";
+import Comment from "./Comments";
 
 import dynamic from "next/dynamic";
 const ButtonLike = dynamic(
   () => import("@/app/(site)/components/viewPost/ButtonLike"),
   { ssr: false }
 );
-const Comment = dynamic(
-  () => import("./comment_sec/Comment"),
+const AddComment = dynamic(
+  () => import("./AddComment"),
   { ssr: false }
 );
 
@@ -106,7 +107,10 @@ export default function Post({
           </div>
         </div>
         <div className="flex justify-center">
-          <Comment postId={postID} userId={userId}/>
+          <AddComment postId={postID} userId={userId}/>
+        </div>
+        <div className="flex justify-center">
+          <Comment postId={postID}/>
         </div>
       </div>
     </div>

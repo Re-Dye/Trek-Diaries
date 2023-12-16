@@ -161,9 +161,8 @@ export const countLocationByAddress = async (address: string) => {
 
 export const addComment = async (
   comment: InsertComment
-): Promise<ReturnComment> => {
+) => {
   try {
-    // const { post_id, content, user_id } = insertCommentSchema.parse(comments);
     const addComment = db
       .insert(comments)
       .values({
@@ -182,6 +181,50 @@ export const addComment = async (
   } catch (error) {
     console.error("Error in adding comment: ", error);
     throw new Error("Error in adding comment: " + error);
+  }
+};
+
+export const getComments = async (
+  postId: string,
+  limit: number,
+  last: string | null
+): Promise<{ comments: Array<ReturnComment>; next: string | undefined }> => {
+  try {
+    const getComments = db
+      .select({
+        id: comments.id,
+        user_id: comments.user_id,
+        post_id: comments.post_id,
+        content: comments.content,
+        registered_time: comments.registered_time,
+        user_name: users.name,
+      })
+      .from(comments)
+      .where(
+        and(
+          eq(comments.post_id, sql.placeholder("postId")),
+          gt(comments.id, sql.placeholder("last"))
+        )
+      )
+      .orderBy(desc(comments.registered_time), asc(comments.id))
+      .limit(sql.placeholder("limit"))
+      .innerJoin(users, eq(comments.user_id, users.id))
+      .prepare("getComment");
+
+    /* get one more post for next turn */
+    const res = await getComments.execute({ postId, limit: limit + 1, last });
+
+    /* if there is a next page */
+    if (res.length === limit + 1) {
+      const next: string = res[res.length - 1].id;
+      res.pop();
+      return { comments: res, next };
+    } else {
+      return { comments: res, next: undefined };
+    }
+  } catch (error) {
+    console.error("Error in getting posts", error);
+    throw new Error("Error in getting posts: " + error);
   }
 };
 

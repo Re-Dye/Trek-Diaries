@@ -3,7 +3,7 @@ import { likePostSchema, LikePost } from "@/lib/zodSchema/likePost";
 import { addCommentFormSchema, addCommentFormData } from "@/lib/zodSchema/addComment";
 import { ServerRuntime } from "next";
 import { dislikePost, isPostLiked, postExists } from "@/lib/db/actions";
-import { addComment } from "@/lib/db/actions";
+import { addComment, getComments } from "@/lib/db/actions";
 import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
@@ -12,16 +12,6 @@ export async function POST(req: NextRequest) {
     console.log(data);
     
     await addComment(data);
-    // if (!(await addComment({
-    //   post_id: data.post_id,
-    //   content: data.content,
-    //   user_id: data.user_id,
-    //   registered_time: date.toString()
-    // }))) {
-    //   return NextResponse.json("Post already disliked", { status: 409 });
-    // }
-
-  //   const likes: number = await dislikePost(data);
     return NextResponse.json("Comment Added...", { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {
@@ -31,3 +21,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json("Internal server error", { status: 500 });
    }
 } 
+
+export async function GET(req: NextRequest) {
+  const postId = req.nextUrl.searchParams.get("postId");
+  const _limit = req.nextUrl.searchParams.get("limit");
+  const last = req.nextUrl.searchParams.get("last");
+
+  try {
+    /* if type is paginated and locationId is not given */
+    if (!postId || !_limit || !last) {
+      return new Response("Invalid Request", { status: 400 });
+    } else {
+      const limit = +_limit;
+
+      if (isNaN(limit)) {
+        return new Response("Invalid Request", { status: 400 });
+      }
+
+      const { comments, next } = await getComments(postId, limit, last);
+
+      return NextResponse.json(JSON.stringify({ comments, next }), {
+        status: 200,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json("Internal Server Error", { status: 500 });
+  }
+}
