@@ -21,7 +21,7 @@ export default async function Layout({
     <>
       <main>
         <div className="h-screen flex">
-          <div className="relative w-3/4 sm:w-full border-0 shadow-black shadow-xl rounded-r-3xl">
+          <div className="sm:relative sm:w-3/4 border-0 shadow-black shadow-xl rounded-r-3xl">
             <Image
               className="object-cover w-full h-full"
               loading="eager"

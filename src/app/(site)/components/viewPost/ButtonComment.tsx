@@ -8,7 +8,7 @@ export default function ButtonComment({
   return (
     <>
       <button className="cursor-pointer" onClick={handleRouting}>
-        <MessageSquare className="w-6 h-6 hover:text-blue-600" />
+        <MessageSquare className="w-4 h-4 sm:w-6 sm:h-6 hover:text-blue-600" />
       </button>
     </>
   );
