@@ -6,11 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocationStore } from "@/lib/zustand/location";
 import { useToast } from "@/components/ui/use-toast";
 
-export default function Fbar({ user }: { user: any}) {
-  const {toast} = useToast();
+export default function Fbar({ user }: { user: any }) {
+  const { toast } = useToast();
   const locations = useLocationStore((state) => state.locations);
   const setLocations = useLocationStore((state) => state.setLocations);
-  const { data, error, status,  } = useQuery({
+  const { data, error, status } = useQuery({
     queryKey: ["locations"],
     queryFn: async () => {
       // if (session.status === "authenticated") {
@@ -29,7 +29,7 @@ export default function Fbar({ user }: { user: any}) {
       return { message, status };
       // }
     },
-    enabled: (user?.id !== undefined)
+    enabled: user?.id !== undefined,
   });
 
   useEffect(() => {
@@ -38,9 +38,11 @@ export default function Fbar({ user }: { user: any}) {
         console.log("Null data received");
         toast({
           variant: "destructive",
-          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-          description: "Error occured while following location. Please try again later.",
-        })
+          className:
+            "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description:
+            "Error occured while following location. Please try again later.",
+        });
         return;
       }
       if (data.status === 200) {
@@ -49,17 +51,20 @@ export default function Fbar({ user }: { user: any}) {
       } else if (data.status === 400) {
         console.log(data.message);
         toast({
-          className: "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          className:
+            "fixed rounded-md top-0 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
           title: "Invalid Request",
-          description: "Please try again later with proper information."
-        })
+          description: "Please try again later with proper information.",
+        });
       } else {
         console.log(data.message);
         toast({
           variant: "destructive",
-          className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-          description: "Error occured while following location. Please try again later.",
-        })
+          className:
+            "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+          description:
+            "Error occured while following location. Please try again later.",
+        });
       }
     }
 
@@ -67,12 +72,14 @@ export default function Fbar({ user }: { user: any}) {
       console.log(error);
       toast({
         variant: "destructive",
-        className: "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
-        description: "Error occured while following location. Please try again later.",
-      })
+        className:
+          "fixed rounded-md top-2 left-[50%] flex max-h-screen w-full translate-x-[-50%] p-4 sm:right-0 sm:flex-col md:max-w-[420px]",
+        description:
+          "Error occured while following location. Please try again later.",
+      });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, data])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, data]);
 
   return (
     <div className="flex-row absolute box-border space-y-3 mt-4 left-[5px] lg:space-y-6 lg:mt-8 lg:left-5 rounded-md lg:rounded-2xl p-2 lg:p-8 shadow-md bg-slate-100 dark:bg-neutral-800">

@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "next-dev": "next dev",
+    "dev": "concurrently \"yarn run next-dev\" \"yarn run flask-dev\"",
+    "flask-dev": "node check-env.js && FLASK_DEBUG=1 && pip install -r requirements.txt && python -m flask --app src/app/api/flask/app run",
     "build": "next build",
     "start": "next start",
     "prod": "next build && next start",
