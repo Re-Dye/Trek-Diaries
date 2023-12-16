@@ -36,26 +36,26 @@ export default function NavBar({ user }: { user: any }) {
   };
 
   return (
-    <nav className="w-full bg-slate-200 pr-8 pl-8 dark:bg-black fixed z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+    <nav className="w-full bg-slate-200 pr-2 pl-2 sm:pr-4 sm:pl-4 md:pr-6 md:pl-6 lg:pr-8 lg:pl-8 dark:bg-black fixed z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
         <div
-          className="flex cursor-pointer text-green-600 font-bold text-3xl"
+          className="flex cursor-pointer text-green-600 font-bold text-[21px] sm:text-3xl"
           onClick={() => {
             router.push("/");
           }}>
-          <FaHiking className="text-green-600 w-8 h-8" />D
+          <FaHiking className="text-green-600 w-6 h-6 sm:w-8 sm:h-8" />D
         </div>
         <div>
           <SearchInput />
         </div>
-        <div className="flex gap-4">
-          <div className="flex">
+        <div className="flex gap-1 sm:gap-2 md:gap-4">
+          <div className="flex cursor-pointer">
             <ModeToggle />
           </div>
-          <div className="rounded-3xl flex cursor-pointer ">
+          <div className="rounded-3xl flex cursor-pointer">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="w-10 h-10"><ProfilePicture userFirst={name} /></div>
+              <div className="w-8 h-8 sm:w-10 sm:h-10"><ProfilePicture userFirst={name} /></div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 rounded-2xl p-3">
               <DropdownMenuLabel className="flex justify-center text-md">My Account</DropdownMenuLabel>
@@ -74,7 +74,7 @@ export default function NavBar({ user }: { user: any }) {
                   onClick={()=>{
                     router.push('/Preferences');
                   }}>
-                  <LifeBuoy className=" text-red-600"/>Preferences
+                  <LifeBuoy className=" text-teal-600"/>Preferences
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />

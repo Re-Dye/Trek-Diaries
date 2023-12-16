@@ -11,8 +11,8 @@ export default function Flocation({ id, address }: { id: string, address: string
     } 
 
     return(
-        <div className="flex gap-2 items-center hover:text-blue-400 text-lg" onClick={ handleClick }>
-            <Pin className="w-3 h-3"/> { address }
+        <div className="flex gap-1 lg:gap-2 items-center truncate hover:text-blue-400 text-[8px] sm:text-xs lg:text-lg" onClick={ handleClick }>
+            <Pin className="w-2 h-2 lg:w-3 lg:h-3"/> { address }
         </div>
     );
 }
