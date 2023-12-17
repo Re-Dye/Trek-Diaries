@@ -37,23 +37,14 @@ def get_recommendation_trails(trail_name):
     top_five = [i[0] for i in sorted_scores]
     rec_trails = trail_info.iloc[top_five]['Name']
 
-    # Collect locations from the top 5 trails
-    top_five_locations = []
-    for trail in rec_trails:
-        locations = trail_info[trail_info.Name == trail]['Locations'].values[0]
-        # separated by commas
-        top_five_locations.extend(locations.split(','))
+    # Replace non-breaking space with a regular space
+    rec_trails = rec_trails.str.replace('\u00a0', ' ')
 
-    # Find the top 5 most repeated locations
-    top_five_most_repeated_locations = [
-        location for location, count in Counter(top_five_locations).most_common(5)
-    ]
-
-    # Convert the pandas Series to a JSON string
-    rec_trails_json = rec_trails.to_json()
+    # Convert the pandas Series to a list
+    rec_trails_list = rec_trails.tolist()
 
     # Return as a Flask response
-    return rec_trails_json
+    return rec_trails_list
 
 
 def get_recommendation_locations(trail_name):
@@ -80,13 +71,10 @@ def get_recommendation_locations(trail_name):
         # separated by commas
         top_five_locations.extend(locations.split(','))
 
-    # Find the top 5 most repeated locations
+    # Find the top 5 most repeated locations and clean up the names
     top_five_most_repeated_locations = [
-        location for location, count in Counter(top_five_locations).most_common(5)
+        location.strip().strip('"') for location, count in Counter(top_five_locations).most_common(5)
     ]
 
-    # Convert the pandas Series to a JSON string
-    rec_trails_json = rec_trails.to_json()
-
-    # Return as a Flask response
+    # Return as a Python list
     return top_five_most_repeated_locations

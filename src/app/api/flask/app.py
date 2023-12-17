@@ -1,11 +1,22 @@
+
 from flask import Flask
 from Recommend import get_recommendation_locations, get_recommendation_trails
 from flask import request, jsonify, Response
+from flask_sqlalchemy import SQLAlchemy
+
 # from flask_cors import CORS
 
 
 app = Flask(__name__)
-# CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://hridaya.pradhan123:c6vIW2xQlNnf@ep-muddy-darkness-92363127-pooler.ap-southeast-1.aws.neon.tech/trek-diaries'
+db = SQLAlchemy(app)
+
+
+class Preferences(db.Model):
+    __tablename__ = 'preferences'
+    __table_args__ = {'extend_existing': True}
+    user_id = db.Column(db.String(50), primary_key=True)
+    trail = db.Column(db.String(50))
 
 
 # @app.route("/test", methods=['GET'])
@@ -20,14 +31,21 @@ app = Flask(__name__)
 #                     "pageNumber": pageNumber
 #                     })
 
+
 @app.route("/trail_recommendation", methods=['GET'])
 def recommendation_trail():
-    return get_recommendation_trails('annapurna trek')
+    userId = request.args.get('userId')
+    preferences = Preferences.query.filter_by(user_id=userId).first()
+    print(preferences.trail)
+    return get_recommendation_trails(preferences.trail)
 
 
 @app.route("/locs_recommendation", methods=['GET'])
 def recommendation_locs():
-    return get_recommendation_locations('annapurna trek')
+    userId = request.args.get('userId')
+    preferences = Preferences.query.filter_by(user_id=userId).first()
+    print(preferences.trail)
+    return get_recommendation_locations(preferences.trail)
 
 
 if __name__ == '_main_':

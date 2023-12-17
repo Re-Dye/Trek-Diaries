@@ -49,10 +49,10 @@ import { InsertPreference } from "@/lib/zodSchema/dbTypes";
 import { useMutation } from "@tanstack/react-query";
 
 const trails = [
-  { label: "Aanbu Kahireni Trail", value: "akt" },
+  { label: "Aanbu Kahireni Trail", value: "Aanbu Kahireni Trail" },
   { label: "Annapurna Base Camp Heli Trek", value: "abcht" },
   { label: "Annapurna Base Camp Short Trek", value: "abcst" },
-  { label: "Annapurna Base Camp Trek", value: "abct" },
+  { label: "Annapurna Base Camp Trek", value: "Annapurna Base Camp Trek" },
 ] as const;
 
 const features = [
@@ -108,7 +108,7 @@ export default function Preferences({ userId }: { userId: string }) {
         toast({
           title: "Error",
           description: "Invalid data. Please try again with valid data",
-        })
+        });
       } else {
         toast({
           title: "Error",
@@ -121,7 +121,7 @@ export default function Preferences({ userId }: { userId: string }) {
         title: "Error",
         description: `${error.message}\nPlease try again later`,
       });
-    }
+    },
   });
 
   const onSubmit = async (data: preferData) => mutate(data);
