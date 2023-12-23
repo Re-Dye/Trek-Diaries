@@ -1,0 +1,10 @@
+dash>=0.36.0
+dash-html-components
+dash_core_components>=0.43.0
+dash_table
+gunicorn
+numpy
+pandas
+scipy
+scikit-learn
+flask_sqlalchemy
