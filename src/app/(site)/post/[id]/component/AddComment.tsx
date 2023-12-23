@@ -1,26 +1,11 @@
 "use client";
 import React from "react";
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import InfiniteScroll from "react-infinite-scroll-component";
-// import ViewComment from "../../../../components/viewComment/viewComment";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { string, z } from "zod";
-import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
+import { useState} from "react";
 import {
   addCommentFormSchema,
-  addCommentFormData,
 } from "@/lib/zodSchema/addComment";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { getSession } from "next-auth/react";
+import { Button, ButtonLoading } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FormEvent } from "react";
 
@@ -39,7 +24,8 @@ export default function AddComment({
   ) => {
     setComment(event.target.value);
   };
-
+  
+  const client = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -60,6 +46,7 @@ export default function AddComment({
         console.log(res);
       }
       setComment("");
+      client.invalidateQueries({ queryKey: ["comments", postId] });
     },
     onError: (error) => {
       console.log(error);
@@ -79,9 +66,18 @@ export default function AddComment({
           onChange={handleCommentChange}
           value={comment}
         ></Textarea>
-        <Button type="submit" className="w-24 mt-3 flex justify-center">
-          Comment
-        </Button>
+        <div className="m-4">
+                {isPending ? (
+                  <ButtonLoading className=" btn mt-3 px-3 py-2 transition ease-in-out delay-100 text-xs text-white rounded-md w-full bg-cyan-600 lg:h-8 xl:h-10 " />
+                ) : (
+                  <Button
+                    className=" hover:bg-slate-500 w-44 m-auto flex align-center justify-center"
+                    type="submit"
+                  >
+                    Comment
+                  </Button>
+                )}
+              </div>
       </form>
     </div>
   );

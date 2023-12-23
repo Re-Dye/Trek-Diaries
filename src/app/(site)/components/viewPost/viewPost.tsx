@@ -75,7 +75,7 @@ export default function ViewPost({
             </div>
           </div>
         </div>
-        <div className="box-border p-1 overflow-y-scroll">
+        <div className="box-border p-1 overflow">
           <p className="text-sm">{description}</p>
         </div>
         <div className="flex gap-2 text-md justify-end">
