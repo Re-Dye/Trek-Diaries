@@ -18,11 +18,11 @@ export default function ResultLocation({ id, address, description }: {
   return (
     <Card className="flex items-center justify-between rounded-2xl m-2 p-6 shadow-md">
       <div className="flex-row">
-        <div className="text-xl flex gap-2 cursor-pointer">
+        <div className="text-xl flex gap-2 cursor-pointer items-center text-cyan-600 dark:text-cyan-400">
           <MapPin className="w-6 h-6 text-red-500"/>
           <a onClick={ handleClick }>{ address }</a>
         </div>
-        <div className="flex mt-3 box-border text-md">
+        <div className="flex mt-3 box-border text-sm p-2 tracking-wide">
             <p>
               { description }
             </p>

@@ -42,7 +42,7 @@ export default function Results({ query }: { query: string }) {
             />
           ))
         )}
-        {(!locations.length && status === "success") && <h1>Not Found!</h1>}
+        {(!locations.length && status === "success") && <h1 className="flex items-cente justify-center">Location Not Found !!</h1>}
     </>
   )
 }

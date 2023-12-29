@@ -82,9 +82,9 @@ export default function Fbar({ user }: { user: any }) {
   }, [status, data]);
 
   return (
-    <div className="flex-row absolute box-border space-y-3 mt-4 left-[5px] lg:space-y-6 lg:mt-8 lg:left-5 rounded-md lg:rounded-2xl p-2 lg:p-8 shadow-md bg-slate-100 dark:bg-neutral-800">
+    <div className="flex-row fixed box-border space-y-3 mt-4 left-[5px] lg:space-y-6 lg:mt-8 lg:left-5 rounded-md lg:rounded-2xl p-2 lg:p-8 shadow-md bg-slate-100 dark:bg-neutral-800">
       <div className="flex gap-1 lg:gap-2">
-        <h2 className="text-[10px] sm:text-sm lg:text-2xl">Followed Locations</h2>
+        <h2 className="text-[10px] sm:text-sm lg:text-2xl font-semibold">Followed Locations</h2>
         <MapPin className="w-3 h-3 sm:w-4 sm:h-4 lg:w-7 lg:h-7 text-red-600" />
       </div>
       <div className="flex-row cursor-pointer space-y-2 sm:space-y-3">
