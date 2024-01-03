@@ -25,6 +25,7 @@ import {
   ReturnComment,
   insertCommentSchema,
   InsertPreference,
+  ReturnPreference,
 } from "@/lib/zodSchema/dbTypes";
 import { LikePost } from "../zodSchema/likePost";
 import { Pool } from "@neondatabase/serverless";
@@ -681,5 +682,45 @@ export const addPreference = async (data: InsertPreference) => {
   } catch (error) {
     console.error("Error in adding preference", error);
     throw new Error("Error in adding preference: " + error);
+  }
+}
+
+export const updatePreference = async (data: InsertPreference) => {
+  try {
+    await db
+      .update(preferences)
+      .set({
+        altitude: data.altitude,
+        distance: data.distance,
+        features: data.features,
+        month: data.month,
+        trail: data.trail,
+        type: data.type,
+      })
+      .where(eq(preferences.user_id, data.user_id))
+      .execute();
+  } catch (error) {
+    console.error("Error in updating preference", error);
+    throw new Error("Error in updating preference: " + error);
+  }
+}
+
+export const getPreference = async (userId: string): Promise<ReturnPreference | null> => {
+  try {
+    const getPreference = db
+      .select()
+      .from(preferences)
+      .where(eq(preferences.user_id, sql.placeholder("userId")))
+      .prepare("get_preference");
+    const res = await getPreference.execute({ userId });
+
+    if (res.length === 0) {
+      return null;
+    }
+
+    return res[0];
+  } catch (error) {
+    console.error("Error in getting preference", error);
+    throw new Error("Error in getting preference: " + error);
   }
 }
