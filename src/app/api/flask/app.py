@@ -30,7 +30,9 @@ class Preferences(db.Model):
 #                     "model": model,
 #                     "pageNumber": pageNumber
 #                     })
-
+@app.route('/flask')
+def homes_endpoint():
+    return "Welcome"
 
 @app.route("/trail_recommendation", methods=['GET'])
 def recommendation_trail():
