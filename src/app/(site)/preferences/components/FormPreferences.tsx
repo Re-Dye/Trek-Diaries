@@ -42,7 +42,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { preferData, preferSchema } from "@/lib/zodSchema/preference";
 import { useState } from "react";
 import { InsertPreference, ReturnPreference } from "@/lib/zodSchema/dbTypes";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient} from "@tanstack/react-query";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -51,8 +51,8 @@ import { toast } from "@/components/ui/use-toast";
 
 const trails = [
   { label: "Aanbu Kahireni Trail", value: "Aanbu Kahireni Trail" },
-  { label: "Annapurna Base Camp Heli Trek", value: "abcht" },
-  { label: "Annapurna Base Camp Short Trek", value: "abcst" },
+  { label: "Annapurna Base Camp Heli Trek", value: "Annapurna Base Camp Heli Trek" },
+  { label: "Annapurna Base Camp Short Trek", value: "Annapurna Base Camp Short Trek" },
   { label: "Annapurna Base Camp Trek", value: "Annapurna Base Camp Trek" },
 ] as const;
 
@@ -73,6 +73,7 @@ export default function FormPreferences({
   preference: ReturnPreference | null;
 }) {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
   const form = useForm<preferData>({
     resolver: zodResolver(preferSchema),
     defaultValues: {
@@ -112,6 +113,8 @@ export default function FormPreferences({
     },
     onSuccess: (data) => {
       if (data.status === 201) {
+        queryClient.invalidateQueries({queryKey: ["trailRecommendations", userId]});
+        queryClient.invalidateQueries({queryKey: ["locsRecommendations", userId]});
         toast({
           title: "Success",
           description: preference? "Preference updated successfully" : "Preference added successfully",
