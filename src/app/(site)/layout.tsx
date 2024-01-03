@@ -35,7 +35,7 @@ export default async function SiteLayout({
         <div className="fbar">
           <Fbar user={user} />
         </div>
-        {/* <div className="rbar">{user && <Recommendations userId={user.id} />}</div> */}
+        <div className="rbar">{user && <Recommendations userId={user.id} />}</div>
         {children}
       </main>
     </>
