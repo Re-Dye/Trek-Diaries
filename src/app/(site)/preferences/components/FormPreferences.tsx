@@ -40,7 +40,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 
 import { preferData, preferSchema } from "@/lib/zodSchema/preference";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { InsertPreference, ReturnPreference } from "@/lib/zodSchema/dbTypes";
 import { useMutation } from "@tanstack/react-query";
 
