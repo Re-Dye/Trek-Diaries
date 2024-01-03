@@ -40,7 +40,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 
 import { preferData, preferSchema } from "@/lib/zodSchema/preference";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InsertPreference, ReturnPreference } from "@/lib/zodSchema/dbTypes";
 import { useMutation } from "@tanstack/react-query";
 
@@ -76,15 +76,20 @@ export default function FormPreferences({
   const form = useForm<preferData>({
     resolver: zodResolver(preferSchema),
     defaultValues: {
-      features: ["village", "village"],
+      trail: preference ? preference.trail : "",
+      type: preference ? preference.type : "easy",
+      features: preference? JSON.parse(preference.features): ["village"],
+      month: preference ? preference.month : "jan",
+      distance: preference ? preference.distance.toString() : "",
+      altitude: preference ? preference.altitude.toString() : "",
     },
   });
 
   const { mutate } = useMutation({
     mutationFn: async (data: preferData) => {
       const req: InsertPreference = {
-        altitude: data.altitude,
-        distance: data.distance,
+        altitude: +data.altitude,
+        distance: +data.distance,
         features: JSON.stringify(data.features),
         month: data.month,
         trail: data.trail,
@@ -92,7 +97,7 @@ export default function FormPreferences({
         user_id: userId,
       };
       const res = await fetch(`/api/preference/add`, {
-        method: preference ? "PUT" : "POST",
+        method: preference ? "PATCH" : "POST",
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +114,7 @@ export default function FormPreferences({
       if (data.status === 201) {
         toast({
           title: "Success",
-          description: "Preference added successfully",
+          description: preference? "Preference updated successfully" : "Preference added successfully",
         });
       } else if (data.status === 400) {
         toast({
@@ -119,7 +124,7 @@ export default function FormPreferences({
       } else {
         toast({
           title: "Error",
-          description: "Error adding preference",
+          description: preference? "Error updating preference" : "Error adding preference",
         });
       }
     },
@@ -132,6 +137,7 @@ export default function FormPreferences({
   });
 
   const onSubmit = async (data: preferData) => mutate(data);
+
 
   return (
     <Form {...form}>
@@ -249,7 +255,7 @@ export default function FormPreferences({
               </FormLabel>
               <FormControl>
                 <Textarea
-                  defaultValue={preference ? preference.distance : field.value}
+                  defaultValue={preference ? preference.distance.toString() : field.value}
                   placeholder="write your prefered distance(in KM)"
                   className="resize-none"
                   {...field}
@@ -269,7 +275,7 @@ export default function FormPreferences({
               </FormLabel>
               <FormControl>
                 <Textarea
-                  defaultValue={preference ? preference.altitude : field.value}
+                  defaultValue={preference ? preference.altitude.toString() : field.value}
                   placeholder="write your prefered altitude(in m)"
                   className="resize-none"
                   {...field}
@@ -360,6 +366,7 @@ export default function FormPreferences({
                           >
                             <FormControl>
                               <Checkbox
+                                defaultValue={preference? JSON.parse(preference.features).includes(item.id):field.value?.includes(item.id)}
                                 checked={field.value?.includes(item.id)}
                                 onCheckedChange={(checked) => {
                                   return checked

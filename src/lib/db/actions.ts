@@ -685,6 +685,26 @@ export const addPreference = async (data: InsertPreference) => {
   }
 }
 
+export const updatePreference = async (data: InsertPreference) => {
+  try {
+    await db
+      .update(preferences)
+      .set({
+        altitude: data.altitude,
+        distance: data.distance,
+        features: data.features,
+        month: data.month,
+        trail: data.trail,
+        type: data.type,
+      })
+      .where(eq(preferences.user_id, data.user_id))
+      .execute();
+  } catch (error) {
+    console.error("Error in updating preference", error);
+    throw new Error("Error in updating preference: " + error);
+  }
+}
+
 export const getPreference = async (userId: string): Promise<ReturnPreference | null> => {
   try {
     const getPreference = db
