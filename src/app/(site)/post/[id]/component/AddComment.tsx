@@ -54,7 +54,7 @@ export default function AddComment({
     },
   });
   return (
-    <div className="flex-row items-center rounded-2xl p-3 shadow-md space-y-4 w-full ">
+    <div>
       <form
         className=" w-full flex gap-2 justify-center"
         onSubmit={handleComment}

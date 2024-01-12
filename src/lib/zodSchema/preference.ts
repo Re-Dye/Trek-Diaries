@@ -12,13 +12,13 @@ export const preferSchema = z.object({
     .min(1, {
       message: "Please select desired distance (distance is in KM)",
     })
-    .transform((val) => +val),
+    .refine((val) => +val > 0, { message: "Distance must be greater than 0" }),
   altitude: z
     .string()
     .min(2, {
       message: "Please select desired altitude (altitude is in m)",
     })
-    .transform((val) => +val),
+    .refine((val) => +val > 0, { message: "Altitude must be greater than 0" }),
   month: z.enum(
     [
       "jan",

@@ -18,7 +18,7 @@ import {
   AddLocationFormData,
 } from "@/lib/zodSchema/addLocation";
 import { Textarea } from "@/components/ui/textarea";
-import { Info } from "lucide-react";
+import { LocateFixed } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { ReturnLocation, selectLocationSchema } from "@/lib/zodSchema/dbTypes";
 import {
@@ -102,11 +102,10 @@ export default function PopoverAddLocation({
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
-      <DialogContent>
+      <DialogContent className="space-y-6 p-6">
         <DialogHeader>
-          <DialogTitle className="text-2xl m-auto flex justify-center align-center tracking-wider ">
-            <Info className="w-7 h-7 text-cyan-600" />
-            ADD LOCATION
+          <DialogTitle className="text-2xl m-auto flex justify-center items-center gap-3 mt-2 tracking-wide font-semibold text-teal-500">
+            Add Location<LocateFixed className="w-7 h-7 text-red-600"/>
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>

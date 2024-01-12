@@ -81,7 +81,7 @@ export default function Posts({ locationId, userId }: { locationId: string, user
           if (page === undefined) {
             return <h1 key={i}>Not Found!</h1>;
           } else if (page.posts.length === 0 && i === 0) {
-            return <h1 key={i}>No Posts Found!</h1>;
+            return <h1 key={i} className="text-center">No Posts Found!</h1>;
           } {
             return page.posts.map((post, i) => (
               <ViewPost

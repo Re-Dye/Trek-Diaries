@@ -13,16 +13,18 @@ type Props = {
 
 const LocationWrapper: FC<Props> = (props) => {
   return (
-    <div className="mt-2 bg-custom_gray border w-2/4 box-border space-y-2">
-      <div className="flex-row text-center p-4 m-2 rounded-xl shadow-md dark:bg-black bg-slate-100">
+    <div>
+      <div className="flex-row text-center p-6 mt-8 m-2 rounded-xl shadow-md dark:bg-black bg-zinc-200">
         <div className="text-lg space-y-4">
-          <div className="flex gap-2 justify-center">
-            <LocateFixed className="w-6 h-6 text-red-700" />
-            <h1 className="text-xl">{props.location.address}</h1>
+          <div className="flex gap-3 justify-center items-center">
+            <LocateFixed className="w-6 h-6 text-red-600" />
+            <h1 className="text-2xl text-teal-600 font-semibold">{props.location.address}</h1>
           </div>
+          <div className="flex p-2 text-start">
           <p className="text-sm">{props.location.description}</p>
+          </div>
         </div>
-        <div className="flex mt-5 justify-center gap-8">
+        <div className="flex mt-6 justify-center gap-8">
           {props.userId && (
             <>
               <AddPost locationID={props.location.id} userId={props.userId}/>
@@ -31,7 +33,7 @@ const LocationWrapper: FC<Props> = (props) => {
           )}
         </div>
       </div>
-      <div className="flex justify-center">
+      <div>
         <Posts locationId={props.location.id} userId={props.userId}/>
       </div>
     </div>

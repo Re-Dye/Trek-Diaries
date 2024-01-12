@@ -215,13 +215,13 @@ const DialogAddPost: FC<Props> = (props) => {
 
   return (
     <Dialog onOpenChange={props.handleOpen} open={props.open}>
-      <DialogContent>
+      <DialogContent className="bg-zinc-200 dark:bg-black space-y-4">
         <DialogHeader>
-          <DialogTitle className="text-2xl m-auto flex justify-center align-center tracking-wider ">
+          <DialogTitle className="text-2xl m-auto flex justify-center align-center tracking-wider text-teal-600 ">
             ADD POST
           </DialogTitle>
         </DialogHeader>
-        <div className="flex ">
+        <div className="flex">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onAddPost)}>
               <div className="flex-row space-x-3 items-center justify-center">

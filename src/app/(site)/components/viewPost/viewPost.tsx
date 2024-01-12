@@ -78,7 +78,7 @@ export default function ViewPost({
         <div className="box-border p-1 overflow-y-scroll">
           <p className="text-[10px] sm:text-sm">{description}</p>
         </div>
-        <div className="flex gap-1 sm:gap-2 text-xs sm:text-md justify-end">
+        <div className="flex ml-2 gap-1 sm:gap-2 text-xs sm:text-base justify-start">
           <h5>Rating: </h5>
           <Star stars={rating} />
         </div>

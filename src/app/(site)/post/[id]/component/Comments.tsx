@@ -88,7 +88,7 @@ const Comment = ({
           if (page === undefined) {
             return <h1 key={i}>Not Found!</h1>;
           } else if (page.comments.length === 0 && i === 0) {
-            return <h1 key={i}>No Posts Found!</h1>;
+            return <h1 key={i} className="text-center">No Comments Found!</h1>;
           } {
             return page.comments.map((comment, i) => (
               <ViewComment

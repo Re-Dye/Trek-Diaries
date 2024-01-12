@@ -51,3 +51,5 @@ export type ReturnComment = Prettify<
 
 export const insertPreferenceSchema = createInsertSchema(preferences);
 export type InsertPreference = z.infer<typeof insertPreferenceSchema>;
+export const selectPreferenceSchema = createSelectSchema(preferences);
+export type ReturnPreference = z.infer<typeof selectPreferenceSchema>;

@@ -50,31 +50,33 @@ export default function Post({
   const handleRouting = () => router.push(`/location/${locationId}`);
 
   return (
-    <div className="flex-row items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md dark:bg-black bg-slate-100">
-      <div className="flex-row space-y-4">
-        <div className="flex-row">
-          <div className="flex gap-2">
-            <UserCircle className="w-7 h-7" />
-            <h3 className="text-xl">{name}</h3>
+    <div className="flex-row items-center justify-between rounded-2xl m-2 p-4 gap-10 shadow-md dark:bg-black bg-slate-200">
+      <div className="flex-row space-y-5 mt-3">
+        <div className="flex ml-5 gap-3">
+          <div className="flex justify-center items-center">
+            <UserCircle className="w-12 h-12" />
           </div>
-          <h4 className="ml-9 opacity-50 hover:text-blue-500" onClick={handleRouting}>
-            {address}
-          </h4>
-          <h5 className="ml-9 opacity-50">
-            {handleRegisteredTime(registeredTime)}
-          </h5>
+          <div className="flex-row">
+            <h3 className="text-lg">{name}</h3>
+            <h4 className="opacity-50 cursor-pointer hover:text-blue-500 text-sm" onClick={handleRouting}>
+              {address}
+            </h4>
+            <h5 className="text-xs opacity-50 ">
+              {handleRegisteredTime(registeredTime)}
+            </h5>
+          </div>
         </div>
-        <div className="relative w-full h-60">
+        <div className="relative w-full h-60 ">
           <Image
-            className=" rounded-2xl object-contain"
+            className="object-contain rounded-2xl"
             alt="Error: Image could not be loaded."
             fill={true}
             src={pictureURL}
           />
         </div>
       </div>
-      <div className="flex-row space-y-2">
-        <div className="flex justify-between p-4 mt-3 gap-4 rounded-xl shadow-md border-2 bg-transparent border-teal-600">
+      <div className="flex-row space-y-3">
+        <div className="flex justify-between p-6 mt-4 m-5 gap-4 rounded-xl shadow-md border-2 bg-gray-200 dark:bg-transparent">
           <div className="box-border space-y-6">
             <p className="text-sm text-left overflow-y-scroll">{description}</p>
             {userId && (
@@ -109,10 +111,11 @@ export default function Post({
         <div className="flex justify-center">
           <AddComment postId={postID} userId={userId}/>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center w-full">
           <Comment postId={postID}/>
         </div>
       </div>
     </div>
+    
   );
 }

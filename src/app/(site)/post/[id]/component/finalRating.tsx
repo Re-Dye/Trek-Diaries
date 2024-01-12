@@ -12,28 +12,30 @@ const FinalRating = ({ stars }: { stars: number }) => {
     return "hsl(" + c + ", 100%, 50%)";
   };
   return (
-    <div className="flex w-16 h-16">
+    <div className="flex w-16 h-16 justify-center items-center">
     <CircularProgressbar
       value={score}
       text={`${stars}`}
       circleRatio={1}
       styles={{
+        root: {},
         trail: {
           stroke: "grey",
           strokeLinecap: "round",
-        //   transform: "rotate(-126deg)",
+          transform: 'rotate(0.25turn)',
           transformOrigin: "center center",
         },
         path: {
           strokeLinecap: "round",
-        //   transform: "rotate(-126deg)",
+          transform: 'rotate(0.25turn)',
           transformOrigin: "center center",
-          stroke: calcColor(score, 0, 120),
+          stroke: calcColor(score,0,60),
         },
         text: {
-          textAlign: "center",
-          fill: "#aa6c39",
-          fontSize: "32px",
+          fill: 'chocolate',
+          // Text size
+          fontSize: '36px',
+          transform: "translate(-9px, 10px)",
         },
       }}
       strokeWidth={10}
