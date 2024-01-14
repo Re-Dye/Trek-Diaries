@@ -1,5 +1,5 @@
 import { Focus } from "lucide-react";
-import FormPreferences from "./FormPreferences";
+import FormPreferences from "./PreferenceForm";
 import { getPreference } from "@/lib/db/actions";
 import { ReturnPreference } from "@/lib/zodSchema/dbTypes";
 import { Suspense } from "react";
