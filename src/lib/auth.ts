@@ -5,13 +5,14 @@ import { db } from "@/lib/db/db";
 import { loginSchema } from "@/lib/zodSchema/login";
 import { findUser } from "./db/actions";
 import { compare } from "bcryptjs"
+import { Adapter } from "next-auth/adapters";
 
 if (!process.env.NEXTAUTH_SECRET) {
   throw new Error("Please provide process.env.NEXTAUTH_SECRET env variable.");
 }
 
 export const authOptions: NextAuthOptions = {
-  adapter: DrizzleAdapter(db),
+  adapter: DrizzleAdapter(db) as Adapter,
   providers: [
     CredentialsProvider({
       name: "Credentials",
