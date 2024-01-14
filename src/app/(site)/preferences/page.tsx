@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import PreferenceForm from "./components/PreferenceForm";
+import Preferences from "./components/Preferences";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 
@@ -20,7 +20,7 @@ export default async function UserPreferencePage() {
       <div className="w-2/5 sm:w-1/4 bg-custom_gray mt-2 border"></div>
       <div className="mt-2 bg-custom_gray border w-3/4 sm:w-2/4 box-border">
         <div className="flex-row text-center p-4 m-2 rounded-xl shadow-md border-2 bg-transparent border-teal-600">
-          <PreferenceForm userId={user.id}/>
+          <Preferences userId={user.id}/>
         </div>
       </div>
       <div className="w-2/5 sm:w-1/4 bg-custom_gray border mt-2"></div>
