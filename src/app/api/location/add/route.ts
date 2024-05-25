@@ -13,15 +13,11 @@ import { ReturnLocation } from "@/lib/zodSchema/dbTypes";
 export async function POST(req: NextRequest) {
   try {
     const client = algoliasearch(getAlgoliaAppId(), getAlgoliaAdminKey());
-    console.log(client);
     const index = client.initIndex("locations");
-    console.log(index);
     const data = AddLocationFormSchema.parse(
       await req.json()
     );
     const address = `${data.place}, ${data.state}, ${data.country}`;
-    console.log(address);
-    console.log(data.description);
 
     if ((await countLocationByAddress(address)) > 0) {
       return NextResponse.json("Location already exists", { status: 409 });
