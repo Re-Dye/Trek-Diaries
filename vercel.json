@@ -1,3 +1,9 @@
 {
-  "regions": ["sin1"]
+  "regions": ["sin1"],
+  "rewrites": [
+    {
+      "source": "/donation",
+      "destination": "https://www.zeffy.com/en-US/donation-form/donate-to-make-a-difference-14353"
+    }
+  ]
 }
